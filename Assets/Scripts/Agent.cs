@@ -28,6 +28,9 @@ public class Agent : MonoBehaviour
     /* Internal stuff */
     private Transform transform;
 
+    /* Friendship Stuff */
+    MinHeap close_friends;
+
     private void Awake()
     {
         this.transform = GetComponent<Transform>();
@@ -54,6 +57,7 @@ public class Agent : MonoBehaviour
         this.MAX_AGE = Random.Range(Parameters.Instance.MIN_DEATH_AGE, Parameters.Instance.MAX_DEATH_AGE);
         this.offspring = new List<Agent>();
         this.personality = personality;
+        this.close_friends = new MinHeap(this,Random.Range(Parameters.Instance.MIN_FRIENDS, Parameters.Instance.MAX_FRIENDS));
     }
 
     public void dailyUpdate()
@@ -290,5 +294,29 @@ public class Agent : MonoBehaviour
     public string getPersonality()
     {
         return this.personality;
+    }
+
+    public float comparePersonality(string other_personality) /* My cost function */
+    {
+        float common_features = 0;
+        float len = Parameters.Instance.PERSONALITY_LENGTH;
+        for (int i=0; i< len; ++i)
+        {
+            if (this.personality[i] == other_personality[i])
+            {
+                ++common_features;
+            }
+        }
+        return common_features / len;
+    }
+
+    public void debug_printFriends()
+    {
+        this.close_friends.printHeap();
+    }
+
+    public bool tryAddFriend(Agent a)
+    {
+        return this.close_friends.insert(a);
     }
 }

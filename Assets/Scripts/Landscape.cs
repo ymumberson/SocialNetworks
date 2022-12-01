@@ -100,6 +100,7 @@ public class Landscape : MonoBehaviour
                 {
                     work_school_timer = 0;
                     time = TimeState.HomeTime;
+                    updateWorkSchoolFriends();
                     setAllAgentPathsToHome();
                 }
                 break;
@@ -139,6 +140,19 @@ public class Landscape : MonoBehaviour
         for (int i=0; i<arr.Length; ++i)
         {
             arr[i].dailyUpdate();
+        }
+    }
+
+    public void updateWorkSchoolFriends()
+    {
+        Agent[] arr = agents.ToArray();
+        for (int i = 0; i < arr.Length; ++i)
+        {
+            List<Agent> coworkers = getCoworkers(arr[i].getWorkSchool());
+            foreach (Agent a in coworkers) {
+                arr[i].tryAddFriend(a);
+            }
+            arr[i].debug_printFriends();
         }
     }
 
@@ -212,7 +226,7 @@ public class Landscape : MonoBehaviour
         return null;
     }
 
-    public List<Agent> getCoworkers(Building workplace_school)
+    public List<Agent> getCoworkers(Building workplace_school) /* also returns agent who called it */
     {
         List<Agent> ls = new List<Agent>();
         foreach (Agent a in agents)
