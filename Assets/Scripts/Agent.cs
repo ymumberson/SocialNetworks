@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Agent : MonoBehaviour
 {
-    public enum Gender { Male,Female}
-    public enum AgeState { Child, Adult};
+    public enum Gender { Male, Female }
+    public enum AgeState { Child, Adult };
 
     [SerializeField] private int MAX_AGE;
     [SerializeField] private Agent[] parents;
@@ -18,6 +18,7 @@ public class Agent : MonoBehaviour
     [SerializeField] private bool home_owner;
     [SerializeField] private Agent spouse;
     [SerializeField] private List<Agent> offspring;
+    [SerializeField] private string personality;
     private List<Vector2> path;
     //private List<Vector2> path_to_work;
 
@@ -32,14 +33,15 @@ public class Agent : MonoBehaviour
         this.transform = GetComponent<Transform>();
     }
 
-    public void initialise_agent(int age, Gender gender, House home, Building work_school, Agent[] parents, bool home_owner)
+    public void initialise_agent(int age, Gender gender, House home, Building work_school, Agent[] parents, bool home_owner, string personality)
     {
         this.age = age;
         this.age_state = (this.age >= Parameters.Instance.AGE_TURN_ADULT) ? AgeState.Adult : AgeState.Child;
         if (this.age_state == AgeState.Adult)
         {
             transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
-        } else
+        }
+        else
         {
             transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
         }
@@ -51,28 +53,34 @@ public class Agent : MonoBehaviour
         this.spouse = null;
         this.MAX_AGE = Random.Range(Parameters.Instance.MIN_DEATH_AGE, Parameters.Instance.MAX_DEATH_AGE);
         this.offspring = new List<Agent>();
+        this.personality = personality;
     }
 
     public void dailyUpdate()
     {
-        if (lookingForSpouse())
+        if (isAdult())
         {
-            tryPickSpouseFromCoworkers();
-            if (spouse != null)
+            if (lookingForSpouse())
             {
-                Debug.Log("Found a spouse!");
+                tryPickSpouseFromCoworkers();
+                if (spouse != null)
+                {
+                    Debug.Log("Found a spouse!");
+                }
+            }
+            else if (spouse != null) /* Else if (hasSpouse()) { */
+            {
+                if (!home_owner)
+                {
+                    tryFindHouse();
+                }
+                else
+                {
+                    tryProduceOffspring();
+                }
             }
         }
-        else if (spouse != null) /* Else if (hasSpouse()) { */
-        {
-            if (!home_owner)
-            {
-                tryFindHouse();
-            } else
-            {
-                tryProduceOffspring();
-            }
-        }
+
     }
 
     public void calculatePathToHome()
@@ -154,7 +162,7 @@ public class Agent : MonoBehaviour
     {
         Debug.Log("I'm an adult! ...time to find a job :(");
         age_state = AgeState.Adult;
-        transform.localScale = new Vector3(0.8f,0.8f,0.8f);
+        transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
         findJob();
     }
 
@@ -201,7 +209,7 @@ public class Agent : MonoBehaviour
         }
     }
 
-    public void tryFindHouse()
+    public void tryFindHouse() /* TODO: Currently if both parents are dead and still live at home then should set agent to home owner :( */
     {
         House h = Landscape.Instance.getEmptyHouse();
         if (h == null) return; /* Wasn't able to find an empty house */
@@ -238,7 +246,7 @@ public class Agent : MonoBehaviour
         return offspring.Count;
     }
 
-    public void tryProduceOffspring()
+    public void tryProduceOffspring() //TODO need to check if spouse if fertile as well :(
     {
         /* int age, Gender gender, House home, Building work_school, Agent[] parents, bool home_owner */
         if (numOffspring() < Parameters.Instance.MAX_OFFSPRING_AMOUNT
@@ -252,7 +260,8 @@ public class Agent : MonoBehaviour
                     this.home,
                     Landscape.Instance.getRandomSchool(),
                     new Agent[] { this, this.spouse },
-                    false
+                    false,
+                    Landscape.Instance.generateRandomPersonality(this.personality, spouse.personality)
                     );
 
                 this.addOffspring(offspring);
@@ -271,5 +280,15 @@ public class Agent : MonoBehaviour
     public bool offspringCondition1()
     {
         return Random.Range(0, 100) < 10;
+    }
+
+    public char getPersonalityAtIndex(int index)
+    {
+        return this.personality[index];
+    }
+
+    public string getPersonality()
+    {
+        return this.personality;
     }
 }

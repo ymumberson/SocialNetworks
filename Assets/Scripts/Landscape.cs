@@ -281,10 +281,10 @@ public class Landscape : MonoBehaviour
         this.agents.Add(a);
     }
 
-    public Agent instantiateAgent(int age, Agent.Gender gender, House home, Building work_school, Agent[] parents, bool home_owner)
+    public Agent instantiateAgent(int age, Agent.Gender gender, House home, Building work_school, Agent[] parents, bool home_owner, string personality)
     {
         Agent a = Instantiate(AGENT_TEMPLATE).GetComponent<Agent>();
-        a.initialise_agent(age,gender,home,work_school,parents,home_owner);
+        a.initialise_agent(age,gender,home,work_school,parents,home_owner,personality);
         addAgent(a);
         return a;
     }
@@ -466,7 +466,8 @@ public class Landscape : MonoBehaviour
                 h,
                 workplaces[Random.Range(0, workplaces.Length)],
                 null,
-                true
+                true,
+                generateRandomPersonality()
                 );
             mum.moveTo(getLocation(mum.getHome()));
             agents.Add(mum);
@@ -479,7 +480,8 @@ public class Landscape : MonoBehaviour
                 h,
                 workplaces[Random.Range(0, workplaces.Length - 1)],
                 null,
-                true
+                true,
+                generateRandomPersonality()
                 );
             dad.moveTo(getLocation(dad.getHome()));
             agents.Add(dad);
@@ -498,12 +500,47 @@ public class Landscape : MonoBehaviour
                     h,
                     household_school,
                     new Agent[] { mum, dad },
-                    false
+                    false,
+                    generateRandomPersonality(dad.getPersonality(), mum.getPersonality())
                     );
                 child.moveTo(getLocation(child.getHome()));
                 agents.Add(child);
                 h.addOccupant(child);
             }
         }
+    }
+
+    public string generateRandomPersonality()
+    {
+        string str = "";
+        for (int i=0; i<Parameters.Instance.PERSONALITY_LENGTH; ++i)
+        {
+            if (Random.Range(0f,1f) > 0.5f)
+            {
+                str += '1';
+            }
+            else
+            {
+                str += '0';
+            }
+        }
+        return str;
+    }
+
+    public string generateRandomPersonality(string dad, string mum)
+    {
+        string str = "";
+        for (int i = 0; i < Parameters.Instance.PERSONALITY_LENGTH; ++i)
+        {
+            if (Random.Range(0f, 1f) > 0.5f)
+            {
+                str += dad[i];
+            }
+            else
+            {
+                str += mum[i];
+            }
+        }
+        return str;
     }
 }

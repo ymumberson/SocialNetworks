@@ -18,6 +18,9 @@ public class Parameters : MonoBehaviour
     [SerializeField] public int MAX_OFFSPRING_AMOUNT = 3;
     [SerializeField] public int MIN_FERTILITY_AGE = 20;
     [SerializeField] public int MAX_FERTILITY_AGE = 50;
+    [SerializeField] public int MIN_FRIENDS = 3;
+    [SerializeField] public int MAX_FRIENDS = 7;
+    [SerializeField] public int PERSONALITY_LENGTH = 5; /* Probably change to 100 later */
 
     /* Daily Parameters */
     [SerializeField] public float TIME_AT_WORK_SCHOOL = 1f;
