@@ -148,7 +148,7 @@ public class Landscape : MonoBehaviour
         Agent[] arr = agents.ToArray();
         for (int i = 0; i < arr.Length; ++i)
         {
-            List<Agent> coworkers = getCoworkers(arr[i].getWorkSchool());
+            List<Agent> coworkers = getCoworkers(arr[i].getWorkSchool(),arr[i]);
             foreach (Agent a in coworkers) {
                 arr[i].tryAddFriend(a);
             }
@@ -226,7 +226,21 @@ public class Landscape : MonoBehaviour
         return null;
     }
 
-    public List<Agent> getCoworkers(Building workplace_school) /* also returns agent who called it */
+    public List<Agent> getCoworkers(Building workplace_school, Agent self) /* also returns agent who called it */
+    {
+        List<Agent> ls = new List<Agent>();
+        foreach (Agent a in agents)
+        {
+            if (a == self) continue; /* Skips so doesn't add 'self' to list */ 
+            if (a.getWorkSchool() == workplace_school)
+            {
+                ls.Add(a);
+            }
+        }
+        return ls;
+    }
+
+    public List<Agent> getEmployees(Building workplace_school) /* also returns agent who called it */
     {
         List<Agent> ls = new List<Agent>();
         foreach (Agent a in agents)

@@ -201,7 +201,7 @@ public class Agent : MonoBehaviour
 
     public void tryPickSpouseFromCoworkers()
     {
-        List<Agent> coworkers = Landscape.Instance.getCoworkers(work_school);
+        List<Agent> coworkers = Landscape.Instance.getCoworkers(work_school,this);
         if (coworkers.Count != 0)
         {
             Agent selected_coworker = coworkers[Random.Range(0, coworkers.Count - 1)];
