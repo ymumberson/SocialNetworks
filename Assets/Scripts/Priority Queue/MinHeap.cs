@@ -108,6 +108,14 @@ public class MinHeap
         if (size < max_size)
         {
             agents[size] = a;
+
+            int i = size;
+            while (cost(i) < cost(parent(i)))
+            {
+                swap(i, parent(i));
+                i = parent(i);
+            }
+
             ++size;
             return true;
         }
@@ -115,19 +123,20 @@ public class MinHeap
         /* If queue doesn't have room, or new agent is a worse friend */
         if (!(a.comparePersonality(this.owner.getPersonality()) > cost(size-1))) return false;
         agents[size-1] = a;
+        minHeapify(0);
 
-        int i = size-1;
-        while (cost(i) < cost(parent(i)))
-        {
-            swap(i, parent(i));
-            i = parent(i);
-        }
+        //int i = size-1;
+        //while (cost(i) < cost(parent(i)))
+        //{
+        //    swap(i, parent(i));
+        //    i = parent(i);
+        //}
         return true;
     }
 
     public void printHeap()
     {
-        string s = "";
+        string s = "Max size: " + max_size;
         for (int i = 0; i < size / 2; ++i)
         {
             s += "| Parent node: " + cost(i);
