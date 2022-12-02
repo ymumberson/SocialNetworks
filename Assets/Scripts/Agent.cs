@@ -29,7 +29,7 @@ public class Agent : MonoBehaviour
     private Transform transform;
 
     /* Friendship Stuff */
-    MinHeap close_friends;
+    [SerializeField] MinHeap close_friends;
 
     private void Awake()
     {

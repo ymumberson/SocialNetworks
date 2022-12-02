@@ -4,13 +4,18 @@ using UnityEngine;
 
 /**
  * Synthezised from: https://www.geeksforgeeks.org/max-heap-in-java/#:~:text=A%20max-heap%20is%20a,child%20at%20index%202k%20%2B%202.
- **/
+ *
+ * While we could store scores, this wouldn't work because personalities can change overtime
+ * and so we should always re-evaluate these each time.
+ * -> More expensive but allows for dynamic behaviour.
+ */
+[System.Serializable]
 public class MinHeap
 {
     private Agent owner;
-    private Agent[] agents;
-    private int size;
-    private int max_size;
+    [SerializeField] private Agent[] agents;
+    [SerializeField] private int size;
+    [SerializeField] private int max_size;
 
     public MinHeap(Agent owner, int max_size)
     {
