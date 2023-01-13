@@ -58,6 +58,8 @@ public class Agent : MonoBehaviour
         this.offspring = new List<Agent>();
         this.personality = personality;
         this.close_friends = new MinHeap(this,Random.Range(Parameters.Instance.MIN_FRIENDS, Parameters.Instance.MAX_FRIENDS));
+
+        this.moveTo(new Vector2(home.x, home.y));
     }
 
     public void dailyUpdate()
@@ -318,5 +320,10 @@ public class Agent : MonoBehaviour
     public bool tryAddFriend(Agent a)
     {
         return this.close_friends.insert(a);
+    }
+
+    public Agent[] getFriends()
+    {
+        return close_friends.getAgents();
     }
 }

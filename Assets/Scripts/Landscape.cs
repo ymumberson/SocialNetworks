@@ -12,6 +12,7 @@ public class Landscape : MonoBehaviour
     [SerializeField] private Texture2D MAP_IMAGE;
     [SerializeField] private GameObject TILE_TEMPLATE;
     [SerializeField] private GameObject AGENT_TEMPLATE;
+    [SerializeField] private GraphRendererScript graphRenderer;
     [SerializeField] private int day;
     [SerializeField] private int year;
     [SerializeField] private TimeState time;
@@ -19,7 +20,7 @@ public class Landscape : MonoBehaviour
     /* Internal variables */
     private TileInfo[,] terrain;
     private int width, height;
-    private List<Agent> agents;
+    [SerializeField] private List<Agent> agents;
     private float turn_timer = 0f;
     [SerializeField] private float work_school_timer;
     [SerializeField] private float home_timer;
@@ -44,6 +45,7 @@ public class Landscape : MonoBehaviour
         agents = new List<Agent>();
 
         InitialPopulationRule1();
+        initialiseGraphRenderer();
 
         day = 1;
         year = 1;
@@ -154,6 +156,7 @@ public class Landscape : MonoBehaviour
             }
             arr[i].debug_printFriends();
         }
+        updateSocialNetworkGraph();
     }
 
     public void ageAllAgents()
@@ -302,11 +305,13 @@ public class Landscape : MonoBehaviour
     public void removeAgent(Agent a)
     {
         this.agents.Remove(a);
+        removeAgentFromGraphRenderer(a);
     }
 
     public void addAgent(Agent a)
     {
         this.agents.Add(a);
+        addAgentToGraphRenderer(a);
     }
 
     public Agent instantiateAgent(int age, Agent.Gender gender, House home, Building work_school, Agent[] parents, bool home_owner, string personality)
@@ -570,5 +575,28 @@ public class Landscape : MonoBehaviour
             }
         }
         return str;
+    }
+
+    private void initialiseGraphRenderer()
+    {
+        foreach (Agent a in agents)
+        {
+            graphRenderer.addAgent(a);
+        }
+    }
+
+    public void addAgentToGraphRenderer(Agent a)
+    {
+        graphRenderer.addAgent(a);
+    }
+
+    public void removeAgentFromGraphRenderer(Agent a)
+    {
+        graphRenderer.removeAgent(a);
+    }
+
+    public void updateSocialNetworkGraph()
+    {
+        graphRenderer.updateGraph();
     }
 }

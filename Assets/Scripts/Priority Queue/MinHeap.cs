@@ -8,6 +8,8 @@ using UnityEngine;
  * While we could store scores, this wouldn't work because personalities can change overtime
  * and so we should always re-evaluate these each time.
  * -> More expensive but allows for dynamic behaviour.
+ * 
+ * Also assumes size is at least 3
  */
 [System.Serializable]
 public class MinHeap
@@ -60,6 +62,7 @@ public class MinHeap
     private void minHeapify(int i)
     {
         if (isLeaf(i)) return;
+        if (max_size == 1) return; /* Special case */
 
         /* Should be index bounds safe? */
         float cost_i = cost(i);
@@ -137,6 +140,11 @@ public class MinHeap
         //    i = parent(i);
         //}
         return true;
+    }
+
+    public Agent[] getAgents()
+    {
+        return agents;
     }
 
     public void printHeap()
