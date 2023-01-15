@@ -96,14 +96,16 @@ public class Landscape : MonoBehaviour
                 }
                 break;
             case TimeState.Midday:
-                dailyUpdateAllAgents(); /* Update their states halfway through the day ie at work/school */
+                
                 work_school_timer += Time.fixedDeltaTime;
                 if (work_school_timer > Parameters.Instance.TIME_AT_WORK_SCHOOL)
                 {
+                    dailyUpdateAllAgents(); /* Update their states halfway through the day ie at work/school */
                     work_school_timer = 0;
                     time = TimeState.HomeTime;
                     updateWorkSchoolFriends();
                     setAllAgentPathsToHome();
+                    updateSocialNetworkGraph();
                 }
                 break;
             case TimeState.HomeTime:
@@ -156,7 +158,6 @@ public class Landscape : MonoBehaviour
             }
             arr[i].debug_printFriends();
         }
-        updateSocialNetworkGraph();
     }
 
     public void ageAllAgents()

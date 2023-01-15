@@ -13,7 +13,7 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private float density;
 
     /* For moving nodes */
-    private float l = 0.001f;
+    private float l = 1f;
 
     private void Awake()
     {
@@ -61,34 +61,40 @@ public class GraphRendererScript : MonoBehaviour
 
     public void updateGraph() /* Simply needs to update edges, nodes will always re-render themselves when moved */
     {
-        repositionNodes();
+        //repositionNodes();
         redrawEdges();
         recalculateNetworkDensity();
     }
 
     public void repositionNodes()
     {
-        //foreach (NodeScript node in nodeList)
-        //{
-        //    Vector3 node_pos = node.getPosition();
-        //    foreach (NodeScript other_node in nodeList)
-        //    {
-        //        if (node == other_node) continue;
-        //        if (!node.hasNeighbours()) continue;
-        //        Vector3 other_pos = other_node.getPosition();
-        //        if (node.hasNeighbour(other_node.agent))
-        //        {
-        //            //Debug.Log(attractiveForce(node,other_node));
-        //            node.moveBy(Vector3.MoveTowards(node_pos, other_pos,1f).normalized);
-        //        } 
-        //        else
-        //        {
-        //            //Debug.Log(repulsiveForce(node, other_node));
-        //            node.moveBy(Vector3.MoveTowards(other_pos, node_pos, 1f).normalized);
-        //        }
-        //    }
-        //}
-        
+        foreach (NodeScript node in nodeList)
+        {
+            Vector3 node_pos = node.getPosition();
+            if (!node.hasNeighbours()) continue;
+            foreach (NodeScript other_node in nodeList)
+            {
+                if (node == other_node) continue;
+                Vector3 other_pos = other_node.getPosition();
+                if (node.hasNeighbour(other_node.agent))
+                {
+                    //Debug.Log(attractiveForce(node,other_node));
+                    //node.moveBy(Vector3.MoveTowards(node_pos, other_pos, 1f).normalized);
+                    //Debug.Log(Vector3.MoveTowards(node_pos, other_pos, 1f).normalized);
+                    //Debug.Log(node_pos + " | " + (other_pos - node_pos).normalized);
+                    node.moveBy((other_pos - node_pos).normalized * attractiveForce(node, other_node));
+
+                }
+                else
+                {
+                    //Debug.Log(repulsiveForce(node, other_node));
+                    //node.moveBy(Vector3.MoveTowards(other_pos, node_pos, 1f).normalized);
+                    //Debug.Log("Not neighbour");
+                    //node.moveBy((node_pos - other_pos).normalized * repulsiveForce(node, other_node));
+                }
+            }
+        }
+
         //foreach (NodeScript ns in nodeList)
         //{
         //    Agent[] neighbours = ns.getNeighbours();
@@ -126,7 +132,7 @@ public class GraphRendererScript : MonoBehaviour
         //            }
         //        }
         //    }
-            
+
         //}
     }
 

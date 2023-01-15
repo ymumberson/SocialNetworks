@@ -7,11 +7,13 @@ public class NodeScript : MonoBehaviour
     private Transform transform;
     public Agent agent;
     private List<LineRenderer> edges;
+    //private Rigidbody2D rb;
 
     private void Awake()
     {
         this.transform = GetComponent<Transform>();
         this.edges = new List<LineRenderer>();
+        //rb = GetComponent<Rigidbody2D>();
     }
 
     public void setPosition(Vector2 pos)
@@ -27,6 +29,8 @@ public class NodeScript : MonoBehaviour
     public void moveBy(Vector3 pos)
     {
         transform.position += pos;
+        //Debug.Log("Moving by: " + pos);
+        //rb.AddRelativeForce(pos*100);
     }
 
     public Agent[] getNeighbours()
