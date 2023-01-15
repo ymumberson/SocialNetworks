@@ -7,13 +7,15 @@ public class NodeScript : MonoBehaviour
     private Transform transform;
     public Agent agent;
     private List<LineRenderer> edges;
-    //private Rigidbody2D rb;
+    [SerializeField] private int degreeOfConnectivity;
+    private Rigidbody2D rb;
 
     private void Awake()
     {
         this.transform = GetComponent<Transform>();
         this.edges = new List<LineRenderer>();
-        //rb = GetComponent<Rigidbody2D>();
+        this.degreeOfConnectivity = 0;
+        rb = GetComponent<Rigidbody2D>();
     }
 
     public void setPosition(Vector2 pos)
@@ -28,9 +30,9 @@ public class NodeScript : MonoBehaviour
 
     public void moveBy(Vector3 pos)
     {
-        transform.position += pos;
+        //transform.position += pos;
         //Debug.Log("Moving by: " + pos);
-        //rb.AddRelativeForce(pos*100);
+        rb.AddRelativeForce(pos*100);
     }
 
     public Agent[] getNeighbours()
@@ -67,5 +69,20 @@ public class NodeScript : MonoBehaviour
             Destroy(lr.gameObject);
         }
         edges.Clear();
+    }
+
+    public void resetDegreeOfConnectivity()
+    {
+        degreeOfConnectivity = 0;
+    }
+
+    public void incrementDegreeOfConnectivity()
+    {
+        ++degreeOfConnectivity;
+    }
+
+    public int getDegreeOfConnectivity()
+    {
+        return degreeOfConnectivity;
     }
 }

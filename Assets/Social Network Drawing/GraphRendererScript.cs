@@ -11,6 +11,7 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private int numNodes;
     [SerializeField] private int numEdges;
     [SerializeField] private float density;
+    [SerializeField] private float avgConnectivity;
 
     /* For moving nodes */
     private float l = 1f;
@@ -48,7 +49,7 @@ public class GraphRendererScript : MonoBehaviour
                 ns_to_remove = ns;
                 ns.destroyAllEdges();
                 Destroy(ns.gameObject);
-                updateGraph(); /* Might not be best to update here? (It's only to re-render edges anyway) */
+                //updateGraph(); /* Might not be best to update here? (It's only to re-render edges anyway) */
                 break;
             }
         }
@@ -61,9 +62,10 @@ public class GraphRendererScript : MonoBehaviour
 
     public void updateGraph() /* Simply needs to update edges, nodes will always re-render themselves when moved */
     {
-        //repositionNodes();
+        repositionNodes();
         redrawEdges();
         recalculateNetworkDensity();
+        recalculateConnectivity();
     }
 
     public void repositionNodes()
@@ -90,7 +92,7 @@ public class GraphRendererScript : MonoBehaviour
                     //Debug.Log(repulsiveForce(node, other_node));
                     //node.moveBy(Vector3.MoveTowards(other_pos, node_pos, 1f).normalized);
                     //Debug.Log("Not neighbour");
-                    //node.moveBy((node_pos - other_pos).normalized * repulsiveForce(node, other_node));
+                    node.moveBy((node_pos - other_pos).normalized * repulsiveForce(node, other_node));
                 }
             }
         }
@@ -191,6 +193,7 @@ public class GraphRendererScript : MonoBehaviour
         float length = Vector3.Distance(pU, pV);
 
         return (l * l) / (length);
+        //return (length * length) / l;
     }
 
     public float repulsiveForce(NodeScript u, NodeScript v)
@@ -199,6 +202,37 @@ public class GraphRendererScript : MonoBehaviour
         Vector3 pV = v.getPosition();
         float length = Vector3.Distance(pU, pV);
 
-        return (length*length) / l;
+        //return (length*length) / l;
+       return ((l*l) / (length*numNodes));
+    }
+
+    public void recalculateConnectivity()
+    {
+        foreach (NodeScript ns in nodeList)
+        {
+            ns.resetDegreeOfConnectivity();
+        }
+        foreach (NodeScript ns in nodeList)
+        {
+            Agent[] neighbours = ns.getNeighbours();
+            if (neighbours.Length > 0)
+            {
+                foreach (NodeScript other in nodeList)
+                {
+                    if (ns.hasNeighbour(other.agent))
+                    {
+                        ns.incrementDegreeOfConnectivity();
+                        other.incrementDegreeOfConnectivity();
+                    }
+                }
+            }
+        }
+
+        this.avgConnectivity = 0;
+        foreach (NodeScript ns in nodeList)
+        {
+            this.avgConnectivity += ns.getDegreeOfConnectivity();
+        }
+        this.avgConnectivity /= nodeList.Count;
     }
 }

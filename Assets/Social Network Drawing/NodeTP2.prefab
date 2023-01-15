@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
+  degreeOfConnectivity: 0
 --- !u!50 &-5198399620202139189
 Rigidbody2D:
   serializedVersion: 4
@@ -118,7 +119,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!58 &-3815241889640090132
 CircleCollider2D:
   m_ObjectHideFlags: 0
