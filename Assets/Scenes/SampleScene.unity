@@ -259,6 +259,7 @@ MonoBehaviour:
   numNodes: 0
   numEdges: 0
   density: 0
+  avgConnectivity: 0
 --- !u!1 &1018197017
 GameObject:
   m_ObjectHideFlags: 0
