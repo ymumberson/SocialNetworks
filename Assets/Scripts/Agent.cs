@@ -326,4 +326,9 @@ public class Agent : MonoBehaviour
     {
         return close_friends.getAgents();
     }
+
+    public bool hasFriends()
+    {
+        return !close_friends.isEmpty();
+    }
 }

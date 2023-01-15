@@ -24,9 +24,31 @@ public class NodeScript : MonoBehaviour
         return transform.position;
     }
 
+    public void moveBy(Vector3 pos)
+    {
+        transform.position += pos;
+    }
+
     public Agent[] getNeighbours()
     {
         return agent.getFriends();
+    }
+
+    public bool hasNeighbours()
+    {
+        return agent.hasFriends();
+    }
+
+    public bool hasNeighbour(Agent a)
+    {
+        foreach (Agent neighbour in getNeighbours())
+        {
+            if (a == neighbour)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void addLineRenderer(LineRenderer lr)
