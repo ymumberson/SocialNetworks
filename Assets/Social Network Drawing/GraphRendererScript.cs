@@ -6,15 +6,16 @@ public class GraphRendererScript : MonoBehaviour
 {
     [SerializeField] private GameObject NODE_TEMPLATE;
     [SerializeField] private GameObject EDGE_TEMPLATE;
-    [SerializeField] private float minX=0, maxX=-50, minY=0, maxY=-50;
+    [SerializeField] private float minX=-5, maxX=-105, minY=-5, maxY=-105;
     [SerializeField] private List<NodeScript> nodeList;
     [SerializeField] private int numNodes;
     [SerializeField] private int numEdges;
     [SerializeField] private float density;
     [SerializeField] private float avgConnectivity;
+    private Vector2 lower, upper;
 
     /* For moving nodes */
-    private float l = 1f;
+    private float l;
 
     private void Awake()
     {
@@ -22,6 +23,9 @@ public class GraphRendererScript : MonoBehaviour
         numEdges = 0;
         numNodes = 0;
         density = 0;
+        lower = new Vector2(minX, minY);
+        upper = new Vector2(maxX, maxY);
+        l = Mathf.Abs(maxX - minX) / 20f;
     }
 
     public Vector2 randomBoundedVector2()
@@ -33,6 +37,7 @@ public class GraphRendererScript : MonoBehaviour
     {
         /* Instantiate node template and set values */
         NodeScript ns = Instantiate(NODE_TEMPLATE).GetComponent<NodeScript>();
+        ns.setBounds(lower,upper);
         ns.setPosition(randomBoundedVector2());
         ns.agent = a;
         nodeList.Add(ns);

@@ -251,10 +251,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NODE_TEMPLATE: {fileID: 3403897210632306119, guid: ccdb31543375f9740abfc21bd300877e, type: 3}
   EDGE_TEMPLATE: {fileID: 6111434137109635877, guid: 8fa846863f493534e9b8b0c413a38580, type: 3}
-  minX: 0
-  maxX: -50
-  minY: 0
-  maxY: -50
+  minX: -5
+  maxX: -105
+  minY: -5
+  maxY: -105
   nodeList: []
   numNodes: 0
   numEdges: 0
