@@ -32,7 +32,8 @@ public class NodeScript : MonoBehaviour
     {
         //transform.position += pos;
         //Debug.Log("Moving by: " + pos);
-        rb.AddRelativeForce(pos*100);
+        rb.AddForce(pos*100);
+        //Debug.Log("Adding force " + (pos*100));
     }
 
     public Agent[] getNeighbours()

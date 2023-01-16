@@ -156,7 +156,7 @@ public class Landscape : MonoBehaviour
             foreach (Agent a in coworkers) {
                 arr[i].tryAddFriend(a);
             }
-            arr[i].debug_printFriends();
+            //arr[i].debug_printFriends();
         }
     }
 

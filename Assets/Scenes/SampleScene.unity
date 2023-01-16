@@ -249,7 +249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d73ff7b14c98ebb429d2e7ff819e7ab6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NODE_TEMPLATE: {fileID: 3403897210632306119, guid: 85e7f7d07f05c424e8d8732f821727b5, type: 3}
+  NODE_TEMPLATE: {fileID: 3403897210632306119, guid: ccdb31543375f9740abfc21bd300877e, type: 3}
   EDGE_TEMPLATE: {fileID: 6111434137109635877, guid: 8fa846863f493534e9b8b0c413a38580, type: 3}
   minX: 0
   maxX: -50
