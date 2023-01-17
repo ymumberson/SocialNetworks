@@ -89,7 +89,8 @@ public class Landscape : MonoBehaviour
         switch (time)
         {
             case TimeState.Morning:
-                updateAllAgentPaths();
+                //updateAllAgentPaths();
+                teleportAgentsToDestinations();
                 if (allAgentsReachedDestination())
                 {
                     time = TimeState.Midday;
@@ -109,7 +110,8 @@ public class Landscape : MonoBehaviour
                 }
                 break;
             case TimeState.HomeTime:
-                updateAllAgentPaths();
+                //updateAllAgentPaths();
+                teleportAgentsToDestinations();
                 if (allAgentsReachedDestination())
                 {
                     time = TimeState.NightTime;
@@ -177,6 +179,14 @@ public class Landscape : MonoBehaviour
             if (!a.reachedDestination()) allreached = false;
         }
         return allreached;
+    }
+
+    public void teleportAgentsToDestinations()
+    {
+        foreach (Agent a in agents)
+        {
+            a.teleportToDestination();
+        }
     }
 
     public void setAllAgentPathsToWorkSchool()

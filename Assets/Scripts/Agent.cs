@@ -109,6 +109,16 @@ public class Agent : MonoBehaviour
         }
     }
 
+    public void teleportToDestination()
+    {
+        if (path.Count >= 0)
+        {
+            moveTo(path[0]);
+            path.Clear();
+            path = null;
+        }
+    }
+
     public bool reachedDestination()
     {
         return path == null;

@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class GraphRendererScript : MonoBehaviour
 {
+    /*
+     * Characteristics we need to calculate:
+     * 1) Size: DONE
+     *      -> Number of nodes or edges.
+     * 2) Path length: TODO
+     *      -> Distance between a pair of nodes (Probably store the average)
+     * 3) Whole network density: DONE
+     *      -> Ratio of actual edges to the maximum number of edges.
+     */
     [SerializeField] private GameObject NODE_TEMPLATE;
     [SerializeField] private GameObject EDGE_TEMPLATE;
     [SerializeField] private float minX=-5, maxX=-105, minY=-5, maxY=-105;
@@ -13,6 +22,7 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private float density;
     [SerializeField] private float avgConnectivity;
     private Vector2 lower, upper;
+    private Vector2 centre;
 
     /* For moving nodes */
     private float l;
@@ -25,7 +35,8 @@ public class GraphRendererScript : MonoBehaviour
         density = 0;
         lower = new Vector2(minX, minY);
         upper = new Vector2(maxX, maxY);
-        l = Mathf.Abs(maxX - minX) / 20f;
+        centre = new Vector2((minX + maxX) / 2f, (minY + maxY) / 2f);
+        l = Mathf.Abs(maxX - minX)/5f;
     }
 
     public Vector2 randomBoundedVector2()
@@ -83,14 +94,23 @@ public class GraphRendererScript : MonoBehaviour
             {
                 if (node == other_node) continue;
                 Vector3 other_pos = other_node.getPosition();
+                Vector3 accumulated_attraction = new Vector3(0, 0, 0);
+                Vector3 accumulated_target = new Vector3(0, 0, 0);
+                float numNeighbours = 0;
                 if (node.hasNeighbour(other_node.agent))
                 {
                     //Debug.Log(attractiveForce(node,other_node));
                     //node.moveBy(Vector3.MoveTowards(node_pos, other_pos, 1f).normalized);
                     //Debug.Log(Vector3.MoveTowards(node_pos, other_pos, 1f).normalized);
                     //Debug.Log(node_pos + " | " + (other_pos - node_pos).normalized);
-                    node.moveBy((other_pos - node_pos).normalized * attractiveForce(node, other_node));
 
+
+                    //node.moveBy((other_pos - node_pos).normalized * attractiveForce(node, other_node));
+
+                    //node.moveTowards(other_node.getPosition(), ((other_pos - node_pos).normalized * attractiveForce(node, other_node)));
+                    accumulated_attraction += ((other_pos - node_pos).normalized * attractiveForce(node, other_node));
+                    accumulated_target += other_pos;
+                    ++numNeighbours;
                 }
                 else
                 {
@@ -99,6 +119,12 @@ public class GraphRendererScript : MonoBehaviour
                     //Debug.Log("Not neighbour");
                     node.moveBy((node_pos - other_pos).normalized * repulsiveForce(node, other_node));
                 }
+                
+                //node.moveBy(accumulated_attraction);
+                accumulated_target /= numNeighbours;
+                node.moveTowards(accumulated_target, accumulated_attraction);
+                
+                node.moveBy(towardsCentre(node.getPosition())); /* Just centring nodes */
             }
         }
 
@@ -193,6 +219,7 @@ public class GraphRendererScript : MonoBehaviour
 
     public float attractiveForce(NodeScript u, NodeScript v)
     {
+        if (u.getPosition().Equals(v.getPosition())) return 0;
         Vector3 pU = u.getPosition();
         Vector3 pV = v.getPosition();
         float length = Vector3.Distance(pU, pV);
@@ -207,8 +234,8 @@ public class GraphRendererScript : MonoBehaviour
         Vector3 pV = v.getPosition();
         float length = Vector3.Distance(pU, pV);
 
-        //return (length*length) / l;
-       return ((l*l) / (length*numNodes));
+        return (length*length) / (l*l*numNodes);
+       //return ((l*l) / (length*numNodes));
     }
 
     public void recalculateConnectivity()
@@ -239,5 +266,10 @@ public class GraphRendererScript : MonoBehaviour
             this.avgConnectivity += ns.getDegreeOfConnectivity();
         }
         this.avgConnectivity /= nodeList.Count;
+    }
+
+    public Vector2 towardsCentre(Vector2 pos)
+    {
+        return (centre - pos).normalized / l; /* opposite way around bc graph is in negative coordinate space */
     }
 }

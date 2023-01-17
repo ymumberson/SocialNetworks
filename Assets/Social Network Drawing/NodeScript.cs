@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class NodeScript : MonoBehaviour
 {
+    /*
+     * Characteristics we need to calculate:
+     * 1) Degree of connectivity: DONE
+     *      -> The number of links to or from the node.
+     * 2) Clustering coefficient: TODO
+     *      -> The extent to which nodes connected to a given node are
+     *          in turn linked to each other.
+     */
     private Transform transform;
     public Agent agent;
     private List<LineRenderer> edges;
@@ -64,8 +72,22 @@ public class NodeScript : MonoBehaviour
     {
         //transform.position += pos;
         //Debug.Log("Moving by: " + pos);
-        rb.AddForce(pos*100);
+        //rb.AddForce(pos*100);
+        rb.AddForce(pos);
         //Debug.Log("Adding force " + (pos*100));
+        //rb.MovePosition(transform.position + pos);
+    }
+
+    public void moveTowards(Vector2 pos, Vector2 speed)
+    {
+        if (speed.magnitude >= Vector2.Distance(pos,transform.position))
+        {
+            transform.position = pos;
+        }
+        else
+        {
+            rb.AddForce(speed);
+        }
     }
 
     public Agent[] getNeighbours()
