@@ -610,4 +610,9 @@ public class Landscape : MonoBehaviour
     {
         graphRenderer.updateGraph();
     }
+
+    public GraphRendererScript getGraphRenderer()
+    {
+        return this.graphRenderer;
+    }
 }

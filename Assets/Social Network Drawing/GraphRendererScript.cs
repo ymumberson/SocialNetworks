@@ -21,6 +21,7 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private int numEdges;
     [SerializeField] private float density;
     [SerializeField] private float avgConnectivity;
+    [SerializeField] private float avgClusteringCoefficient;
     private Vector2 lower, upper;
     private Vector2 centre;
 
@@ -82,6 +83,7 @@ public class GraphRendererScript : MonoBehaviour
         redrawEdges();
         recalculateNetworkDensity();
         recalculateConnectivity();
+        recalculateClusteringCoefficient();
     }
 
     public void repositionNodes()
@@ -268,8 +270,33 @@ public class GraphRendererScript : MonoBehaviour
         this.avgConnectivity /= nodeList.Count;
     }
 
+    public void recalculateClusteringCoefficient()
+    {
+        this.avgClusteringCoefficient = 0;
+        foreach (NodeScript ns in nodeList)
+        {
+            ns.calculateClusteringCoefficient();
+            avgClusteringCoefficient += ns.getClusteringCoefficient();
+        }
+        avgClusteringCoefficient /= numNodes;
+    }
+
     public Vector2 towardsCentre(Vector2 pos)
     {
         return (centre - pos).normalized / l; /* opposite way around bc graph is in negative coordinate space */
+    }
+
+    public List<NodeScript> getNodes(Agent[] agents)
+    {
+        List<Agent> agent_ls = new List<Agent>(agents);
+        List<NodeScript> ns_ls = new List<NodeScript>();
+        foreach (NodeScript ns in nodeList)
+        {
+            if (agent_ls.Contains(ns.agent))
+            {
+                ns_ls.Add(ns);
+            }
+        }
+        return ns_ls;
     }
 }

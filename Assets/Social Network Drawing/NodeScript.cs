@@ -20,6 +20,11 @@ public class NodeScript : MonoBehaviour
     private Vector2 lowerBound;
     private Vector2 upperBound;
 
+    /// <summary>
+    /// This stores the value of clustering coefficient from when it was last calculated.
+    /// </summary>
+    [SerializeField] private float clusteringCoefficient;
+
     private void Awake()
     {
         this.transform = GetComponent<Transform>();
@@ -95,6 +100,11 @@ public class NodeScript : MonoBehaviour
         return agent.getFriends();
     }
 
+    public List<NodeScript> getNeighbourNodes()
+    {
+        return Landscape.Instance.getGraphRenderer().getNodes(getNeighbours());
+    }
+
     public bool hasNeighbours()
     {
         return agent.hasFriends();
@@ -139,5 +149,37 @@ public class NodeScript : MonoBehaviour
     public int getDegreeOfConnectivity()
     {
         return degreeOfConnectivity;
+    }
+
+    public void calculateClusteringCoefficient()
+    {
+        /* Loop through each neighbour, and for each neighbour count the edges with other neighbours of THIS node */
+        float numEdgesBetweenNeighbours = 0;
+        List<NodeScript> neighbourNodes = getNeighbourNodes();
+        foreach (NodeScript nb_node in neighbourNodes)
+        {
+            List<NodeScript> neighbour_neighbourNodes = nb_node.getNeighbourNodes();
+            foreach (NodeScript ns in neighbour_neighbourNodes)
+            {
+                if (neighbourNodes.Contains(ns))
+                {
+                    ++numEdgesBetweenNeighbours;
+                }
+            }
+        }
+
+        float numNeighbours = getNeighbours().Length;
+        float maxPossibleEdges = numNeighbours * (numNeighbours - 1);
+
+        this.clusteringCoefficient = (numEdgesBetweenNeighbours) / (maxPossibleEdges);
+    }
+
+    /// <summary>
+    /// Returns the clustering coefficient from the last time it was calculated.
+    /// </summary>
+    /// <returns></returns> Clustering Coefficient
+    public float getClusteringCoefficient()
+    {
+        return this.clusteringCoefficient;
     }
 }
