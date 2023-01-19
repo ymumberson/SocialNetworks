@@ -113,6 +113,8 @@ public class MinHeap
         //    return false;
         //}
 
+        if (this.contains(a)) return false; /* Don't insert if already contained */
+
         if (size < max_size)
         {
             agents[size] = a;
@@ -145,6 +147,16 @@ public class MinHeap
     public Agent[] getAgents()
     {
         return agents;
+    }
+
+    public bool contains(Agent a)
+    {
+        if (this.isEmpty()) return false;
+        for (int i=0; i<size; ++i)
+        {
+            if (agents[i] == a) return true;
+        }
+        return false;
     }
 
     public void printHeap()
