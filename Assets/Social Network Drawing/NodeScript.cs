@@ -8,7 +8,7 @@ public class NodeScript : MonoBehaviour
      * Characteristics we need to calculate:
      * 1) Degree of connectivity: DONE
      *      -> The number of links to or from the node.
-     * 2) Clustering coefficient: TODO
+     * 2) Clustering coefficient: DONE
      *      -> The extent to which nodes connected to a given node are
      *          in turn linked to each other.
      */

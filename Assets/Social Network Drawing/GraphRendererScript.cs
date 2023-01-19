@@ -67,7 +67,6 @@ public class GraphRendererScript : MonoBehaviour
                 ns_to_remove = ns;
                 ns.destroyAllEdges();
                 Destroy(ns.gameObject);
-                //updateGraph(); /* Might not be best to update here? (It's only to re-render edges anyway) */
                 break;
             }
         }
@@ -97,87 +96,17 @@ public class GraphRendererScript : MonoBehaviour
             {
                 if (node == other_node) continue;
                 Vector2 other_pos = other_node.getPosition();
-                //Vector3 accumulated_attraction = new Vector3(0, 0, 0);
-                //Vector3 accumulated_target = new Vector3(0, 0, 0);
-                //float numNeighbours = 0;
                 if (node.hasNeighbour(other_node.agent))
                 {
-                    //Debug.Log(attractiveForce(node,other_node));
-                    //node.moveBy(Vector3.MoveTowards(node_pos, other_pos, 1f).normalized);
-                    //Debug.Log(Vector3.MoveTowards(node_pos, other_pos, 1f).normalized);
-                    //Debug.Log(node_pos + " | " + (other_pos - node_pos).normalized);
-
-
-                    //node.moveBy((other_pos - node_pos).normalized * attractiveForce(node, other_node));
-
-                    //node.moveTowards(other_node.getPosition(), ((other_pos - node_pos).normalized * attractiveForce(node, other_node)));
-                    //accumulated_attraction += ((other_pos - node_pos).normalized * attractiveForce(node, other_node));
-                    //accumulated_target += other_pos;
-                    //++numNeighbours;
-
-
-                    //node.moveBy(attractiveForce(node, other_node));
                     node.moveTowards(other_pos, attractiveForce(node, other_node));
                 }
                 else
                 {
-                    //Debug.Log(repulsiveForce(node, other_node));
-                    //node.moveBy(Vector3.MoveTowards(other_pos, node_pos, 1f).normalized);
-                    //Debug.Log("Not neighbour");
-                    //node.moveBy((node_pos - other_pos).normalized * repulsiveForce(node, other_node));
-
-
-                    //node.moveBy(repulsiveForce(node, other_node));
                     node.moveTowards(other_pos, repulsiveForce(node, other_node));
                 }
-                
-                //node.moveBy(accumulated_attraction);
-                //accumulated_target /= numNeighbours;
-                //node.moveTowards(accumulated_target, accumulated_attraction);
-                
                 node.moveBy(towardsCentre(node.getPosition())); /* Just centring nodes */
             }
         }
-
-        //foreach (NodeScript ns in nodeList)
-        //{
-        //    Agent[] neighbours = ns.getNeighbours();
-        //    if (neighbours.Length > 0) /* If it has neighbours */
-        //    {
-        //        foreach (NodeScript ns_other in nodeList)
-        //        {
-        //            if (ns != ns_other) /* If not self */
-        //            {
-        //                float force = 0;
-        //                bool isNeighbour = false;
-        //                foreach (Agent a in neighbours)
-        //                {
-        //                    if (ns_other.agent == a)
-        //                    {
-        //                        isNeighbour = true;
-        //                    }
-        //                }
-        //                if (isNeighbour)
-        //                {
-        //                    /* Apply attractive force */
-        //                    force = attractiveForce(ns, ns_other);
-        //                } else
-        //                {
-        //                    /* Apply repulsive force */
-        //                    force = -repulsiveForce(ns, ns_other); /* made negative */
-        //                }
-        //                Vector3 ns_to_other = (ns_other.getPosition() - ns.getPosition());
-        //                ns_to_other.Normalize();
-        //                Debug.Log("Ns to other: " + ns_to_other);
-        //                Debug.Log("Force: " + force);
-        //                Debug.Log("Multiplied: " + force*ns_to_other);
-        //                ns.moveBy(ns_to_other * force);
-        //                ns_other.moveBy(-ns_to_other * force);
-        //            }
-        //        }
-        //    }
-
-        //}
     }
 
     private void redrawEdges()
