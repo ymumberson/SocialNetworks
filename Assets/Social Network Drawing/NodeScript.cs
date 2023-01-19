@@ -83,15 +83,16 @@ public class NodeScript : MonoBehaviour
         //rb.MovePosition(transform.position + pos);
     }
 
-    public void moveTowards(Vector2 pos, Vector2 speed)
+    public void moveTowards(Vector3 pos, Vector3 speed)
     {
         if (speed.magnitude >= Vector2.Distance(pos,transform.position))
         {
-            transform.position = pos;
+            transform.position = pos + new Vector3(Random.Range(-0.01f,0.01f), Random.Range(-0.01f, 0.01f),0);
         }
         else
         {
-            rb.AddForce(speed);
+            //rb.AddForce(speed);
+            rb.MovePosition(transform.position + speed);
         }
     }
 

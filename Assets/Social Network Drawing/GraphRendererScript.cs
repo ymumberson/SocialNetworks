@@ -37,7 +37,8 @@ public class GraphRendererScript : MonoBehaviour
         lower = new Vector2(minX, minY);
         upper = new Vector2(maxX, maxY);
         centre = new Vector2((minX + maxX) / 2f, (minY + maxY) / 2f);
-        l = Mathf.Abs(maxX - minX)/5f;
+        //l = Mathf.Abs(maxX - minX)/5f;
+        l = Mathf.Abs(maxX - minX)/20f;
     }
 
     public Vector2 randomBoundedVector2()
@@ -95,10 +96,10 @@ public class GraphRendererScript : MonoBehaviour
             foreach (NodeScript other_node in nodeList)
             {
                 if (node == other_node) continue;
-                Vector3 other_pos = other_node.getPosition();
-                Vector3 accumulated_attraction = new Vector3(0, 0, 0);
-                Vector3 accumulated_target = new Vector3(0, 0, 0);
-                float numNeighbours = 0;
+                Vector2 other_pos = other_node.getPosition();
+                //Vector3 accumulated_attraction = new Vector3(0, 0, 0);
+                //Vector3 accumulated_target = new Vector3(0, 0, 0);
+                //float numNeighbours = 0;
                 if (node.hasNeighbour(other_node.agent))
                 {
                     //Debug.Log(attractiveForce(node,other_node));
@@ -110,21 +111,29 @@ public class GraphRendererScript : MonoBehaviour
                     //node.moveBy((other_pos - node_pos).normalized * attractiveForce(node, other_node));
 
                     //node.moveTowards(other_node.getPosition(), ((other_pos - node_pos).normalized * attractiveForce(node, other_node)));
-                    accumulated_attraction += ((other_pos - node_pos).normalized * attractiveForce(node, other_node));
-                    accumulated_target += other_pos;
-                    ++numNeighbours;
+                    //accumulated_attraction += ((other_pos - node_pos).normalized * attractiveForce(node, other_node));
+                    //accumulated_target += other_pos;
+                    //++numNeighbours;
+
+
+                    //node.moveBy(attractiveForce(node, other_node));
+                    node.moveTowards(other_pos, attractiveForce(node, other_node));
                 }
                 else
                 {
                     //Debug.Log(repulsiveForce(node, other_node));
                     //node.moveBy(Vector3.MoveTowards(other_pos, node_pos, 1f).normalized);
                     //Debug.Log("Not neighbour");
-                    node.moveBy((node_pos - other_pos).normalized * repulsiveForce(node, other_node));
+                    //node.moveBy((node_pos - other_pos).normalized * repulsiveForce(node, other_node));
+
+
+                    //node.moveBy(repulsiveForce(node, other_node));
+                    node.moveTowards(other_pos, repulsiveForce(node, other_node));
                 }
                 
                 //node.moveBy(accumulated_attraction);
-                accumulated_target /= numNeighbours;
-                node.moveTowards(accumulated_target, accumulated_attraction);
+                //accumulated_target /= numNeighbours;
+                //node.moveTowards(accumulated_target, accumulated_attraction);
                 
                 node.moveBy(towardsCentre(node.getPosition())); /* Just centring nodes */
             }
@@ -219,25 +228,24 @@ public class GraphRendererScript : MonoBehaviour
         density = numEdges / (float)(numNodes * (numNodes - 1));
     }
 
-    public float attractiveForce(NodeScript u, NodeScript v)
+    public Vector2 attractiveForce(NodeScript u, NodeScript v)
     {
-        if (u.getPosition().Equals(v.getPosition())) return 0;
+        if (u.getPosition().Equals(v.getPosition())) return Vector2.zero;
         Vector3 pU = u.getPosition();
         Vector3 pV = v.getPosition();
-        float length = Vector3.Distance(pU, pV);
+        float distance = Vector3.Distance(pU, pV);
 
-        return (l * l) / (length);
-        //return (length * length) / l;
+        return ((distance * distance) / l) * (v.getPosition() - u.getPosition()).normalized;
     }
 
-    public float repulsiveForce(NodeScript u, NodeScript v)
+    public Vector2 repulsiveForce(NodeScript u, NodeScript v)
     {
+        if (u.getPosition().Equals(v.getPosition())) return Vector2.zero;
         Vector3 pU = u.getPosition();
         Vector3 pV = v.getPosition();
-        float length = Vector3.Distance(pU, pV);
+        float distance = Vector3.Distance(pU, pV);
 
-        return (length*length) / (l*l*numNodes);
-       //return ((l*l) / (length*numNodes));
+        return ((l*l)/distance) * (v.getPosition() - u.getPosition()).normalized;
     }
 
     public void recalculateConnectivity()
