@@ -22,6 +22,7 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private float density;
     [SerializeField] private float avgConnectivity;
     [SerializeField] private float avgClusteringCoefficient;
+    [SerializeField] private float avgPathLength;
     private Vector2 lower, upper;
     private Vector2 centre;
 
@@ -84,6 +85,7 @@ public class GraphRendererScript : MonoBehaviour
         recalculateNetworkDensity();
         recalculateConnectivity();
         recalculateClusteringCoefficient();
+        calculateAveragePathLength();
     }
 
     public void repositionNodes()
@@ -235,5 +237,48 @@ public class GraphRendererScript : MonoBehaviour
             }
         }
         return ns_ls;
+    }
+
+    public void calculateAveragePathLength()
+    {
+        float total = 0;
+        List<int> ls = calculateAllShortestPaths();
+        foreach (int i in ls)
+        {
+            total += i;
+        }
+        this.avgPathLength = total / ls.Count;
+    }
+
+    public List<int> calculateAllShortestPaths()
+    {
+        List<int> path_lengths = new List<int>();
+
+        foreach (NodeScript root in nodeList)
+        {
+            /* Want to reset each time */
+            Queue<NodeScript> nodes_to_visit = new Queue<NodeScript>();
+            List<NodeScript> visited_nodes = new List<NodeScript>();
+
+            visited_nodes.Add(root);
+            nodes_to_visit.Enqueue(root);
+            int depth = 1;
+            while (nodes_to_visit.Count > 0)
+            {
+                NodeScript ns = nodes_to_visit.Dequeue();
+                foreach (NodeScript neighbour in ns.getNeighbourNodes())
+                {
+                    if (!visited_nodes.Contains(neighbour)) /* if not visited */
+                    {
+                        path_lengths.Add(depth);
+                        visited_nodes.Add(neighbour);
+                        nodes_to_visit.Enqueue(neighbour);
+                    }
+                }
+                ++depth;
+            }
+        }
+
+        return path_lengths;
     }
 }
