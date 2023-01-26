@@ -8,6 +8,7 @@ public class Agent : MonoBehaviour
     public enum AgeState { Child, Adult };
 
     [SerializeField] private int MAX_AGE;
+    [SerializeField] private NodeScript node;
     [SerializeField] private Agent[] parents;
     [SerializeField] private int age;
     [SerializeField] private AgeState age_state;
@@ -27,6 +28,7 @@ public class Agent : MonoBehaviour
 
     /* Internal stuff */
     private Transform transform;
+    
 
     /* Friendship Stuff */
     [SerializeField] MinHeap close_friends;
@@ -193,7 +195,8 @@ public class Agent : MonoBehaviour
         home.removeOccupant(this);
         Landscape.Instance.removeAgent(this);
         Debug.Log("Oh no am ded :(");
-        Destroy(this.gameObject);
+        //Destroy(this.gameObject);
+        (this.gameObject).SetActive(false);
     }
 
     public bool lookingForSpouse() /* Redefine later */
@@ -340,5 +343,25 @@ public class Agent : MonoBehaviour
     public bool hasFriends()
     {
         return !close_friends.isEmpty();
+    }
+
+    public void setNode(NodeScript ns)
+    {
+        this.node = ns;
+    }
+
+    public NodeScript getNode()
+    {
+        return this.node;
+    }
+
+    public Vector2 getNodePosition()
+    {
+        if (node == null) Debug.Log("Node is null dummy");
+        if (node == null)
+        {
+            return Vector2.positiveInfinity;
+        }
+        return node.getPosition();
     }
 }

@@ -260,6 +260,8 @@ MonoBehaviour:
   numEdges: 0
   density: 0
   avgConnectivity: 0
+  avgClusteringCoefficient: 0
+  avgPathLength: 0
 --- !u!1 &1018197017
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,8 +317,8 @@ MonoBehaviour:
   MIN_FRIENDS: 3
   MAX_FRIENDS: 7
   PERSONALITY_LENGTH: 20
-  TIME_AT_WORK_SCHOOL: 0
-  TIME_AT_HOME: 0
+  TIME_AT_WORK_SCHOOL: 0.1
+  TIME_AT_HOME: 0.1
   TIME_AT_SOCIAL: 1
   MIN_INITIAL_CHILDREN: 0
   MAX_INITIAL_CHILDREN: 3

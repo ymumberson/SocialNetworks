@@ -53,7 +53,7 @@ public class GraphRendererScript : MonoBehaviour
         NodeScript ns = Instantiate(NODE_TEMPLATE).GetComponent<NodeScript>();
         ns.setBounds(lower,upper);
         ns.setPosition(randomBoundedVector2());
-        ns.agent = a;
+        ns.setAgent(a);
         nodeList.Add(ns);
         ++numNodes;
     }
@@ -63,11 +63,16 @@ public class GraphRendererScript : MonoBehaviour
         NodeScript ns_to_remove = null;
         foreach (NodeScript ns in nodeList)
         {
-            if (ns.agent == a)
+            if (ns.getAgent() == a)
             {
                 ns_to_remove = ns;
                 ns.destroyAllEdges();
+                ns.removeFromAgent();
+                
+                /* Could either destroy the object or set it to inactive */
                 Destroy(ns.gameObject);
+                //ns.gameObject.SetActive(false);
+
                 break;
             }
         }
@@ -82,10 +87,10 @@ public class GraphRendererScript : MonoBehaviour
     {
         repositionNodes();
         redrawEdges();
-        recalculateNetworkDensity();
-        recalculateConnectivity();
-        recalculateClusteringCoefficient();
-        calculateAveragePathLength();
+        //recalculateNetworkDensity();
+        //recalculateConnectivity();
+        //recalculateClusteringCoefficient();
+        //calculateAveragePathLength();
     }
 
     public void repositionNodes()
@@ -98,7 +103,7 @@ public class GraphRendererScript : MonoBehaviour
             {
                 if (node == other_node) continue;
                 Vector2 other_pos = other_node.getPosition();
-                if (node.hasNeighbour(other_node.agent))
+                if (node.hasNeighbour(other_node.getAgent()))
                 {
                     node.moveTowards(other_pos, attractiveForce(node, other_node));
                 }
@@ -123,7 +128,9 @@ public class GraphRendererScript : MonoBehaviour
                 Vector2 pos = ns.getPosition();
                 for (int i = 0; i < neighbours.Length; ++i)
                 {
-                    Vector2 neighbour_pos = getPosition(neighbours[i]);
+                    //Vector2 neighbour_pos = getPosition(neighbours[i]);
+                    Vector2 neighbour_pos = neighbours[i].getNodePosition();
+                    if (neighbour_pos.Equals(Vector2.positiveInfinity)) continue;
                     if (!neighbour_pos.Equals(Vector2.positiveInfinity)) /* ie neighbour is valid */
                     {
                         /* Creates a new edge */
@@ -140,18 +147,18 @@ public class GraphRendererScript : MonoBehaviour
         }
     }
 
-    public Vector2 getPosition(Agent a)
-    {
-        foreach (NodeScript ns in nodeList)
-        {
-            if (ns.agent == a)
-            {
-                return ns.getPosition();
-            }
-        }
+    //public Vector2 getPosition(Agent a)
+    //{
+    //    foreach (NodeScript ns in nodeList)
+    //    {
+    //        if (ns.getAgent() == a)
+    //        {
+    //            return ns.getPosition();
+    //        }
+    //    }
 
-        return Vector2.positiveInfinity; /* ie ERROR */
-    }
+    //    return Vector2.positiveInfinity; /* ie ERROR */
+    //}
 
     private void recalculateNetworkDensity()
     {
@@ -192,7 +199,7 @@ public class GraphRendererScript : MonoBehaviour
             {
                 foreach (NodeScript other in nodeList)
                 {
-                    if (ns.hasNeighbour(other.agent))
+                    if (ns.hasNeighbour(other.getAgent()))
                     {
                         ns.incrementDegreeOfConnectivity();
                         other.incrementDegreeOfConnectivity();
@@ -225,19 +232,19 @@ public class GraphRendererScript : MonoBehaviour
         return (centre - pos).normalized / l; /* opposite way around bc graph is in negative coordinate space */
     }
 
-    public List<NodeScript> getNodes(Agent[] agents)
-    {
-        List<Agent> agent_ls = new List<Agent>(agents);
-        List<NodeScript> ns_ls = new List<NodeScript>();
-        foreach (NodeScript ns in nodeList)
-        {
-            if (agent_ls.Contains(ns.agent))
-            {
-                ns_ls.Add(ns);
-            }
-        }
-        return ns_ls;
-    }
+    //public List<NodeScript> getNodes(Agent[] agents)
+    //{
+    //    List<Agent> agent_ls = new List<Agent>(agents);
+    //    List<NodeScript> ns_ls = new List<NodeScript>();
+    //    foreach (NodeScript ns in nodeList)
+    //    {
+    //        if (agent_ls.Contains(ns.getAgent()))
+    //        {
+    //            ns_ls.Add(ns);
+    //        }
+    //    }
+    //    return ns_ls;
+    //}
 
     public void calculateAveragePathLength()
     {

@@ -131,8 +131,8 @@ public class MinHeap
         }
 
         /* If queue doesn't have room, or new agent is a worse friend */
-        if (!(a.comparePersonality(this.owner.getPersonality()) > cost(size-1))) return false;
-        agents[size-1] = a;
+        if (!(a.comparePersonality(this.owner.getPersonality()) > cost(size - 1))) return false;
+        agents[size - 1] = a;
         minHeapify(0);
 
         //int i = size-1;
@@ -146,7 +146,21 @@ public class MinHeap
 
     public Agent[] getAgents()
     {
-        return agents;
+        //return agents;
+        return getAllActiveAgents();
+    }
+
+    public Agent[] getAllActiveAgents()
+    {
+        List<Agent> ls = new List<Agent>();
+        for (int i=0; i<agents.Length; ++i)
+        {
+            if (agents[i] != null && agents[i].isActiveAndEnabled)
+            {
+                ls.Add(agents[i]);
+            }
+        }
+        return ls.ToArray();
     }
 
     public bool contains(Agent a)

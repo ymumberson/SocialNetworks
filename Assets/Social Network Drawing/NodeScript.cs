@@ -13,7 +13,7 @@ public class NodeScript : MonoBehaviour
      *          in turn linked to each other.
      */
     private Transform transform;
-    public Agent agent;
+    [SerializeField] private Agent agent;
     private List<LineRenderer> edges;
     [SerializeField] private int degreeOfConnectivity;
     private Rigidbody2D rb;
@@ -45,6 +45,17 @@ public class NodeScript : MonoBehaviour
         upperBound = upper;
     }
 
+    public void setAgent(Agent a)
+    {
+        this.agent = a;
+        this.agent.setNode(this);
+    }
+
+    public Agent getAgent()
+    {
+        return this.agent;
+    }
+
     private void keepInBounds()
     {
         Vector2 pos = transform.position;
@@ -70,6 +81,7 @@ public class NodeScript : MonoBehaviour
 
     public Vector2 getPosition()
     {
+        if (transform == null) Debug.Log("So the script isn't null but the transform is?");
         return transform.position;
     }
 
@@ -103,7 +115,17 @@ public class NodeScript : MonoBehaviour
 
     public List<NodeScript> getNeighbourNodes()
     {
-        return Landscape.Instance.getGraphRenderer().getNodes(getNeighbours());
+        //return Landscape.Instance.getGraphRenderer().getNodes(getNeighbours());
+        List<NodeScript> ls = new List<NodeScript>();
+        foreach (Agent a in getNeighbours())
+        {
+            if (a != null)
+            {
+                ls.Add(a.getNode());
+            }
+            
+        }
+        return ls;
     }
 
     public bool hasNeighbours()
@@ -182,5 +204,13 @@ public class NodeScript : MonoBehaviour
     public float getClusteringCoefficient()
     {
         return this.clusteringCoefficient;
+    }
+
+    public void removeFromAgent()
+    {
+        //if (this.agent != null)
+        //{
+        //    this.agent.setNode(null);
+        //}
     }
 }
