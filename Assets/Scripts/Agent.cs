@@ -425,7 +425,10 @@ public class Agent : MonoBehaviour
 
     public void tryToArrangeSocialMeetup()
     {
-        socialMeetupRule1();
+        if (Random.value <= Parameters.Instance.DAILY_CHANCE_OF_SOCIAL_MEETUP)
+        {
+            socialMeetupRule1();
+        }
     }
 
     private void socialMeetupRule1()

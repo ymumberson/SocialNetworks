@@ -24,6 +24,8 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private float avgClusteringCoefficient;
     [SerializeField] private float avgPathLength;
     [SerializeField] private float percent_nodes_that_can_reach_all_nodes;
+    [SerializeField] private float maxDepth;
+    [SerializeField] private float avgDepth;
     private Vector2 lower, upper;
     private Vector2 centre;
 
@@ -270,6 +272,7 @@ public class GraphRendererScript : MonoBehaviour
     public List<int> calculateAllShortestPaths()
     {
         List<int> path_lengths = new List<int>();
+        List<int> max_depth_ls = new List<int>();
         float num_nodes_that_can_reach_all_nodes = 0;
         foreach (NodeScript root in nodeList)
         {
@@ -282,10 +285,12 @@ public class GraphRendererScript : MonoBehaviour
             nodes_to_visit.Enqueue(root);
             depth_queue.Enqueue(1);
             //int depth = 1;
+            int maxDepth = 0;
             while (nodes_to_visit.Count > 0)
             {
                 NodeScript ns = nodes_to_visit.Dequeue();
                 int depth = depth_queue.Dequeue();
+                maxDepth = depth;
                 foreach (NodeScript neighbour in ns.getNeighbourNodes())
                 {
                     if (!visited_nodes.Contains(neighbour)) /* if not visited */
@@ -298,12 +303,24 @@ public class GraphRendererScript : MonoBehaviour
                     }
                 }
             }
+            max_depth_ls.Add(maxDepth);
             root.setCanReachAllNodes(visited_nodes.Count == numNodes);
             if (root.getCanReachAlNodes())
             {
                 ++num_nodes_that_can_reach_all_nodes;
             }
         }
+        this.avgDepth = 0;
+        this.maxDepth = 0;
+        foreach (int dep in max_depth_ls)
+        {
+            avgDepth += dep;
+            if (dep > maxDepth)
+            {
+                maxDepth = dep;
+            }
+        }
+        this.avgDepth /= max_depth_ls.Count;
         this.percent_nodes_that_can_reach_all_nodes = num_nodes_that_can_reach_all_nodes / numNodes;
         return path_lengths;
     }
