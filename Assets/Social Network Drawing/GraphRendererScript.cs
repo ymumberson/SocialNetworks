@@ -8,7 +8,7 @@ public class GraphRendererScript : MonoBehaviour
      * Characteristics we need to calculate:
      * 1) Size: DONE
      *      -> Number of nodes or edges.
-     * 2) Path length: TODO
+     * 2) Path length: DONE
      *      -> Distance between a pair of nodes (Probably store the average)
      * 3) Whole network density: DONE
      *      -> Ratio of actual edges to the maximum number of edges.
@@ -23,6 +23,7 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private float avgConnectivity;
     [SerializeField] private float avgClusteringCoefficient;
     [SerializeField] private float avgPathLength;
+    [SerializeField] private float percent_nodes_that_can_reach_all_nodes;
     private Vector2 lower, upper;
     private Vector2 centre;
 
@@ -246,6 +247,11 @@ public class GraphRendererScript : MonoBehaviour
     //    return ns_ls;
     //}
 
+    /// <summary>
+    /// Calculates the average shortest path lengths of REACHABLE nodes for each node. 
+    /// This means that a low average shortest path length might actually indicate isolated clusters, and not 
+    /// a low complete reachability.
+    /// </summary>
     public void calculateAveragePathLength()
     {
         float total = 0;
@@ -257,22 +263,29 @@ public class GraphRendererScript : MonoBehaviour
         this.avgPathLength = total / ls.Count;
     }
 
+    /// <summary>
+    /// Returns all shortest paths of REACHABLE nodes for each node.
+    /// </summary>
+    /// <returns></returns>
     public List<int> calculateAllShortestPaths()
     {
         List<int> path_lengths = new List<int>();
-
+        float num_nodes_that_can_reach_all_nodes = 0;
         foreach (NodeScript root in nodeList)
         {
             /* Want to reset each time */
             Queue<NodeScript> nodes_to_visit = new Queue<NodeScript>();
             List<NodeScript> visited_nodes = new List<NodeScript>();
+            Queue<int> depth_queue = new Queue<int>();
 
             visited_nodes.Add(root);
             nodes_to_visit.Enqueue(root);
-            int depth = 1;
+            depth_queue.Enqueue(1);
+            //int depth = 1;
             while (nodes_to_visit.Count > 0)
             {
                 NodeScript ns = nodes_to_visit.Dequeue();
+                int depth = depth_queue.Dequeue();
                 foreach (NodeScript neighbour in ns.getNeighbourNodes())
                 {
                     if (!visited_nodes.Contains(neighbour)) /* if not visited */
@@ -280,13 +293,18 @@ public class GraphRendererScript : MonoBehaviour
                         path_lengths.Add(depth);
                         visited_nodes.Add(neighbour);
                         nodes_to_visit.Enqueue(neighbour);
+                        depth_queue.Enqueue(depth + 1);
                         //Debug.Log("Path length: " + depth);
                     }
                 }
-                ++depth;
+            }
+            root.setCanReachAllNodes(visited_nodes.Count == numNodes);
+            if (root.getCanReachAlNodes())
+            {
+                ++num_nodes_that_can_reach_all_nodes;
             }
         }
-
+        this.percent_nodes_that_can_reach_all_nodes = num_nodes_that_can_reach_all_nodes / numNodes;
         return path_lengths;
     }
 }

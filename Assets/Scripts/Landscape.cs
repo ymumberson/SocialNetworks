@@ -150,6 +150,7 @@ public class Landscape : MonoBehaviour
                         ++year;
                         ageAllAgents();
                     }
+                    resetAllAgentSocialMeetupCounters();
                 }
                 break;
         }
@@ -215,6 +216,14 @@ public class Landscape : MonoBehaviour
         foreach(Agent a in agents)
         {
             a.removeSocialMeetupBuilding();
+        }
+    }
+    
+    public void resetAllAgentSocialMeetupCounters()
+    {
+        foreach (Agent a in agents)
+        {
+            a.resetNumSocialMeetups();
         }
     }
 

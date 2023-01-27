@@ -24,6 +24,7 @@ public class NodeScript : MonoBehaviour
     /// This stores the value of clustering coefficient from when it was last calculated.
     /// </summary>
     [SerializeField] private float clusteringCoefficient;
+    [SerializeField] private bool canReachAllNodes;
 
     private void Awake()
     {
@@ -180,8 +181,8 @@ public class NodeScript : MonoBehaviour
         float numEdgesBetweenNeighbours = 0;
         List<NodeScript> neighbourNodes = getNeighbourNodes();
 
-        /* If node has no neighbours then return zero to avoid NaN */
-        if (neighbourNodes.Count == 0)
+        /* If node has none or one neighbours then return zero to avoid NaN */
+        if (neighbourNodes.Count <= 1)
         {
             this.clusteringCoefficient = 0;
             return;
@@ -220,5 +221,15 @@ public class NodeScript : MonoBehaviour
         //{
         //    this.agent.setNode(null);
         //}
+    }
+
+    public void setCanReachAllNodes(bool b)
+    {
+        this.canReachAllNodes = b;
+    }
+
+    public bool getCanReachAlNodes()
+    {
+        return this.canReachAllNodes;
     }
 }
