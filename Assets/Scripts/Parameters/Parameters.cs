@@ -21,6 +21,8 @@ public class Parameters : MonoBehaviour
     [SerializeField] public int MIN_FRIENDS = 3;
     [SerializeField] public int MAX_FRIENDS = 7;
     [SerializeField] public int PERSONALITY_LENGTH = 5; /* Probably change to 100 later */
+    [SerializeField] public int MAX_NUMBER_OF_SOCIAL_MEETUPS_PER_WEEK = 2;
+    [SerializeField] public float DAILY_CHANCE_OF_SOCIAL_MEETUP = 0.1f; /* Percentage chance */
 
     /* Daily Parameters */
     [SerializeField] public float TIME_AT_WORK_SCHOOL = 1f;

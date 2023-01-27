@@ -6,7 +6,7 @@ public class Landscape : MonoBehaviour
 {
     public static Landscape Instance;
     
-    public enum TimeState { Morning, Midday, HomeTime, NightTime }
+    public enum TimeState { Morning, Midday, WalkingToSocial, SocialTime, HomeTime,  NightTime }
 
     /* Externally visible variables */
     [SerializeField] private Texture2D MAP_IMAGE;
@@ -22,9 +22,7 @@ public class Landscape : MonoBehaviour
     private int width, height;
     [SerializeField] private List<Agent> agents;
     private float turn_timer = 0f;
-    [SerializeField] private float work_school_timer;
-    [SerializeField] private float home_timer;
-    [SerializeField] private float social_timer;
+    [SerializeField] private float timer;
     [SerializeField] private int num_adults;
     [SerializeField] private int num_children;
 
@@ -68,18 +66,18 @@ public class Landscape : MonoBehaviour
             turn_timer = 0f;
             updateAgentPaths();
 
-            num_adults = 0;
-            num_children = 0;
-            foreach (Agent a in agents)
-            {
-                if (a.isAdult())
-                {
-                    ++num_adults;
-                } else
-                {
-                    ++num_children;
-                }
-            }
+            //num_adults = 0;
+            //num_children = 0;
+            //foreach (Agent a in agents)
+            //{
+            //    if (a.isAdult())
+            //    {
+            //        ++num_adults;
+            //    } else
+            //    {
+            //        ++num_children;
+            //    }
+            //}
         }
         
     }
@@ -89,39 +87,60 @@ public class Landscape : MonoBehaviour
         switch (time)
         {
             case TimeState.Morning:
-                //updateAllAgentPaths();
-                teleportAgentsToDestinations();
+                updateAllAgentPaths();
+                //teleportAgentsToDestinations();
                 if (allAgentsReachedDestination())
                 {
                     time = TimeState.Midday;
                 }
                 break;
             case TimeState.Midday:
-                
-                work_school_timer += Time.fixedDeltaTime;
-                if (work_school_timer > Parameters.Instance.TIME_AT_WORK_SCHOOL)
+
+                timer += Time.fixedDeltaTime;
+                if (timer > Parameters.Instance.TIME_AT_WORK_SCHOOL)
                 {
                     dailyUpdateAllAgents(); /* Update their states halfway through the day ie at work/school */
-                    work_school_timer = 0;
-                    time = TimeState.HomeTime;
+                    timer = 0;
+                    time = TimeState.WalkingToSocial;
                     updateWorkSchoolFriends();
+                    tryArrangeSocialMeetups();
+                    //setAllAgentPathsToHome();
+                    setAllAgentPathsToHomeOrSocial();
+                    updateSocialNetworkGraph();
+                }
+                break;
+            case TimeState.WalkingToSocial:
+                updateAllAgentPaths();
+                if (allAgentsReachedDestination())
+                {
+                    time = TimeState.SocialTime;
+                }
+                break;
+            case TimeState.SocialTime:
+                timer += Time.fixedDeltaTime;
+                if (timer > Parameters.Instance.TIME_AT_SOCIAL)
+                {
+                    timer = 0;
+                    time = TimeState.HomeTime;
                     setAllAgentPathsToHome();
+                    removeAllSocialMeetupBuildings();
+                    updateSocialBuildingFriends();
                     updateSocialNetworkGraph();
                 }
                 break;
             case TimeState.HomeTime:
-                //updateAllAgentPaths();
-                teleportAgentsToDestinations();
+                updateAllAgentPaths();
+                //teleportAgentsToDestinations();
                 if (allAgentsReachedDestination())
                 {
                     time = TimeState.NightTime;
                 }
                 break;
             case TimeState.NightTime:
-                home_timer += Time.fixedDeltaTime;
-                if (home_timer > Parameters.Instance.TIME_AT_HOME)
+                timer += Time.fixedDeltaTime;
+                if (timer > Parameters.Instance.TIME_AT_HOME)
                 {
-                    home_timer = 0;
+                    timer = 0;
                     time = TimeState.Morning;
                     setAllAgentPathsToWorkSchool();
                     ++day;
@@ -162,11 +181,57 @@ public class Landscape : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// For each agent, tries to add every other agent who is in the same building to
+    /// the agent's close friends list.
+    /// </summary>
+    public void updateSocialBuildingFriends()
+    {
+        foreach (Agent a in agents)
+        {
+            if (!a.isAttendingSocialMeetupToday()) continue;
+            foreach (Agent other in agents)
+            {
+                if (other == a) continue;
+                if (a.getSocialMeetupBuilding() == other.getSocialMeetupBuilding())
+                {
+                    //Debug.Log("Trying to make a friend from the social");
+                    a.tryAddFriend(other);
+                }
+            }
+        }
+    }
+
+    public void tryArrangeSocialMeetups()
+    {
+        foreach (Agent a in agents)
+        {
+            a.tryToArrangeSocialMeetup();
+        }
+    }
+
+    public void removeAllSocialMeetupBuildings()
+    {
+        foreach(Agent a in agents)
+        {
+            a.removeSocialMeetupBuilding();
+        }
+    }
+
     public void ageAllAgents()
     {
-        foreach (Agent a in agents.ToArray())
+        num_adults = 0;
+        num_children = 0;
+        foreach (Agent a in agents.ToArray()) /* Convert to array to avoid collection modified enumeration error */
         {
             a.incrementAge();
+            if (a.isAdult())
+            {
+                ++num_adults;
+            } else
+            {
+                ++num_children;
+            }
         }
     }
 
@@ -202,6 +267,32 @@ public class Landscape : MonoBehaviour
         foreach (Agent a in agents)
         {
             a.calculatePathToHome();
+        }
+    }
+
+    public void trySetAllAgentPathsToSocial()
+    {
+        foreach (Agent a in agents)
+        {
+            if (a.isAttendingSocialMeetupToday())
+            {
+                a.calculatePathToSocial();
+            }
+        }
+    }
+
+    public void setAllAgentPathsToHomeOrSocial()
+    {
+        foreach (Agent a in agents)
+        {
+            if (a.isAttendingSocialMeetupToday())
+            {
+                a.calculatePathToSocial();
+            } 
+            else
+            {
+                a.calculatePathToHome();
+            }
         }
     }
 
@@ -301,16 +392,39 @@ public class Landscape : MonoBehaviour
         return ls.ToArray();
     }
 
+    public Social[] getAllSocials()
+    {
+        List<Social> ls = new List<Social>();
+
+        for (int j = 0; j < height; ++j)
+        {
+            for (int i = 0; i < width; ++i)
+            {
+                if (terrain[i, j].tile.tile_type == Tile.TileType.Social)
+                {
+                    ls.Add((Social)terrain[i, j].tile);
+                }
+            }
+        }
+        return ls.ToArray();
+    }
+
     public School getRandomSchool()
     {
         School[] schools = getAllSchools();
-        return schools[Random.Range(0, schools.Length - 1)];
+        return schools[Random.Range(0, schools.Length)];
     }
 
     public Workplace getRandomWorkplace()
     {
         Workplace[] workplaces = getAllWorkplaces();
-        return workplaces[Random.Range(0, workplaces.Length - 1)];
+        return workplaces[Random.Range(0, workplaces.Length)];
+    }
+
+    public Social getRandomSocial()
+    {
+        Social[] socials = getAllSocials();
+        return socials[Random.Range(0, socials.Length)];
     }
 
     public void removeAgent(Agent a)

@@ -20,6 +20,9 @@ public class Agent : MonoBehaviour
     [SerializeField] private Agent spouse;
     [SerializeField] private List<Agent> offspring;
     [SerializeField] private string personality;
+    [SerializeField] private int num_social_meetups;
+    [SerializeField] private bool is_attending_social_meetup_today;
+    [SerializeField] private Social social_meetup_building;
     private List<Vector2> path;
     //private List<Vector2> path_to_work;
 
@@ -60,6 +63,8 @@ public class Agent : MonoBehaviour
         this.offspring = new List<Agent>();
         this.personality = personality;
         this.close_friends = new MinHeap(this,Random.Range(Parameters.Instance.MIN_FRIENDS, Parameters.Instance.MAX_FRIENDS));
+        this.num_social_meetups = 0;
+        this.is_attending_social_meetup_today = false;
 
         this.moveTo(new Vector2(home.x, home.y));
     }
@@ -99,6 +104,11 @@ public class Agent : MonoBehaviour
     public void calculatePathToWorkSchool()
     {
         path = Landscape.Instance.pathFind(new Vector2(this.x, this.y), new Vector2(work_school.x, work_school.y));
+    }
+
+    public void calculatePathToSocial()
+    {
+        path = Landscape.Instance.pathFind(new Vector2(this.x, this.y), new Vector2(social_meetup_building.x, social_meetup_building.y));
     }
 
     public void moveAlongPath()
@@ -363,5 +373,84 @@ public class Agent : MonoBehaviour
             return Vector2.positiveInfinity;
         }
         return node.getPosition();
+    }
+
+    public bool canAttentSocialMeetup()
+    {
+        return this.numSocialMeetupsBelowThreshold() && !isAttendingSocialMeetupToday();
+    }
+
+    public bool isAttendingSocialMeetupToday()
+    {
+        return this.is_attending_social_meetup_today;
+    }
+
+    public bool numSocialMeetupsBelowThreshold()
+    {
+        return this.num_social_meetups < Parameters.Instance.MAX_NUMBER_OF_SOCIAL_MEETUPS_PER_WEEK;
+    }
+
+    public void resetNumSocialMeetups()
+    {
+        this.num_social_meetups = 0;
+    }
+
+    public void incrementNumSocialMeetups()
+    {
+        ++num_social_meetups;
+    }
+
+    public void setSocialMeetupBuilding(Social s)
+    {
+        if (s == null)
+        {
+            removeSocialMeetupBuilding();
+            return;
+        }
+        this.social_meetup_building = s;
+        this.is_attending_social_meetup_today = true;
+        this.incrementNumSocialMeetups();
+    }
+
+    public void removeSocialMeetupBuilding()
+    {
+        this.social_meetup_building = null;
+        this.is_attending_social_meetup_today = false;
+    }
+
+    public Social getSocialMeetupBuilding()
+    {
+        return this.social_meetup_building;
+    }
+
+    public void tryToArrangeSocialMeetup()
+    {
+        socialMeetupRule1();
+    }
+
+    private void socialMeetupRule1()
+    {
+        if (this.canAttentSocialMeetup())
+        {
+            /* TODO Pick to meet friends or family -> For now just friends */
+            Agent[] agents = this.getFriends();
+            List<Agent> available_agents = new List<Agent>();
+            foreach (Agent a in agents)
+            {
+                if (a.canAttentSocialMeetup())
+                {
+                    available_agents.Add(a);
+                }
+            }
+            if (available_agents.Count > 0) /* No need for a second loop here really */
+            {
+                Social s = Landscape.Instance.getRandomSocial();
+                this.setSocialMeetupBuilding(s);
+                foreach (Agent a in available_agents)
+                {
+                    a.setSocialMeetupBuilding(s);
+                }
+            }
+        }
     }
 }

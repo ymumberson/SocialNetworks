@@ -179,6 +179,14 @@ public class NodeScript : MonoBehaviour
         /* Loop through each neighbour, and for each neighbour count the edges with other neighbours of THIS node */
         float numEdgesBetweenNeighbours = 0;
         List<NodeScript> neighbourNodes = getNeighbourNodes();
+
+        /* If node has no neighbours then return zero to avoid NaN */
+        if (neighbourNodes.Count == 0)
+        {
+            this.clusteringCoefficient = 0;
+            return;
+        }
+
         foreach (NodeScript nb_node in neighbourNodes)
         {
             List<NodeScript> neighbour_neighbourNodes = nb_node.getNeighbourNodes();

@@ -87,10 +87,10 @@ public class GraphRendererScript : MonoBehaviour
     {
         repositionNodes();
         redrawEdges();
-        //recalculateNetworkDensity();
-        //recalculateConnectivity();
-        //recalculateClusteringCoefficient();
-        //calculateAveragePathLength();
+        recalculateNetworkDensity();
+        recalculateConnectivity();
+        recalculateClusteringCoefficient();
+        calculateAveragePathLength();
     }
 
     public void repositionNodes()
@@ -280,6 +280,7 @@ public class GraphRendererScript : MonoBehaviour
                         path_lengths.Add(depth);
                         visited_nodes.Add(neighbour);
                         nodes_to_visit.Enqueue(neighbour);
+                        //Debug.Log("Path length: " + depth);
                     }
                 }
                 ++depth;
