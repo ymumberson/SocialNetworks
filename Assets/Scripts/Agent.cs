@@ -375,9 +375,14 @@ public class Agent : MonoBehaviour
         return node.getPosition();
     }
 
-    public bool canAttentSocialMeetup()
+    public bool canAttendSocialMeetup()
     {
         return this.numSocialMeetupsBelowThreshold() && !isAttendingSocialMeetupToday();
+    }
+
+    public bool canAttendSocialMeetup(Social s)
+    {
+        return this.canAttendSocialMeetup() && s.forAdults() == this.isAdult();
     }
 
     public bool isAttendingSocialMeetupToday()
@@ -433,21 +438,30 @@ public class Agent : MonoBehaviour
 
     private void socialMeetupRule1()
     {
-        if (this.canAttentSocialMeetup())
+        if (this.canAttendSocialMeetup())
         {
             /* TODO Pick to meet friends or family -> For now just friends */
             Agent[] agents = this.getFriends();
             List<Agent> available_agents = new List<Agent>();
+            //Social s = Landscape.Instance.getRandomSocial();
+            Social s;
+            if (this.isAdult())
+            {
+                s = Landscape.Instance.getRandomAdultSocial();
+            } 
+            else
+            {
+                s = Landscape.Instance.getRandomChildSocial();
+            }
             foreach (Agent a in agents)
             {
-                if (a.canAttentSocialMeetup())
+                if (a.canAttendSocialMeetup(s))
                 {
                     available_agents.Add(a);
                 }
             }
             if (available_agents.Count > 0) /* No need for a second loop here really */
             {
-                Social s = Landscape.Instance.getRandomSocial();
                 this.setSocialMeetupBuilding(s);
                 foreach (Agent a in available_agents)
                 {

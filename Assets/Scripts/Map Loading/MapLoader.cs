@@ -42,7 +42,7 @@ public class MapLoader : MonoBehaviour
                 else if (colour_equals(current_pixel_colour, yellow))
                 {
                     terrain[i, j].GetComponent<SpriteRenderer>().color = Color.yellow;
-                    terrain[i, j].GetComponent<TileInfo>().tile = new Social(i, j);
+                    terrain[i, j].GetComponent<TileInfo>().tile = new Social(i, j, (Random.value <= Parameters.Instance.PERCENT_CHILD_SOCIAL_BUILDINGS));
                 }
                 else if (colour_equals(current_pixel_colour, blue))
                 {

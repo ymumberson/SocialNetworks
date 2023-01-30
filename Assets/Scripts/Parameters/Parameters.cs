@@ -37,6 +37,9 @@ public class Parameters : MonoBehaviour
     [SerializeField] public int MIN_INITIAL_CHILD_AGE = 0;
     [SerializeField] public int MAX_INITIAL_CHILD_AGE = 17;
 
+    /* Terrain Generation Parameters */
+    [SerializeField] public float PERCENT_CHILD_SOCIAL_BUILDINGS = 0.2f;
+
     private void Awake()
     {
         if (Instance)

@@ -35,7 +35,7 @@ public class Landscape : MonoBehaviour
         {
             Instance = this;
         }
-        
+
         terrain = new MapLoader().textureToGameArray(MAP_IMAGE,TILE_TEMPLATE); // TODO -> Doesn't like the 'new' keyword!
         this.width = terrain.GetLength(0); // Right now map is 50x50 so idk if these dimensions are correct :(
         this.height = terrain.GetLength(1);
@@ -418,6 +418,42 @@ public class Landscape : MonoBehaviour
         return ls.ToArray();
     }
 
+    public Social[] getAllChildSocials()
+    {
+        List<Social> ls = new List<Social>();
+
+        for (int j = 0; j < height; ++j)
+        {
+            for (int i = 0; i < width; ++i)
+            {
+                if (terrain[i, j].tile.tile_type == Tile.TileType.Social
+                    && ((Social)(terrain[i, j].tile)).forChildren())
+                {
+                    ls.Add((Social)terrain[i, j].tile);
+                }
+            }
+        }
+        return ls.ToArray();
+    }
+
+    public Social[] getAllAdultSocials()
+    {
+        List<Social> ls = new List<Social>();
+
+        for (int j = 0; j < height; ++j)
+        {
+            for (int i = 0; i < width; ++i)
+            {
+                if (terrain[i, j].tile.tile_type == Tile.TileType.Social
+                    && ((Social)(terrain[i, j].tile)).forAdults())
+                {
+                    ls.Add((Social)terrain[i, j].tile);
+                }
+            }
+        }
+        return ls.ToArray();
+    }
+
     public School getRandomSchool()
     {
         School[] schools = getAllSchools();
@@ -433,6 +469,18 @@ public class Landscape : MonoBehaviour
     public Social getRandomSocial()
     {
         Social[] socials = getAllSocials();
+        return socials[Random.Range(0, socials.Length)];
+    }
+
+    public Social getRandomChildSocial()
+    {
+        Social[] socials = getAllChildSocials();
+        return socials[Random.Range(0, socials.Length)];
+    }
+
+    public Social getRandomAdultSocial()
+    {
+        Social[] socials = getAllAdultSocials();
         return socials[Random.Range(0, socials.Length)];
     }
 

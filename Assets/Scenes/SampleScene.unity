@@ -262,6 +262,9 @@ MonoBehaviour:
   avgConnectivity: 0
   avgClusteringCoefficient: 0
   avgPathLength: 0
+  percent_nodes_that_can_reach_all_nodes: 0
+  maxDepth: 0
+  avgDepth: 0
 --- !u!1 &1018197017
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,9 +320,11 @@ MonoBehaviour:
   MIN_FRIENDS: 3
   MAX_FRIENDS: 7
   PERSONALITY_LENGTH: 20
+  MAX_NUMBER_OF_SOCIAL_MEETUPS_PER_WEEK: 2
+  DAILY_CHANCE_OF_SOCIAL_MEETUP: 0.1
   TIME_AT_WORK_SCHOOL: 0.5
   TIME_AT_HOME: 0.5
-  TIME_AT_SOCIAL: 1
+  TIME_AT_SOCIAL: 0.5
   MIN_INITIAL_CHILDREN: 0
   MAX_INITIAL_CHILDREN: 3
   MIN_INITIAL_PARENT_AGE: 20
@@ -401,7 +406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69ea4c7b0903acf4b89c243b673df0e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MAP_IMAGE: {fileID: 2800000, guid: 6f9a0ff126e59fb4ebfb7fff0323a072, type: 3}
+  MAP_IMAGE: {fileID: 2800000, guid: 1fdccdcf1c73e27469517546ef4a2d01, type: 3}
   TILE_TEMPLATE: {fileID: 5565839179423602630, guid: 20100528dc8055649873138ca42f89e1, type: 3}
   AGENT_TEMPLATE: {fileID: 5018756405826311313, guid: d359af58d870a7647b7044ce0923943a, type: 3}
   graphRenderer: {fileID: 767240267}
@@ -409,9 +414,7 @@ MonoBehaviour:
   year: 0
   time: 0
   agents: []
-  work_school_timer: 0
-  home_timer: 0
-  social_timer: 0
+  timer: 0
   num_adults: 0
   num_children: 0
 --- !u!4 &1191486956
