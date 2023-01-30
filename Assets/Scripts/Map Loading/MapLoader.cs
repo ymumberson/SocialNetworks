@@ -21,6 +21,7 @@ public class MapLoader : MonoBehaviour
 
         Color current_pixel_colour;
         GameObject go;
+        List<Social> social_ls = new List<Social>();
         for (int j = 0; j < texture.height; ++j)
         {
             for (int i = 0; i < texture.width; ++i)
@@ -42,7 +43,8 @@ public class MapLoader : MonoBehaviour
                 else if (colour_equals(current_pixel_colour, yellow))
                 {
                     terrain[i, j].GetComponent<SpriteRenderer>().color = Color.yellow;
-                    terrain[i, j].GetComponent<TileInfo>().tile = new Social(i, j, (Random.value <= Parameters.Instance.PERCENT_CHILD_SOCIAL_BUILDINGS));
+                    terrain[i, j].GetComponent<TileInfo>().tile = new Social(i, j, false); /* Default to forAdults */
+                    social_ls.Add((Social)terrain[i, j].tile);
                 }
                 else if (colour_equals(current_pixel_colour, blue))
                 {
@@ -63,8 +65,30 @@ public class MapLoader : MonoBehaviour
                 {
                     Debug.Log(((int)(current_pixel_colour.r * 1000)) + "," + ((int)(current_pixel_colour.g * 1000)) + "," + ((int)(current_pixel_colour.b * 1000)));
                 }
+                Debug.Log("Tile size: " + terrain[i, j].GetComponent<SpriteRenderer>().size);
             }
         }
+
+        /* Count total number of social buildings, and calculate number to set to child only */
+        if (social_ls.Count <= 1) return null; /* ie error */
+        int num_child_socials = (int) Mathf.Ceil(social_ls.Count * Parameters.Instance.PERCENT_CHILD_SOCIAL_BUILDINGS);
+        if (num_child_socials == 0 || social_ls.Count - num_child_socials == 0) return null; /* ie error */
+
+        /* Shuffle the list */
+        for (int i=0; i<social_ls.Count; ++i)
+        {
+            int randomIndex = Random.Range(0, social_ls.Count);
+            Social temp = social_ls[i];
+            social_ls[i] = social_ls[randomIndex];
+            social_ls[randomIndex] = temp;
+        }
+        
+        /* Set the first 'num_child_social' many Socials to forChildren */
+        for (int i=0; i<num_child_socials; ++i)
+        {
+            social_ls[i].setForChildren(true);
+        }
+
         return terrain;
     }
 

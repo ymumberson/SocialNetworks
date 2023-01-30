@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4295606643547028485}
   - component: {fileID: 5160415854738437214}
   - component: {fileID: 1369607251485945791}
+  - component: {fileID: -6108473419313867993}
   m_Layer: 0
   m_Name: agent_template
   m_TagString: Untagged
@@ -95,3 +96,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7206602fc3dfbdf4c90f1686e9045380, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_AGE: 0
+  node: {fileID: 0}
+  parents: []
+  age: 0
+  age_state: 0
+  gender: 0
+  x: 0
+  y: 0
+  home_owner: 0
+  spouse: {fileID: 0}
+  offspring: []
+  personality: 
+  num_social_meetups: 0
+  is_attending_social_meetup_today: 0
+  close_friends:
+    agents: []
+    size: 0
+    max_size: 0
+--- !u!58 &-6108473419313867993
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5018756405826311313}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5

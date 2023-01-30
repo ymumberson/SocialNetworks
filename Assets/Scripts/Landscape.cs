@@ -8,11 +8,15 @@ public class Landscape : MonoBehaviour
     
     public enum TimeState { Morning, Midday, WalkingToSocial, SocialTime, HomeTime,  NightTime }
 
+    /* Settings */
+    [SerializeField] private bool AGENT_PATHFINDING;
+
     /* Externally visible variables */
     [SerializeField] private Texture2D MAP_IMAGE;
     [SerializeField] private GameObject TILE_TEMPLATE;
     [SerializeField] private GameObject AGENT_TEMPLATE;
     [SerializeField] private GraphRendererScript graphRenderer;
+    [SerializeField] private InGameScript inGameUI;
     [SerializeField] private int day;
     [SerializeField] private int year;
     [SerializeField] private TimeState time;
@@ -25,6 +29,7 @@ public class Landscape : MonoBehaviour
     [SerializeField] private float timer;
     [SerializeField] private int num_adults;
     [SerializeField] private int num_children;
+    [SerializeField] private Agent highlighted_agent;
 
     private void Awake()
     {
@@ -35,7 +40,7 @@ public class Landscape : MonoBehaviour
         {
             Instance = this;
         }
-
+        AGENT_PATHFINDING = true;
         terrain = new MapLoader().textureToGameArray(MAP_IMAGE,TILE_TEMPLATE); // TODO -> Doesn't like the 'new' keyword!
         this.width = terrain.GetLength(0); // Right now map is 50x50 so idk if these dimensions are correct :(
         this.height = terrain.GetLength(1);
@@ -51,10 +56,19 @@ public class Landscape : MonoBehaviour
         setAllAgentPathsToWorkSchool();
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
+        /* Centre the camera */
+        float tileWidth = 1f;
+        float cameraHigh = tileWidth * height;
+        Vector3 camera_centre = new Vector3(tileWidth * width / 2f, cameraHigh / 2f, -10f);
+        Camera.main.transform.position = camera_centre;
+        Camera.main.orthographicSize = (cameraHigh / 2f) * 1.1f;
+    }
+
+    private void Update()
+    {
+        updateHighlightedAgent();
     }
 
     private void FixedUpdate()
@@ -104,7 +118,6 @@ public class Landscape : MonoBehaviour
                     time = TimeState.WalkingToSocial;
                     updateWorkSchoolFriends();
                     tryArrangeSocialMeetups();
-                    //setAllAgentPathsToHome();
                     setAllAgentPathsToHomeOrSocial();
                     updateSocialNetworkGraph();
                 }
@@ -130,7 +143,6 @@ public class Landscape : MonoBehaviour
                 break;
             case TimeState.HomeTime:
                 updateAllAgentPaths();
-                //teleportAgentsToDestinations();
                 if (allAgentsReachedDestination())
                 {
                     time = TimeState.NightTime;
@@ -246,6 +258,8 @@ public class Landscape : MonoBehaviour
 
     public bool updateAllAgentPaths()
     {
+        if (!AGENT_PATHFINDING) return teleportAgentsToDestinations();
+
         bool allreached = true;
         foreach (Agent a in agents)
         {
@@ -255,12 +269,13 @@ public class Landscape : MonoBehaviour
         return allreached;
     }
 
-    public void teleportAgentsToDestinations()
+    public bool teleportAgentsToDestinations()
     {
         foreach (Agent a in agents)
         {
             a.teleportToDestination();
         }
+        return true;
     }
 
     public void setAllAgentPathsToWorkSchool()
@@ -785,5 +800,22 @@ public class Landscape : MonoBehaviour
     public GraphRendererScript getGraphRenderer()
     {
         return this.graphRenderer;
+    }
+
+    public void setHighlightedAgent(Agent a)
+    {
+        if (highlighted_agent != null)
+        {
+            highlighted_agent.unHighlightAgentAndFriends();
+        }
+        this.highlighted_agent = a;
+    }
+
+    private void updateHighlightedAgent()
+    {
+        if (highlighted_agent == null) return;
+        highlighted_agent.unHighlightAgentAndFriends();
+        highlighted_agent.highlightAgentAndFriends();
+        inGameUI.updateSelectedAgentText(highlighted_agent);
     }
 }

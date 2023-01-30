@@ -13,6 +13,7 @@ public class GraphRendererScript : MonoBehaviour
      * 3) Whole network density: DONE
      *      -> Ratio of actual edges to the maximum number of edges.
      */
+    [SerializeField] private bool ENABLE_VISUALS;
     [SerializeField] private GameObject NODE_TEMPLATE;
     [SerializeField] private GameObject EDGE_TEMPLATE;
     [SerializeField] private float minX=-5, maxX=-105, minY=-5, maxY=-105;
@@ -43,6 +44,7 @@ public class GraphRendererScript : MonoBehaviour
         centre = new Vector2((minX + maxX) / 2f, (minY + maxY) / 2f);
         //l = Mathf.Abs(maxX - minX)/5f;
         l = Mathf.Abs(maxX - minX)/20f;
+        ENABLE_VISUALS = true;
     }
 
     public Vector2 randomBoundedVector2()
@@ -88,8 +90,12 @@ public class GraphRendererScript : MonoBehaviour
 
     public void updateGraph() /* Simply needs to update edges, nodes will always re-render themselves when moved */
     {
-        repositionNodes();
-        redrawEdges();
+        if (ENABLE_VISUALS)
+        {
+            repositionNodes();
+            redrawEdges();
+        }
+        
         recalculateNetworkDensity();
         recalculateConnectivity();
         recalculateClusteringCoefficient();

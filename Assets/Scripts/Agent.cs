@@ -8,6 +8,7 @@ public class Agent : MonoBehaviour
     public enum AgeState { Child, Adult };
 
     [SerializeField] private int MAX_AGE;
+    [SerializeField] private int MAX_NUM_OFFSPRING;
     [SerializeField] private NodeScript node;
     [SerializeField] private Agent[] parents;
     [SerializeField] private int age;
@@ -31,9 +32,10 @@ public class Agent : MonoBehaviour
 
     /* Internal stuff */
     private Transform transform;
-    
+
 
     /* Friendship Stuff */
+    [SerializeField] private int MAX_NUM_FRIENDS;
     [SerializeField] MinHeap close_friends;
 
     private void Awake()
@@ -60,9 +62,11 @@ public class Agent : MonoBehaviour
         this.home_owner = home_owner;
         this.spouse = null;
         this.MAX_AGE = Random.Range(Parameters.Instance.MIN_DEATH_AGE, Parameters.Instance.MAX_DEATH_AGE);
+        this.MAX_NUM_OFFSPRING = Parameters.Instance.MAX_OFFSPRING_AMOUNT;
         this.offspring = new List<Agent>();
         this.personality = personality;
-        this.close_friends = new MinHeap(this,Random.Range(Parameters.Instance.MIN_FRIENDS, Parameters.Instance.MAX_FRIENDS));
+        this.MAX_NUM_FRIENDS = Random.Range(Parameters.Instance.MIN_FRIENDS, Parameters.Instance.MAX_FRIENDS);
+        this.close_friends = new MinHeap(this, MAX_NUM_FRIENDS);
         this.num_social_meetups = 0;
         this.is_attending_social_meetup_today = false;
 
@@ -123,7 +127,7 @@ public class Agent : MonoBehaviour
 
     public void teleportToDestination()
     {
-        if (path.Count >= 0)
+        if (path != null && path.Count >= 0)
         {
             moveTo(path[0]);
             path.Clear();
@@ -163,9 +167,30 @@ public class Agent : MonoBehaviour
         return this.spouse;
     }
 
+    public Gender getGender()
+    {
+        return this.gender;
+    }
+
+    public string getGenderString()
+    {
+        if (this.gender == Gender.Male)
+        {
+            return "Male";
+        } else
+        {
+            return "Female";
+        }
+    }
+
     public int getAge()
     {
         return this.age;
+    }
+
+    public int getMaxAge()
+    {
+        return this.MAX_AGE;
     }
 
     public bool isAdult()
@@ -238,6 +263,11 @@ public class Agent : MonoBehaviour
         }
     }
 
+    public bool isHomeOwner()
+    {
+        return this.home_owner;
+    }
+
     public void tryFindHouse() /* TODO: Currently if both parents are dead and still live at home then should set agent to home owner :( */
     {
         House h = Landscape.Instance.getEmptyHouse();
@@ -275,10 +305,15 @@ public class Agent : MonoBehaviour
         return offspring.Count;
     }
 
+    public int getMaxNumOffspring()
+    {
+        return this.MAX_NUM_OFFSPRING;
+    }
+
     public void tryProduceOffspring() //TODO need to check if spouse if fertile as well :(
     {
         /* int age, Gender gender, House home, Building work_school, Agent[] parents, bool home_owner */
-        if (numOffspring() < Parameters.Instance.MAX_OFFSPRING_AMOUNT
+        if (numOffspring() < this.MAX_NUM_OFFSPRING
             && inFertilityAgeRange()) /* If room for children and is fertile */
         {
             if (offspringCondition1())
@@ -348,6 +383,16 @@ public class Agent : MonoBehaviour
     public Agent[] getFriends()
     {
         return close_friends.getAgents();
+    }
+
+    public int getNumFriends()
+    {
+        return this.getFriends().Length;
+    }
+
+    public int getMaxNumFriends()
+    {
+        return this.MAX_NUM_FRIENDS;
     }
 
     public bool hasFriends()
@@ -443,7 +488,6 @@ public class Agent : MonoBehaviour
             /* TODO Pick to meet friends or family -> For now just friends */
             Agent[] agents = this.getFriends();
             List<Agent> available_agents = new List<Agent>();
-            //Social s = Landscape.Instance.getRandomSocial();
             Social s;
             if (this.isAdult())
             {
@@ -469,5 +513,39 @@ public class Agent : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void highlightAgentAndFriends()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        sr.color = Color.red;
+        sr.sortingOrder = 2;
+        foreach (Agent a in this.getFriends())
+        {
+            a.highlightAgent();
+        }
+    }
+
+    public void unHighlightAgentAndFriends()
+    {
+        this.unHighlightAgent();
+        foreach (Agent a in this.getFriends())
+        {
+            a.unHighlightAgent();
+        }
+    }
+
+    public void highlightAgent()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        sr.color = Color.green;
+        sr.sortingOrder = 1;
+    }
+
+    public void unHighlightAgent()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        sr.color = Color.white;
+        sr.sortingOrder = 0;
     }
 }
