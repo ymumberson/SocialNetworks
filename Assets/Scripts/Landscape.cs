@@ -69,6 +69,8 @@ public class Landscape : MonoBehaviour
     private void Update()
     {
         updateHighlightedAgent();
+        inGameUI.updateLandscapeText(this);
+        inGameUI.updateGraphRendererText(graphRenderer);
     }
 
     private void FixedUpdate()
@@ -547,6 +549,51 @@ public class Landscape : MonoBehaviour
     //    return ls.ToArray();
     //}
 
+    public int getDay()
+    {
+        return day;
+    }
+
+    public int getYear()
+    {
+        return year;
+    }
+
+    public TimeState getTime()
+    {
+        return this.time;
+    }
+
+    public string getTimeString()
+    {
+        switch (this.time)
+        {
+            case TimeState.HomeTime:
+                return "Home Time";
+            case TimeState.Midday:
+                return "Midday";
+            case TimeState.Morning:
+                return "Morning";
+            case TimeState.NightTime:
+                return "Night Time";
+            case TimeState.SocialTime:
+                return "Home";
+            case TimeState.WalkingToSocial:
+                return "Home";
+        }
+        return "TimE iSNt rEaL MaN";
+    }
+
+    public int getNumChildren()
+    {
+        return num_children;
+    }
+
+    public int getNumAdults()
+    {
+        return this.num_adults;
+    }
+
     public Vector2 getLocation(Tile t)
     {
         for (int j=0; j<height; ++j)
@@ -817,5 +864,16 @@ public class Landscape : MonoBehaviour
         highlighted_agent.unHighlightAgentAndFriends();
         highlighted_agent.highlightAgentAndFriends();
         inGameUI.updateSelectedAgentText(highlighted_agent);
+    }
+
+    public void setHighlightedAgent(int agentID)
+    {
+        foreach (Agent a in agents)
+        {
+            if (a.getAgentID() == agentID)
+            {
+                this.setHighlightedAgent(a);
+            }
+        }
     }
 }

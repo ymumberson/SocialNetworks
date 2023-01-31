@@ -7,11 +7,17 @@ using UnityEngine.UI;
 public class InGameScript : MonoBehaviour
 {
 
+    /* Search UI */
+    [SerializeField] private TextMeshProUGUI SEARCH_AGENT_ID_TEXT;
+
+    /* Time Buttons */
     [SerializeField] private Button PAUSE_BUTTON;
     [SerializeField] private Button NORMAL_SPEED_BUTTON;
     [SerializeField] private Button HALF_SPEED_BUTTON;
     [SerializeField] private Button DOUBLE_SPEED_BUTTON;
     [SerializeField] private Button QUADRUPLE_SPEED_BUTTON;
+
+    /* Selected Agent */
     [SerializeField] private TextMeshProUGUI AGENT_ID_TEXT;
     [SerializeField] private TextMeshProUGUI AGE_TEXT;
     [SerializeField] private TextMeshProUGUI GENDER_TEXT;
@@ -19,10 +25,28 @@ public class InGameScript : MonoBehaviour
     [SerializeField] private TextMeshProUGUI NUM_CHILDREN_TEXT;
     [SerializeField] private TextMeshProUGUI NUM_FRIENDS_TEXT;
     [SerializeField] private TextMeshProUGUI FRIENDS_TEXT;
+
+    /* Agent's Node */
     [SerializeField] private TextMeshProUGUI CONNECTIVITY_TEXT;
     [SerializeField] private TextMeshProUGUI CLUSTERING_TEXT;
     [SerializeField] private TextMeshProUGUI AVG_PATH_LENGTH_TEXT;
     [SerializeField] private TextMeshProUGUI MAX_DEPTH_TEXT;
+
+    /* General Debug UI */
+    /* Landscape */
+    [SerializeField] private TextMeshProUGUI DAY_TEXT;
+    [SerializeField] private TextMeshProUGUI YEAR_TEXT;
+    [SerializeField] private TextMeshProUGUI TIME_TEXT;
+    [SerializeField] private TextMeshProUGUI NUMBER_ADULTS_TEXT;
+    [SerializeField] private TextMeshProUGUI NUMBER_CHILDREN_TEXT;
+    /* Graph Renderer */
+    [SerializeField] private TextMeshProUGUI GR_DENSITY_TEXT;
+    [SerializeField] private TextMeshProUGUI GR_CONNECTIVITY_TEXT;
+    [SerializeField] private TextMeshProUGUI GR_CLUSTERING_TEXT;
+    [SerializeField] private TextMeshProUGUI GR_PATH_LENGTH_TEXT;
+    [SerializeField] private TextMeshProUGUI GR_MAX_DEPTH_TEXT;
+    [SerializeField] private TextMeshProUGUI GR_AVG_DEPTH_TEXT;
+    [SerializeField] private TextMeshProUGUI GR_CAN_REACH_ALL_TEXT;
 
     private Button selected_button;
 
@@ -123,5 +147,50 @@ public class InGameScript : MonoBehaviour
         CLUSTERING_TEXT.text = "Clustering:";
         AVG_PATH_LENGTH_TEXT.text = "Avg Path:";
         MAX_DEPTH_TEXT.text = "Max Depth:";
+    }
+
+    public void selectAgent()
+    {
+        try
+        {
+            //int id = int.Parse(SEARCH_AGENT_ID_TEXT.text, System.Globalization.NumberStyles.AllowLeadingWhite | System.Globalization.NumberStyles.AllowTrailingWhite);
+            //selectAgent(id);
+            string s = SEARCH_AGENT_ID_TEXT.text;
+            string temp = "";
+            for (int i=0; i<s.Length-1; ++i)
+            {
+                temp += s[i];
+            }
+            int id = System.Convert.ToInt32(temp);
+            selectAgent(id);
+        } catch (System.Exception e)
+        {
+            Debug.LogError("Invalid AgentID for the search :(");
+        }
+    }
+
+    public void selectAgent(int agentID)
+    {
+        Landscape.Instance.setHighlightedAgent(agentID);
+    }
+
+    public void updateLandscapeText(Landscape l)
+    {
+        DAY_TEXT.text = "Day: " + l.getDay();
+        YEAR_TEXT.text = "Year: " + l.getYear();
+        TIME_TEXT.text = "Time: " + l.getTimeString();
+        NUMBER_ADULTS_TEXT.text = "#Adults: " + l.getNumAdults();
+        NUMBER_CHILDREN_TEXT.text = "#Children: " + l.getNumChildren();
+    }
+
+    public void updateGraphRendererText(GraphRendererScript gr)
+    {
+        GR_DENSITY_TEXT.text = "Density: " + gr.getDensity();
+        GR_CONNECTIVITY_TEXT.text = "Connectivity: " + gr.getAverageConnectivity();
+        GR_CLUSTERING_TEXT.text = "Clustering: " + gr.getAverageClusteringCoefficient();
+        GR_PATH_LENGTH_TEXT.text = "Avg Path: " + gr.getAveragePathLength();
+        GR_MAX_DEPTH_TEXT.text = "Max Depth: " + gr.getMaxDepth();
+        GR_AVG_DEPTH_TEXT.text = "Avg Depth: " + gr.getAverageDepth();
+        GR_CAN_REACH_ALL_TEXT.text = "Can Reach All: " + gr.getPercentCanReachAll();
     }
 }

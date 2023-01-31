@@ -47,6 +47,41 @@ public class GraphRendererScript : MonoBehaviour
         ENABLE_VISUALS = true;
     }
 
+    public float getDensity()
+    {
+        return this.density;
+    }
+
+    public float getAverageConnectivity()
+    {
+        return this.avgConnectivity;
+    }
+
+    public float getAverageClusteringCoefficient()
+    {
+        return this.avgClusteringCoefficient;
+    }
+
+    public float getAveragePathLength()
+    {
+        return this.avgPathLength;
+    }
+
+    public float getMaxDepth()
+    {
+        return this.maxDepth;
+    }
+
+    public float getAverageDepth()
+    {
+        return this.avgDepth;
+    }
+
+    public float getPercentCanReachAll()
+    {
+        return this.percent_nodes_that_can_reach_all_nodes;
+    }
+
     public Vector2 randomBoundedVector2()
     {
         return new Vector2(Random.Range(minX,maxX), Random.Range(minY, maxY));
