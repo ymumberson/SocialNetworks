@@ -65,7 +65,6 @@ public class MapLoader : MonoBehaviour
                 {
                     Debug.Log(((int)(current_pixel_colour.r * 1000)) + "," + ((int)(current_pixel_colour.g * 1000)) + "," + ((int)(current_pixel_colour.b * 1000)));
                 }
-                Debug.Log("Tile size: " + terrain[i, j].GetComponent<SpriteRenderer>().size);
             }
         }
 

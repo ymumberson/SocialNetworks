@@ -25,6 +25,8 @@ public class NodeScript : MonoBehaviour
     /// </summary>
     [SerializeField] private float clusteringCoefficient;
     [SerializeField] private bool canReachAllNodes;
+    [SerializeField] private float avgPathLength;
+    [SerializeField] private int maxDepth;
 
     private void Awake()
     {
@@ -231,5 +233,25 @@ public class NodeScript : MonoBehaviour
     public bool getCanReachAlNodes()
     {
         return this.canReachAllNodes;
+    }
+
+    public void setAvgPathLength(float n)
+    {
+        this.avgPathLength = n;
+    }
+
+    public void setMaxDepth(int n)
+    {
+        this.maxDepth = n;
+    }
+
+    public float getAvgPathLength()
+    {
+        return this.avgPathLength;
+    }
+
+    public int getMaxDepth()
+    {
+        return this.maxDepth;
     }
 }

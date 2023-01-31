@@ -290,8 +290,8 @@ public class GraphRendererScript : MonoBehaviour
             visited_nodes.Add(root);
             nodes_to_visit.Enqueue(root);
             depth_queue.Enqueue(1);
-            //int depth = 1;
             int maxDepth = 0;
+            float avgDepth = 0;
             while (nodes_to_visit.Count > 0)
             {
                 NodeScript ns = nodes_to_visit.Dequeue();
@@ -305,11 +305,13 @@ public class GraphRendererScript : MonoBehaviour
                         visited_nodes.Add(neighbour);
                         nodes_to_visit.Enqueue(neighbour);
                         depth_queue.Enqueue(depth + 1);
-                        //Debug.Log("Path length: " + depth);
+                        avgDepth += depth;
                     }
                 }
             }
             max_depth_ls.Add(maxDepth);
+            root.setMaxDepth(maxDepth);
+            root.setAvgPathLength(avgDepth / visited_nodes.Count);
             root.setCanReachAllNodes(visited_nodes.Count == numNodes);
             if (root.getCanReachAlNodes())
             {

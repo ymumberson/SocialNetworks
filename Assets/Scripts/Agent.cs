@@ -7,6 +7,9 @@ public class Agent : MonoBehaviour
     public enum Gender { Male, Female }
     public enum AgeState { Child, Adult };
 
+    private static int LAST_AGENT_ID = 0;
+
+    [SerializeField] private int AGENT_ID;
     [SerializeField] private int MAX_AGE;
     [SerializeField] private int MAX_NUM_OFFSPRING;
     [SerializeField] private NodeScript node;
@@ -41,6 +44,12 @@ public class Agent : MonoBehaviour
     private void Awake()
     {
         this.transform = GetComponent<Transform>();
+        this.AGENT_ID = Agent.LAST_AGENT_ID++;
+    }
+
+    public int getAgentID()
+    {
+        return this.AGENT_ID;
     }
 
     public void initialise_agent(int age, Gender gender, House home, Building work_school, Agent[] parents, bool home_owner, string personality)
