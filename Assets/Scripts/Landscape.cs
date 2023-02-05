@@ -56,16 +56,6 @@ public class Landscape : MonoBehaviour
         setAllAgentPathsToWorkSchool();
     }
 
-    private void Start()
-    {
-        /* Centre the camera */
-        float tileWidth = 1f;
-        float cameraHigh = tileWidth * height;
-        Vector3 camera_centre = new Vector3(tileWidth * width / 2f, cameraHigh / 2f, -10f);
-        Camera.main.transform.position = camera_centre;
-        Camera.main.orthographicSize = (cameraHigh / 2f) * 1.1f;
-    }
-
     private void Update()
     {
         updateHighlightedAgent();
@@ -604,6 +594,16 @@ public class Landscape : MonoBehaviour
             }
         }
         return new Vector2(-1,-1); //TODO This will crash the program if tile is not found and not checked!
+    }
+
+    public int getHeight()
+    {
+        return this.height;
+    }
+
+    public int getWidth()
+    {
+        return this.width;
     }
 
     public bool inBounds(int x, int y)

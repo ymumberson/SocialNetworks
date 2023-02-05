@@ -132,6 +132,7 @@ public class MinHeap
 
         /* If queue doesn't have room, or new agent is a worse friend */
         if (!(a.comparePersonality(this.owner.getPersonality()) > cost(size - 1))) return false;
+        //Debug.Log("Found a better friend (" + a.comparePersonality(this.owner.getPersonality()) + " > " + cost(size - 1));
         agents[size - 1] = a;
         minHeapify(0);
 

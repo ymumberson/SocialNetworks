@@ -89,10 +89,10 @@ public class Agent : MonoBehaviour
             if (lookingForSpouse())
             {
                 tryPickSpouseFromCoworkers();
-                if (spouse != null)
-                {
-                    Debug.Log("Found a spouse!");
-                }
+                //if (spouse != null)
+                //{
+                //    Debug.Log("Found a spouse!");
+                //}
             }
             else if (spouse != null) /* Else if (hasSpouse()) { */
             {
@@ -222,7 +222,7 @@ public class Agent : MonoBehaviour
 
     public void becomeAdult()
     {
-        Debug.Log("I'm an adult! ...time to find a job :(");
+        //Debug.Log("I'm an adult! ...time to find a job :(");
         age_state = AgeState.Adult;
         transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
         findJob();
@@ -238,7 +238,7 @@ public class Agent : MonoBehaviour
     {
         home.removeOccupant(this);
         Landscape.Instance.removeAgent(this);
-        Debug.Log("Oh no am ded :(");
+        //Debug.Log("Oh no am ded :(");
         //Destroy(this.gameObject);
         (this.gameObject).SetActive(false);
     }
@@ -282,7 +282,7 @@ public class Agent : MonoBehaviour
         House h = Landscape.Instance.getEmptyHouse();
         if (h == null) return; /* Wasn't able to find an empty house */
 
-        Debug.Log("Found a house!");
+        //Debug.Log("Found a house!");
 
         home.removeOccupant(this);
         spouse.home.removeOccupant(spouse);
@@ -339,7 +339,7 @@ public class Agent : MonoBehaviour
 
                 this.addOffspring(offspring);
                 spouse.addOffspring(offspring);
-                Debug.Log("A baby was born!!!!");
+                //Debug.Log("A baby was born!!!!");
             }
         }
     }
@@ -363,6 +363,11 @@ public class Agent : MonoBehaviour
     public string getPersonality()
     {
         return this.personality;
+    }
+
+    public float comparePersonality(Agent other)
+    {
+        return this.comparePersonality(other.getPersonality());
     }
 
     public float comparePersonality(string other_personality) /* My cost function */

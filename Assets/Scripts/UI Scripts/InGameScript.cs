@@ -6,7 +6,10 @@ using UnityEngine.UI;
 
 public class InGameScript : MonoBehaviour
 {
-
+    /* InGame UIs */
+    [SerializeField] GameObject inGameUI;
+    [SerializeField] GraphUIScript graphUI;
+    
     /* Search UI */
     [SerializeField] private TextMeshProUGUI SEARCH_AGENT_ID_TEXT;
 
@@ -49,12 +52,41 @@ public class InGameScript : MonoBehaviour
     [SerializeField] private TextMeshProUGUI GR_CAN_REACH_ALL_TEXT;
 
     private Button selected_button;
-
+    private float camera_height;
+    private Vector3 camera_position;
 
     private void Awake()
     {
         Time.timeScale = 1f;
         selectButton(NORMAL_SPEED_BUTTON);
+    }
+
+    private void Start()
+    {
+        /* Centre the camera */
+        float tileWidth = 1f;
+        this.camera_height = tileWidth * Landscape.Instance.getHeight();
+        this.camera_position = new Vector3(tileWidth * Landscape.Instance.getWidth() / 2f, camera_height / 2f, -10f);
+        Camera.main.transform.position = camera_position;
+        Camera.main.orthographicSize = (camera_height / 2f) * 1.1f;
+    }
+
+    public void switchToGraphUI()
+    {
+        this.hideUI();
+        graphUI.showGraphUI();
+    }
+
+    public void hideUI()
+    {
+        this.inGameUI.SetActive(false);
+    }
+
+    public void showUI()
+    {
+        this.inGameUI.SetActive(true);
+        Camera.main.transform.position = camera_position;
+        Camera.main.orthographicSize = (camera_height / 2f) * 1.1f;
     }
 
     public void PauseGame()
@@ -109,10 +141,10 @@ public class InGameScript : MonoBehaviour
         Agent[] friends = a.getFriends();
         if (friends.Length >= 1)
         {
-            friends_string += friends[0].getAgentID();
+            friends_string += friends[0].getAgentID() + "(" + a.comparePersonality(friends[0]) + ")";
             for (int i=1; i<friends.Length; ++i)
             {
-                friends_string += ", " + friends[i].getAgentID();
+                friends_string += ", " + friends[i].getAgentID() + "(" + a.comparePersonality(friends[i]) + ")";
             }
         }
         FRIENDS_TEXT.text = friends_string;
@@ -135,10 +167,10 @@ public class InGameScript : MonoBehaviour
 
     public void updateNodeText(NodeScript ns)
     {
-        CONNECTIVITY_TEXT.text = "Connectivity:" + ns.getDegreeOfConnectivity();
-        CLUSTERING_TEXT.text = "Clustering:" + ns.getClusteringCoefficient();
-        AVG_PATH_LENGTH_TEXT.text = "Avg Path:" + ns.getAvgPathLength();
-        MAX_DEPTH_TEXT.text = "Max Depth:" + ns.getMaxDepth();
+        CONNECTIVITY_TEXT.text = "Connectivity: " + ns.getDegreeOfConnectivity();
+        CLUSTERING_TEXT.text = "Clustering: " + ns.getClusteringCoefficient();
+        AVG_PATH_LENGTH_TEXT.text = "Avg Path: " + ns.getAvgPathLength();
+        MAX_DEPTH_TEXT.text = "Max Depth: " + ns.getMaxDepth();
     }
 
     public void resetNodeText()

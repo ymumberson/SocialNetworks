@@ -44,7 +44,27 @@ public class GraphRendererScript : MonoBehaviour
         centre = new Vector2((minX + maxX) / 2f, (minY + maxY) / 2f);
         //l = Mathf.Abs(maxX - minX)/5f;
         l = Mathf.Abs(maxX - minX)/20f;
-        ENABLE_VISUALS = true;
+        //ENABLE_VISUALS = true;
+    }
+
+    public void enableVisuals(bool b)
+    {
+        this.ENABLE_VISUALS = b;
+    }
+
+    public Vector2 getCentre()
+    {
+        return this.centre;
+    }
+
+    public Vector2 getUpper()
+    {
+        return this.upper;
+    }
+
+    public Vector2 getLower()
+    {
+        return this.lower;
     }
 
     public float getDensity()
