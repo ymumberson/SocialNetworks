@@ -65,7 +65,7 @@ public class Landscape : MonoBehaviour
 
     private void FixedUpdate()
     {
-
+        //shuffleAgentOrder();
         turn_timer += Time.fixedDeltaTime;
         if (turn_timer >= Parameters.Instance.TURN_TIME)
         {
@@ -87,6 +87,20 @@ public class Landscape : MonoBehaviour
         }
         
     }
+    
+    public void shuffleAgentOrder()
+    {
+        for (int i=0; i<agents.Count; ++i)
+        {
+            int random_index = Random.Range(0, agents.Count);
+            if (random_index != i)
+            {
+                Agent temp = agents[i];
+                agents[i] = agents[random_index];
+                agents[random_index] = temp;
+            }
+        }
+    }
 
     private void updateAgentPaths()
     {
@@ -97,6 +111,7 @@ public class Landscape : MonoBehaviour
                 //teleportAgentsToDestinations();
                 if (allAgentsReachedDestination())
                 {
+                    shuffleAgentOrder();
                     time = TimeState.Midday;
                 }
                 break;
@@ -105,6 +120,7 @@ public class Landscape : MonoBehaviour
                 timer += Time.fixedDeltaTime;
                 if (timer > Parameters.Instance.TIME_AT_WORK_SCHOOL)
                 {
+                    shuffleAgentOrder();
                     dailyUpdateAllAgents(); /* Update their states halfway through the day ie at work/school */
                     timer = 0;
                     time = TimeState.WalkingToSocial;
@@ -118,6 +134,7 @@ public class Landscape : MonoBehaviour
                 updateAllAgentPaths();
                 if (allAgentsReachedDestination())
                 {
+                    shuffleAgentOrder();
                     time = TimeState.SocialTime;
                 }
                 break;
@@ -125,6 +142,7 @@ public class Landscape : MonoBehaviour
                 timer += Time.fixedDeltaTime;
                 if (timer > Parameters.Instance.TIME_AT_SOCIAL)
                 {
+                    shuffleAgentOrder();
                     timer = 0;
                     time = TimeState.HomeTime;
                     setAllAgentPathsToHome();
@@ -137,6 +155,7 @@ public class Landscape : MonoBehaviour
                 updateAllAgentPaths();
                 if (allAgentsReachedDestination())
                 {
+                    shuffleAgentOrder();
                     time = TimeState.NightTime;
                 }
                 break;
@@ -144,6 +163,7 @@ public class Landscape : MonoBehaviour
                 timer += Time.fixedDeltaTime;
                 if (timer > Parameters.Instance.TIME_AT_HOME)
                 {
+                    shuffleAgentOrder();
                     timer = 0;
                     time = TimeState.Morning;
                     setAllAgentPathsToWorkSchool();

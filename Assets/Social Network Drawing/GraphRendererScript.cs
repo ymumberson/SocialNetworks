@@ -23,6 +23,7 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private float density;
     [SerializeField] private float avgConnectivity;
     [SerializeField] private float avgClusteringCoefficient;
+    [SerializeField] private float avgClusteringCoefficient_ifHasFriends;
     [SerializeField] private float avgPathLength;
     [SerializeField] private float percent_nodes_that_can_reach_all_nodes;
     [SerializeField] private float maxDepth;
@@ -283,12 +284,20 @@ public class GraphRendererScript : MonoBehaviour
     public void recalculateClusteringCoefficient()
     {
         this.avgClusteringCoefficient = 0;
+        this.avgClusteringCoefficient_ifHasFriends = 0;
+        int count = 0;
         foreach (NodeScript ns in nodeList)
         {
             ns.calculateClusteringCoefficient();
             avgClusteringCoefficient += ns.getClusteringCoefficient();
+            if (ns.getAgent().getNumFriends() > 0)
+            {
+                avgClusteringCoefficient_ifHasFriends += ns.getClusteringCoefficient();
+                ++count;
+            }
         }
         avgClusteringCoefficient /= numNodes;
+        avgClusteringCoefficient_ifHasFriends /= count;
     }
 
     public Vector2 towardsCentre(Vector2 pos)

@@ -26,6 +26,7 @@ public class Agent : MonoBehaviour
     [SerializeField] private string personality;
     [SerializeField] private int num_social_meetups;
     [SerializeField] private bool is_attending_social_meetup_today;
+    [SerializeField] private int total_num_social_meetups_attended;
     [SerializeField] private Social social_meetup_building;
     private List<Vector2> path;
     //private List<Vector2> path_to_work;
@@ -45,6 +46,8 @@ public class Agent : MonoBehaviour
     {
         this.transform = GetComponent<Transform>();
         this.AGENT_ID = Agent.LAST_AGENT_ID++;
+        this.gameObject.name = "Agent: " + this.AGENT_ID;
+        this.total_num_social_meetups_attended = 0;
     }
 
     public int getAgentID()
@@ -464,6 +467,18 @@ public class Agent : MonoBehaviour
         ++num_social_meetups;
     }
 
+    public bool tryInviteToSocial(Social s)
+    {
+        if (this.canAttendSocialMeetup(s))
+        {
+            this.setSocialMeetupBuilding(s);
+            return true;
+        } else
+        {
+            return false;
+        }
+    }
+
     public void setSocialMeetupBuilding(Social s)
     {
         if (s == null)
@@ -474,6 +489,7 @@ public class Agent : MonoBehaviour
         this.social_meetup_building = s;
         this.is_attending_social_meetup_today = true;
         this.incrementNumSocialMeetups();
+        ++total_num_social_meetups_attended;
     }
 
     public void removeSocialMeetupBuilding()
@@ -491,8 +507,14 @@ public class Agent : MonoBehaviour
     {
         if (Random.value <= Parameters.Instance.DAILY_CHANCE_OF_SOCIAL_MEETUP)
         {
-            socialMeetupRule1();
+            //socialMeetupRule1();
+            socialMeetupRule2();
         }
+    }
+
+    public int getTotalNumSocialMeetupsAttended()
+    {
+        return this.total_num_social_meetups_attended;
     }
 
     private void socialMeetupRule1()
@@ -529,11 +551,56 @@ public class Agent : MonoBehaviour
         }
     }
 
+    private void socialMeetupRule2()
+    {
+        if (this.canAttendSocialMeetup())
+        {
+            /* TODO Pick to meet friends or family -> For now just friends */
+            Agent[] agents = this.getFriends();
+            List<Agent> available_agents = new List<Agent>();
+            Social s;
+            if (this.isAdult())
+            {
+                s = Landscape.Instance.getRandomAdultSocial();
+            }
+            else
+            {
+                s = Landscape.Instance.getRandomChildSocial();
+            }
+            foreach (Agent a in agents)
+            {
+                if (a.canAttendSocialMeetup(s))
+                {
+                    available_agents.Add(a);
+                }
+            }
+            if (available_agents.Count > 0) /* No need for a second loop here really */
+            {
+                this.setSocialMeetupBuilding(s);
+                foreach (Agent a in available_agents)
+                {
+                    a.setSocialMeetupBuilding(s);
+                    a.inviteYourFriends(s);
+                }
+            }
+        }
+    }
+
+    public void inviteYourFriends(Social s)
+    {
+        Agent[] friends = this.getFriends();
+        foreach (Agent a in friends)
+        {
+            a.tryInviteToSocial(s);
+        }
+    }
+
     public void highlightAgentAndFriends()
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         sr.color = Color.red;
         sr.sortingOrder = 2;
+        this.node.highlightRed();
         foreach (Agent a in this.getFriends())
         {
             a.highlightAgent();
@@ -554,6 +621,7 @@ public class Agent : MonoBehaviour
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         sr.color = Color.green;
         sr.sortingOrder = 1;
+        this.node.highlightGreen();
     }
 
     public void unHighlightAgent()
@@ -561,5 +629,6 @@ public class Agent : MonoBehaviour
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         sr.color = Color.white;
         sr.sortingOrder = 0;
+        this.node.unHighlight();
     }
 }

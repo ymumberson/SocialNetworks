@@ -52,6 +52,7 @@ public class NodeScript : MonoBehaviour
     {
         this.agent = a;
         this.agent.setNode(this);
+        this.gameObject.name = "Node: " + a.getAgentID();
     }
 
     public Agent getAgent()
@@ -202,7 +203,8 @@ public class NodeScript : MonoBehaviour
             }
         }
 
-        float numNeighbours = getNeighbours().Length;
+        //float numNeighbours = getNeighbours().Length;
+        float numNeighbours = neighbourNodes.Count;
         float maxPossibleEdges = numNeighbours * (numNeighbours - 1);
 
         this.clusteringCoefficient = (numEdgesBetweenNeighbours) / (maxPossibleEdges);
@@ -253,5 +255,26 @@ public class NodeScript : MonoBehaviour
     public int getMaxDepth()
     {
         return this.maxDepth;
+    }
+
+    public void highlightRed()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        sr.color = Color.red;
+        sr.sortingOrder = 2;
+    }
+
+    public void highlightGreen()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        sr.color = Color.green;
+        sr.sortingOrder = 1;
+    }
+
+    public void unHighlight()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        sr.color = Color.white;
+        sr.sortingOrder = 0;
     }
 }
