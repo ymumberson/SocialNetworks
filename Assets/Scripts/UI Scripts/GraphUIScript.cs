@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GraphUIScript : MonoBehaviour
 {
+    [SerializeField] private float zoomFactor = 1f;
     [SerializeField] private GameObject graphUI;
     [SerializeField] private GraphRendererScript graphRenderer;
     [SerializeField] private InGameScript inGameUI;
@@ -22,9 +23,10 @@ public class GraphUIScript : MonoBehaviour
     {
         graphUI.SetActive(true);
         Camera.main.transform.position = camera_position;
-        Camera.main.orthographicSize = (camera_height / 2f) * 1.1f;
+        Camera.main.orthographicSize = (camera_height / 2f) * 1.2f;
         graphRenderer.enableVisuals(true);
-        CameraScript.Instance.setMaxSize(((camera_height / 2f) * 1.1f));
+        CameraScript.Instance.setMaxSize(((camera_height / 2f) * 1.2f));
+        CameraScript.Instance.setZoomFactor(this.zoomFactor);
     }
 
     public void hideGraphUI()

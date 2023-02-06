@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class InGameScript : MonoBehaviour
 {
+    /* Zoom */
+    [SerializeField] private float zoomFactor = 1f;
+    
     /* InGame UIs */
     [SerializeField] GameObject inGameUI;
     [SerializeField] GraphUIScript graphUI;
@@ -69,7 +72,7 @@ public class InGameScript : MonoBehaviour
         this.camera_position = new Vector3(tileWidth * Landscape.Instance.getWidth() / 2f, camera_height / 2f, -10f);
         Camera.main.transform.position = camera_position;
         Camera.main.orthographicSize = (camera_height / 2f) * 1.1f;
-        CameraScript.Instance.setMaxSize(((camera_height / 2f) * 1.1f));
+        CameraScript.Instance.setMaxSize((camera_height / 2f) * 1.1f);
     }
 
     public void switchToGraphUI()
@@ -87,8 +90,9 @@ public class InGameScript : MonoBehaviour
     {
         this.inGameUI.SetActive(true);
         Camera.main.transform.position = camera_position;
-        Camera.main.orthographicSize = (camera_height / 2f) * 1.1f;
-        CameraScript.Instance.setMaxSize(((camera_height / 2f) * 1.1f));
+        Camera.main.orthographicSize = (camera_height / 2f) * 1.2f;
+        CameraScript.Instance.setMaxSize((camera_height / 2f) * 1.2f);
+        CameraScript.Instance.setZoomFactor(this.zoomFactor);
     }
 
     public void PauseGame()
