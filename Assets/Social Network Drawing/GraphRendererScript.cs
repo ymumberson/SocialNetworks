@@ -168,13 +168,25 @@ public class GraphRendererScript : MonoBehaviour
             {
                 if (node == other_node) continue;
                 Vector2 other_pos = other_node.getPosition();
+                int count = 0;
+                Vector2 sum_position = Vector2.zero;
+                Vector2 sum_force = Vector2.zero;
                 if (node.hasNeighbour(other_node.getAgent()))
                 {
-                    node.moveTowards(other_pos, attractiveForce(node, other_node));
+                    //node.moveTowards(other_pos, attractiveForce(node, other_node));
+                    sum_position += other_pos;
+                    sum_force += attractiveForce(node, other_node);
+                    ++count;
                 }
                 else
                 {
                     node.moveTowards(other_pos, repulsiveForce(node, other_node));
+                }
+                if (count > 0)
+                {
+                    sum_position /= count;
+                    sum_force /= count;
+                    node.moveTowards(sum_position, sum_force);
                 }
                 node.moveBy(towardsCentre(node.getPosition())); /* Just centring nodes */
             }

@@ -147,6 +147,7 @@ public class Landscape : MonoBehaviour
                     time = TimeState.HomeTime;
                     setAllAgentPathsToHome();
                     removeAllSocialMeetupBuildings();
+                    //updateSocialBuildingFriends();
                     updateSocialBuildingFriends();
                     updateSocialNetworkGraph();
                 }
@@ -222,6 +223,30 @@ public class Landscape : MonoBehaviour
                 {
                     //Debug.Log("Trying to make a friend from the social");
                     a.tryAddFriend(other);
+                }
+            }
+        }
+        clearAllSocialBuildingGroups();
+    }
+
+    public void clearAllSocialBuildingGroups()
+    {
+        foreach (Social s in this.getAllSocials())
+        {
+            s.clearSocialGroupsList();
+        }
+    }
+
+    public void updateSocialBuildingFriendsViaGroups()
+    {
+        foreach (Agent a in agents)
+        {
+            if (a.isAttendingSocialMeetupToday())
+            {
+                List<Agent> group = a.getSocialGroup();
+                foreach (Agent group_member in group)
+                {
+                    a.tryAddFriend(group_member);
                 }
             }
         }

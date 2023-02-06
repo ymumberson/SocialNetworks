@@ -28,6 +28,7 @@ public class Agent : MonoBehaviour
     [SerializeField] private bool is_attending_social_meetup_today;
     [SerializeField] private int total_num_social_meetups_attended;
     [SerializeField] private Social social_meetup_building;
+    [SerializeField] private int social_group_index;
     private List<Vector2> path;
     //private List<Vector2> path_to_work;
 
@@ -503,12 +504,32 @@ public class Agent : MonoBehaviour
         return this.social_meetup_building;
     }
 
+    public void setSocialGroupIndex(int index)
+    {
+        this.social_group_index = index;
+    }
+
+    public int getSocialGroupIndex()
+    {
+        return this.social_group_index;
+    }
+    
+    public List<Agent> getSocialGroup()
+    {
+        if (this.social_meetup_building != null)
+        {
+            return this.social_meetup_building.getSocialGroup(this.social_group_index);
+        }
+        return null;
+    }
+
     public void tryToArrangeSocialMeetup()
     {
         if (Random.value <= Parameters.Instance.DAILY_CHANCE_OF_SOCIAL_MEETUP)
         {
             //socialMeetupRule1();
-            socialMeetupRule2();
+            //socialMeetupRule2();
+            socialMeetupRule3();
         }
     }
 
@@ -586,6 +607,45 @@ public class Agent : MonoBehaviour
         }
     }
 
+    private void socialMeetupRule3()
+    {
+        if (this.canAttendSocialMeetup())
+        {
+            /* TODO Pick to meet friends or family -> For now just friends */
+            Agent[] agents = this.getFriends();
+            List<Agent> available_agents = new List<Agent>();
+            Social s;
+            if (this.isAdult())
+            {
+                s = Landscape.Instance.getRandomAdultSocial();
+            }
+            else
+            {
+                s = Landscape.Instance.getRandomChildSocial();
+            }
+            foreach (Agent a in agents)
+            {
+                if (a.canAttendSocialMeetup(s))
+                {
+                    available_agents.Add(a);
+                }
+            }
+            if (available_agents.Count > 0) /* No need for a second loop here really */
+            {
+                int group_index = s.createNewSocialGroup();
+                s.addAgentToSocialGroup(group_index, this);
+                this.setSocialMeetupBuilding(s);
+                foreach (Agent a in available_agents)
+                {
+                    a.setSocialMeetupBuilding(s);
+                    a.setSocialGroupIndex(group_index);
+                    s.addAgentToSocialGroup(group_index, a);
+                    a.inviteYourFriends(s, group_index);
+                }
+            }
+        }
+    }
+
     public void inviteYourFriends(Social s)
     {
         Agent[] friends = this.getFriends();
@@ -595,12 +655,25 @@ public class Agent : MonoBehaviour
         }
     }
 
+    public void inviteYourFriends(Social s, int group_index)
+    {
+        Agent[] friends = this.getFriends();
+        foreach (Agent a in friends)
+        {
+            if (a.tryInviteToSocial(s))
+            {
+                s.addAgentToSocialGroup(group_index, a);
+                a.setSocialGroupIndex(group_index);
+            }
+        }
+    }
+
     public void highlightAgentAndFriends()
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         sr.color = Color.red;
         sr.sortingOrder = 2;
-        this.node.highlightRed();
+        if (this.node) this.node.highlightRed();
         foreach (Agent a in this.getFriends())
         {
             a.highlightAgent();
@@ -621,7 +694,7 @@ public class Agent : MonoBehaviour
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         sr.color = Color.green;
         sr.sortingOrder = 1;
-        this.node.highlightGreen();
+        if (this.node) this.node.highlightGreen();
     }
 
     public void unHighlightAgent()
@@ -629,6 +702,6 @@ public class Agent : MonoBehaviour
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         sr.color = Color.white;
         sr.sortingOrder = 0;
-        this.node.unHighlight();
+        if (this.node) this.node.unHighlight();
     }
 }

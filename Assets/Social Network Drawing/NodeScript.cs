@@ -200,6 +200,10 @@ public class NodeScript : MonoBehaviour
                 {
                     ++numEdgesBetweenNeighbours;
                 }
+                //else
+                //{
+                //    Debug.Log("My friends aren't friends... but should they be? " + nb_node.agent.comparePersonality(ns.agent));
+                //}
             }
         }
 
