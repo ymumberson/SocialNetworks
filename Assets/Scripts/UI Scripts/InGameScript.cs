@@ -69,6 +69,7 @@ public class InGameScript : MonoBehaviour
         this.camera_position = new Vector3(tileWidth * Landscape.Instance.getWidth() / 2f, camera_height / 2f, -10f);
         Camera.main.transform.position = camera_position;
         Camera.main.orthographicSize = (camera_height / 2f) * 1.1f;
+        CameraScript.Instance.setMaxSize(((camera_height / 2f) * 1.1f));
     }
 
     public void switchToGraphUI()
@@ -87,6 +88,7 @@ public class InGameScript : MonoBehaviour
         this.inGameUI.SetActive(true);
         Camera.main.transform.position = camera_position;
         Camera.main.orthographicSize = (camera_height / 2f) * 1.1f;
+        CameraScript.Instance.setMaxSize(((camera_height / 2f) * 1.1f));
     }
 
     public void PauseGame()

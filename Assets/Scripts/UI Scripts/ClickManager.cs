@@ -14,10 +14,20 @@ public class ClickManager : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
             if (hit.collider != null)
             {
+                /* Check for agent script */
                 Agent a = hit.collider.GetComponent<Agent>();
                 if (a != null)
                 {
                     Landscape.Instance.setHighlightedAgent(a);
+                    return;
+                }
+
+                /* Check for node script */
+                NodeScript ns = hit.collider.GetComponent<NodeScript>();
+                if (ns != null)
+                {
+                    Landscape.Instance.setHighlightedAgent(ns.getAgent());
+                    return;
                 }
             }
         }
