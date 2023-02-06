@@ -18,7 +18,6 @@ public class MinHeap
     [SerializeField] private Agent[] agents;
     [SerializeField] private int size;
     [SerializeField] private int max_size;
-    private float thresh;
 
     public MinHeap(Agent owner, int max_size)
     {
@@ -26,7 +25,6 @@ public class MinHeap
         this.size = 0;
         this.max_size = max_size;
         agents = new Agent[max_size];
-        thresh = Parameters.Instance.PERSONALITY_THRESHOLD; /* Fetched once at object creation */
     }
 
     private int parent(int i)
@@ -104,8 +102,16 @@ public class MinHeap
 
     public bool insert(Agent a)
     {
-        float a_cost = a.comparePersonality(this.owner.getPersonality());
-        if (a_cost < thresh) return false; /* Reject if similarity is less than threshold */
+        //Debug.Log("maxsize: " + max_size + ", size: " + size);
+        //if (size < max_size
+        //    || (a.comparePersonality(this.owner.getPersonality()) > cost(size-1)))
+        //{
+        //    agents[size-1] = a;
+        //}
+        //else
+        //{
+        //    return false;
+        //}
 
         if (this.contains(a)) return false; /* Don't insert if already contained */
 
@@ -125,7 +131,7 @@ public class MinHeap
         }
 
         /* If queue doesn't have room, or new agent is a worse friend */
-        if (!(a_cost > cost(size - 1))) return false;
+        if (!(a.comparePersonality(this.owner.getPersonality()) > cost(size - 1))) return false;
         //Debug.Log("Found a better friend (" + a.comparePersonality(this.owner.getPersonality()) + " > " + cost(size - 1));
         agents[size - 1] = a;
         minHeapify(0);

@@ -18,12 +18,9 @@ public class Parameters : MonoBehaviour
     [SerializeField] public int MAX_OFFSPRING_AMOUNT = 3;
     [SerializeField] public int MIN_FERTILITY_AGE = 20;
     [SerializeField] public int MAX_FERTILITY_AGE = 50;
-
-    /* Agent Social Paramaters */
     [SerializeField] public int MIN_FRIENDS = 3;
     [SerializeField] public int MAX_FRIENDS = 7;
     [SerializeField] public int PERSONALITY_LENGTH = 5; /* Probably change to 100 later */
-    [SerializeField] public float PERSONALITY_THRESHOLD = 0.5f;
     [SerializeField] public int MAX_NUMBER_OF_SOCIAL_MEETUPS_PER_WEEK = 2;
     [SerializeField] public float DAILY_CHANCE_OF_SOCIAL_MEETUP = 0.1f; /* Percentage chance */
 

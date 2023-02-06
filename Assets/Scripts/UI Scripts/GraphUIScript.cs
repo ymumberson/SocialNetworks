@@ -24,7 +24,6 @@ public class GraphUIScript : MonoBehaviour
         Camera.main.transform.position = camera_position;
         Camera.main.orthographicSize = (camera_height / 2f) * 1.1f;
         graphRenderer.enableVisuals(true);
-        CameraScript.Instance.setMaxSize(((camera_height / 2f) * 1.1f));
     }
 
     public void hideGraphUI()
