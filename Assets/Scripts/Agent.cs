@@ -704,4 +704,9 @@ public class Agent : MonoBehaviour
         sr.sortingOrder = 0;
         if (this.node) this.node.unHighlight();
     }
+
+    public string getCloseFriendsString()
+    {
+        return this.close_friends.toString();
+    }
 }

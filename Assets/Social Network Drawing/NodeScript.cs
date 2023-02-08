@@ -180,6 +180,7 @@ public class NodeScript : MonoBehaviour
 
     public void calculateClusteringCoefficient()
     {
+        float previous_clustering_coefficient = this.clusteringCoefficient;
         /* Loop through each neighbour, and for each neighbour count the edges with other neighbours of THIS node */
         float numEdgesBetweenNeighbours = 0;
         List<NodeScript> neighbourNodes = getNeighbourNodes();
@@ -212,6 +213,20 @@ public class NodeScript : MonoBehaviour
         float maxPossibleEdges = numNeighbours * (numNeighbours - 1);
 
         this.clusteringCoefficient = (numEdgesBetweenNeighbours) / (maxPossibleEdges);
+        //if (this.clusteringCoefficient < previous_clustering_coefficient)
+        //{
+        //    Debug.Log("AgentID: " + this.agent.getAgentID() + ", Clustering Coefficient has decreased from " + previous_clustering_coefficient
+        //        + " to " + this.clusteringCoefficient);
+        //    if (edges.Count < neighbourNodes.Count)
+        //    {
+        //        Debug.Log("AgentID: " + this.agent.getAgentID() + ", but maybe it's because I went from " + edges.Count
+        //            + " friends to " + neighbourNodes.Count + " friends?");
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("AgentID: " + this.agent.getAgentID() + ", maybe it's the heap? " + this.agent.getCloseFriendsString());
+        //    }
+        //}
     }
 
     /// <summary>

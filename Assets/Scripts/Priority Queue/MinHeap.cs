@@ -186,4 +186,23 @@ public class MinHeap
         }
         Debug.Log(s);
     }
+
+    public string toString()
+    {
+        string s = "Max size: " + max_size;
+        for (int i = 0; i < size / 2; ++i)
+        {
+            s += "| Parent node: " + cost(i);
+            if (left(i) < size)
+            {
+                s += "| left node: " + cost(left(i));
+            }
+            if (right(i) < size)
+            {
+                s += "| right node: " + cost(right(i));
+            }
+            s += "/";
+        }
+        return s;
+    }
 }
