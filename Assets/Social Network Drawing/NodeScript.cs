@@ -195,17 +195,63 @@ public class NodeScript : MonoBehaviour
         foreach (NodeScript nb_node in neighbourNodes)
         {
             List<NodeScript> neighbour_neighbourNodes = nb_node.getNeighbourNodes();
-            foreach (NodeScript ns in neighbour_neighbourNodes)
+            foreach(NodeScript nb_node2 in neighbourNodes)
             {
-                if (neighbourNodes.Contains(ns))
+                if (nb_node == nb_node2) continue;
+                if (neighbour_neighbourNodes.Contains(nb_node2))
                 {
                     ++numEdgesBetweenNeighbours;
                 }
-                //else
-                //{
-                //    Debug.Log("My friends aren't friends... but should they be? " + nb_node.agent.comparePersonality(ns.agent));
-                //}
+                else
+                {
+                    //Debug.Log(nb_node.agent.getAgentID() + " and " + nb_node2.agent.getAgentID() + " are not friends.");
+                    //if (nb_node.agent.comparePersonality(nb_node2.agent) > nb_node.agent.getWorstFriendValue()
+                    //    && nb_node.agent.hasEncountered(nb_node2.agent))
+                    //{
+                    //    Debug.Log("Agent " + nb_node.agent.getAgentID() + " and agent " + nb_node2.agent.getAgentID()
+                    //        + " aren't friends but they should be!");
+                    //}
+
+                    //float score = nb_node.agent.comparePersonality(nb_node2.agent);
+                    //float worst_score = nb_node.agent.getWorstFriendValue();
+                    //if (score > worst_score)
+                    //{
+                    //    if (nb_node.agent.hasEncountered(nb_node2.agent))
+                    //    {
+                    //        Debug.Log("Agent " + nb_node.agent.getAgentID() + " and agent " + nb_node2.agent.getAgentID()
+                    //        + " aren't friends but they should be! (" + score + " > " + worst_score + ")");
+                    //    }
+                    //    else
+                    //    {
+                    //        Debug.Log("Agent " + nb_node.agent.getAgentID() + " and agent " + nb_node2.agent.getAgentID()
+                    //        + " would be great friends, but they haven't met! (" + score + " > " + worst_score + ")");
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    //Debug.Log("Agent " + nb_node.agent.getAgentID() + " and agent " + nb_node2.agent.getAgentID()
+                    //    //    + " wouldn't make good friends! (" + score + " <= " + worst_score + ")");
+                    //    Debug.Log("Wouldn't make good friends.");
+                    //}
+                }
             }
+            //foreach (NodeScript ns in neighbour_neighbourNodes)
+            //{
+            //    if (neighbourNodes.Contains(ns))
+            //    {
+            //        ++numEdgesBetweenNeighbours;
+            //    }
+            //    else
+            //    {
+            //        Debug.Log(nb_node.agent.getAgentID() + "|" + ns.agent.getAgentID() + "|" + " My friends aren't friends... but should they be? " + nb_node.agent.comparePersonality(ns.agent)
+            //            + ". Has encountered? " + nb_node.agent.hasEncountered(ns.agent)
+            //            + ". My min value: " + nb_node.agent.getWorstFriendValue());
+            //        Debug.Log(nb_node.agent.getAgentID() + "|" + ns.agent.getAgentID() + "|" +
+            //            "nb_node's friends: " + nb_node.agent.getFriendIDs() + "| ns's friends: " + ns.agent.getFriendIDs());
+            //        Debug.Log(nb_node.agent.getAgentID() + "|" + ns.agent.getAgentID() + "|" +
+            //            "nb_node's scores: " + nb_node.agent.getCloseFriendsString() + "| ns's scores: " + ns.agent.getCloseFriendsString());
+            //    }
+            //}
         }
 
         //float numNeighbours = getNeighbours().Length;
@@ -213,6 +259,9 @@ public class NodeScript : MonoBehaviour
         float maxPossibleEdges = numNeighbours * (numNeighbours - 1);
 
         this.clusteringCoefficient = (numEdgesBetweenNeighbours) / (maxPossibleEdges);
+        //Debug.Log(this.agent.getAgentID() + "|I have " + numNeighbours + " friends, and " + numEdgesBetweenNeighbours + 
+        //    " consider each other friends (One-way). This gives a coefficient of " + this.clusteringCoefficient);
+
         //if (this.clusteringCoefficient < previous_clustering_coefficient)
         //{
         //    Debug.Log("AgentID: " + this.agent.getAgentID() + ", Clustering Coefficient has decreased from " + previous_clustering_coefficient

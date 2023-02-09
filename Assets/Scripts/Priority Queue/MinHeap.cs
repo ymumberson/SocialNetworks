@@ -19,6 +19,7 @@ public class MinHeap
     [SerializeField] private int size;
     [SerializeField] private int max_size;
     private float thresh;
+    private HashSet<int> agents_attempted_inserted;
 
     public MinHeap(Agent owner, int max_size)
     {
@@ -27,6 +28,7 @@ public class MinHeap
         this.max_size = max_size;
         agents = new Agent[max_size];
         thresh = Parameters.Instance.PERSONALITY_THRESHOLD; /* Fetched once at object creation */
+        agents_attempted_inserted = new HashSet<int>();
     }
 
     private int parent(int i)
@@ -46,7 +48,7 @@ public class MinHeap
 
     private bool isLeaf(int i)
     {
-        return (i > (size / 2) && i <= size);
+        return (i > (size / 2)-1 && i < size);
     }
 
     private void swap(int index_a, int index_b)
@@ -58,18 +60,38 @@ public class MinHeap
 
     private float cost(int index)
     {
+        //Debug.Log("Getting cost of index " + index + " for heap " + size + "/" + max_size);
         return agents[index].comparePersonality(this.owner.getPersonality());
     }
 
+    private bool inBounds(int index)
+    {
+        return index < size && index > 0;
+    } 
+
     private void minHeapify(int i)
     {
+        //Debug.Log("MinHeapify index " + i + ", maxsize: " + max_size + ", current size: " + size);
         if (isLeaf(i)) return;
         if (max_size == 1) return; /* Special case */
+        //Debug.Log(i + " is not a leaf for " + size + "/" + max_size);
 
         /* Should be index bounds safe? */
         float cost_i = cost(i);
         float cost_l = cost(left(i));
+
+        if (!inBounds(right(i)))
+        {
+            if ((cost_i > cost_l))
+            {
+                swap(i, left(i));
+            }
+            return;
+        }
+        //Debug.Log(right(i) + " is in bounds?");
+
         float cost_r = cost(right(i));
+
         if (cost_i > cost_l || cost_i > cost_r)
         {
 
@@ -91,7 +113,7 @@ public class MinHeap
         return size == 0;
     }
 
-    public float getMinValue()
+    public float getMaxValue()
     {
         if (isEmpty())
         {
@@ -102,12 +124,34 @@ public class MinHeap
         }
     }
 
+    public float getMinValue()
+    {
+        if (isEmpty())
+        {
+            return 0;
+        }
+        else
+        {
+            return cost(0);
+        }
+    }
+
     public bool insert(Agent a)
     {
+        this.agents_attempted_inserted.Add(a.getAgentID());
+        if (a == this.owner) return false; /* Can't insert self */
         float a_cost = a.comparePersonality(this.owner.getPersonality());
-        if (a_cost < thresh) return false; /* Reject if similarity is less than threshold */
+        if (a_cost < thresh)
+        {
+            //Debug.Log("Rejecting because below thresh");
+            return false; /* Reject if similarity is less than threshold */
+        }
 
-        if (this.contains(a)) return false; /* Don't insert if already contained */
+        if (this.contains(a))
+        {
+            //Debug.Log("Rejecting because I already contain.");
+            return false; /* Don't insert if already contained */
+        }
 
         if (size < max_size)
         {
@@ -125,9 +169,22 @@ public class MinHeap
         }
 
         /* If queue doesn't have room, or new agent is a worse friend */
-        if (!(a_cost > cost(size - 1))) return false;
+        //if (a_cost <= cost(size - 1))
+        //{
+        //    Debug.Log("Rejecting insert: (" + a_cost + " <= " + cost(size - 1) + ", wait is that the wrong value? " + cost(0));
+        //    return false;
+        //}
+
+        //if (a_cost <= cost(0))
+        if (a_cost < cost(0))
+        {
+            //Debug.Log("Rejecting insert: (" + a_cost + " / " + cost(0));
+            return false;
+        }
+
         //Debug.Log("Found a better friend (" + a.comparePersonality(this.owner.getPersonality()) + " > " + cost(size - 1));
-        agents[size - 1] = a;
+        //agents[size - 1] = a;
+        agents[0] = a;
         minHeapify(0);
 
         //int i = size-1;
@@ -136,6 +193,9 @@ public class MinHeap
         //    swap(i, parent(i));
         //    i = parent(i);
         //}
+
+        //Debug.Log("Finished reheapifying: " + this.toString());
+
         return true;
     }
 
@@ -190,19 +250,43 @@ public class MinHeap
     public string toString()
     {
         string s = "Max size: " + max_size;
-        for (int i = 0; i < size / 2; ++i)
+        //for (int i = 0; i < size / 2; ++i)
+        //{
+        //    s += "| Parent node: " + cost(i);
+        //    if (left(i) < size)
+        //    {
+        //        s += "| left node: " + cost(left(i));
+        //    }
+        //    if (right(i) < size)
+        //    {
+        //        s += "| right node: " + cost(right(i));
+        //    }
+        //    s += "/";
+        //}
+        for (int i=0; i<size; ++i)
         {
-            s += "| Parent node: " + cost(i);
-            if (left(i) < size)
-            {
-                s += "| left node: " + cost(left(i));
-            }
-            if (right(i) < size)
-            {
-                s += "| right node: " + cost(right(i));
-            }
-            s += "/";
+            s += "| " + cost(i);
         }
         return s;
+    }
+
+    public string getAgentIDs()
+    {
+        string s = "";
+        for (int i=0; i<size; ++i)
+        {
+            s += agents[i].getAgentID() + ", ";
+        }
+        return s;
+    }
+
+    public bool hasTriedToInsert(Agent a)
+    {
+        return this.hasTriedToInsert(a.getAgentID());
+    }
+
+    public bool hasTriedToInsert(int agentID)
+    {
+        return this.agents_attempted_inserted.Contains(agentID);
     }
 }

@@ -635,13 +635,15 @@ public class Agent : MonoBehaviour
                 int group_index = s.createNewSocialGroup();
                 s.addAgentToSocialGroup(group_index, this);
                 this.setSocialMeetupBuilding(s);
+                this.setSocialGroupIndex(group_index);
                 foreach (Agent a in available_agents)
                 {
                     a.setSocialMeetupBuilding(s);
                     a.setSocialGroupIndex(group_index);
                     s.addAgentToSocialGroup(group_index, a);
-                    a.inviteYourFriends(s, group_index);
+                    //a.inviteYourFriends(s, group_index);
                 }
+                //Debug.Log("(1) Invited " + available_agents.Count + "/" + agents.Length + " of my friends.");
             }
         }
     }
@@ -649,23 +651,32 @@ public class Agent : MonoBehaviour
     public void inviteYourFriends(Social s)
     {
         Agent[] friends = this.getFriends();
+        int count = 0;
         foreach (Agent a in friends)
         {
             a.tryInviteToSocial(s);
+            //if (a.tryInviteToSocial(s))
+            //{
+            //    ++count;
+            //}
         }
+        //Debug.Log("(2) Invited " + count + "/" + friends.Length + " of my friends.");
     }
 
     public void inviteYourFriends(Social s, int group_index)
     {
         Agent[] friends = this.getFriends();
+        int count = 0;
         foreach (Agent a in friends)
         {
             if (a.tryInviteToSocial(s))
             {
                 s.addAgentToSocialGroup(group_index, a);
                 a.setSocialGroupIndex(group_index);
+                ++count;
             }
         }
+        Debug.Log("(2) Invited " + count + "/" + friends.Length + " of my friends.");
     }
 
     public void highlightAgentAndFriends()
@@ -708,5 +719,20 @@ public class Agent : MonoBehaviour
     public string getCloseFriendsString()
     {
         return this.close_friends.toString();
+    }
+
+    public bool hasEncountered(Agent a)
+    {
+        return this.close_friends.hasTriedToInsert(a);
+    }
+
+    public float getWorstFriendValue()
+    {
+        return this.close_friends.getMinValue();
+    }
+
+    public string getFriendIDs()
+    {
+        return this.close_friends.getAgentIDs();
     }
 }

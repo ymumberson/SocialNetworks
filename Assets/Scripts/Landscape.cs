@@ -145,10 +145,11 @@ public class Landscape : MonoBehaviour
                     shuffleAgentOrder();
                     timer = 0;
                     time = TimeState.HomeTime;
+                    
+                    //updateSocialBuildingFriends();
+                    updateSocialBuildingFriendsViaGroups();
                     setAllAgentPathsToHome();
                     removeAllSocialMeetupBuildings();
-                    //updateSocialBuildingFriends();
-                    updateSocialBuildingFriends();
                     updateSocialNetworkGraph();
                 }
                 break;
@@ -244,16 +245,33 @@ public class Landscape : MonoBehaviour
             if (a.isAttendingSocialMeetupToday())
             {
                 List<Agent> group = a.getSocialGroup();
+                if (group.Count == 0) Debug.Log("Empty group");
                 foreach (Agent group_member in group)
                 {
+
+                    if (a == group_member) continue;
                     a.tryAddFriend(group_member);
+
+                    //float worst = a.getWorstFriendValue();
+                    //if (a.tryAddFriend(group_member))
+                    //{
+                    //    Debug.Log(a.getAgentID() + " added " + group_member.getAgentID() + " as a friend (" +
+                    //        a.comparePersonality(group_member) + " > " + worst + ")");
+                    //} 
+                    //else
+                    //{
+                    //    Debug.Log(a.getAgentID() + " did not add " + group_member.getAgentID() + " as a friend (" +
+                    //        a.comparePersonality(group_member) + " <= " + worst + ")");
+                    //}
                 }
             }
         }
+        clearAllSocialBuildingGroups();
     }
 
     public void tryArrangeSocialMeetups()
     {
+        shuffleAgentOrder();
         foreach (Agent a in agents)
         {
             a.tryToArrangeSocialMeetup();

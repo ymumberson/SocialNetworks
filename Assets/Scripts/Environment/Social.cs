@@ -51,6 +51,14 @@ public class Social : Building
 
     public List<Agent> getSocialGroup(int group_index)
     {
-        return social_groups[group_index];
+        if (group_index < social_groups.Count && group_index >= 0)
+        {
+            return social_groups[group_index];
+        } 
+        else
+        {
+            Debug.Log("Out of bounds!");
+            return null;
+        }
     }
 }
