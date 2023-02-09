@@ -149,7 +149,7 @@ public class GraphRendererScript : MonoBehaviour
     {
         if (ENABLE_VISUALS)
         {
-            repositionNodes();
+            repositionNodes2();
             redrawEdges();
         }
         
@@ -166,65 +166,64 @@ public class GraphRendererScript : MonoBehaviour
             Vector3 node_pos = node.getPosition();
             if (!node.hasNeighbours()) continue;
 
-            /* Tried setting nodes to the average of their neighbours */
-            //Vector3 sum_pos = Vector3.zero;
-            //List<NodeScript> neighbours = node.getNeighbourNodes();
-            //foreach (NodeScript ns in neighbours)
-            //{
-            //    sum_pos += ns.transform.position;
-            //}
-            //sum_pos /= neighbours.Count;
-            ////node.setPosition(sum_pos);
-            //node.transform.position = sum_pos;
-
             foreach (NodeScript other_node in nodeList)
             {
                 if (node == other_node) continue;
                 Vector2 other_pos = other_node.getPosition();
-                int count = 0;
-                Vector2 sum_position = Vector2.zero;
-                Vector2 sum_force = Vector2.zero;
                 if (node.hasNeighbour(other_node.getAgent()))
                 {
                     node.moveTowards(other_pos, attractiveForce(node, other_node));
-
-                    //sum_position += other_pos;
-                    //sum_force += attractiveForce(node, other_node);
-                    //++count;
-
-                    //Vector2 moveTowards = (other_node.getPosition() - node.getPosition()).normalized;
-                    //moveTowards += attractiveForce(node, other_node);
-                    //sum_force += moveTowards;
-
-                    //sum_force += attractiveForce(node, other_node);
                 }
                 else
                 {
                     node.moveTowards(other_pos, repulsiveForce(node, other_node));
-
-                    //Vector2 moveTowards = (node.getPosition() - other_node.getPosition()).normalized;
-                    //moveTowards *= repulsiveForce(node, other_node);
-                    //sum_force += moveTowards;
-
-                    //sum_force += repulsiveForce(node, other_node);
                 }
-                //if (count > 0)
-                //{
-                //    sum_position /= count;
-                //    sum_force /= count;
-                //    node.moveTowards(sum_position, sum_force);
-                //}
                 node.moveBy(towardsCentre(node.getPosition())); /* Just centring nodes */
-
-                //sum_force += towardsCentre(node.getPosition()) * (Vector3.Distance(centre,node.getPosition()) / Mathf.Abs(upper.x - lower.x));
-
-                //Debug.Log("Sum force: " + sum_force);
-                //node.GetComponent<Rigidbody2D>().AddForce(sum_force);
-
-                //sum_force.Normalize();
-                //node.transform.position += new Vector3(sum_force.x, sum_force.y, 0);
-                //node.setPosition(node.getPosition() + sum_force);
             }
+        }
+    }
+
+    public void repositionNodes2()
+    {
+        foreach (NodeScript node in nodeList)
+        {
+            Vector2 node_pos = node.getPosition();
+            if (!node.hasNeighbours()) continue;
+            Vector2 sum_repulsive = Vector2.zero;
+            Vector2 sum_attractive = Vector2.zero;
+            const float C = 0.000001f;
+            const float K = 500f;
+            foreach (NodeScript other_node in nodeList)
+            {
+                if (node == other_node) continue;
+                Vector2 other_pos = other_node.getPosition();
+                
+                if (node.hasNeighbour(other_node.getAgent()))
+                {
+                    /* Calculate attractive force */
+                    float distance = Vector2.Distance(node_pos, other_pos);
+                    float attractive_force =
+                        (distance * distance) / K;
+                    Vector2 direction = other_pos - node_pos;
+                    direction.Normalize();
+                    sum_attractive += direction * attractive_force;
+                }
+                else
+                {
+                    /* Calculate repulsive force */
+                    float distance = Vector2.Distance(node_pos, other_pos);
+                    float repulsive_force =
+                        (-C*K*K) / distance;
+                    Vector2 direction = other_pos - node_pos;
+                    direction.Normalize();
+                    sum_repulsive += direction * repulsive_force;
+                }
+            }
+            Vector2 sum_forces = sum_repulsive + sum_attractive + towardsCentre(node_pos);
+            //Debug.Log("Sum Attractive: " + sum_attractive);
+            //Debug.Log("Sum Repulsive: " + sum_repulsive);
+            //Debug.Log("Sum foces: " + sum_forces);
+            node.setPosition(node.getPosition() + sum_forces);
         }
     }
 

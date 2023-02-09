@@ -641,7 +641,7 @@ public class Agent : MonoBehaviour
                     a.setSocialMeetupBuilding(s);
                     a.setSocialGroupIndex(group_index);
                     s.addAgentToSocialGroup(group_index, a);
-                    //a.inviteYourFriends(s, group_index);
+                    a.inviteYourFriends(s, group_index);
                 }
                 //Debug.Log("(1) Invited " + available_agents.Count + "/" + agents.Length + " of my friends.");
             }
@@ -676,7 +676,7 @@ public class Agent : MonoBehaviour
                 ++count;
             }
         }
-        Debug.Log("(2) Invited " + count + "/" + friends.Length + " of my friends.");
+        //Debug.Log("(2) Invited " + count + "/" + friends.Length + " of my friends.");
     }
 
     public void highlightAgentAndFriends()
