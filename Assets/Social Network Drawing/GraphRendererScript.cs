@@ -49,6 +49,24 @@ public class GraphRendererScript : MonoBehaviour
         //l = 1000f;
     }
 
+    private void Update()
+    {
+        if (ENABLE_VISUALS)
+        {
+            repositionNodes2();
+            redrawEdges();
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        //if (ENABLE_VISUALS)
+        //{
+        //    repositionNodes2();
+        //    redrawEdges();
+        //}
+    }
+
     public void enableVisuals(bool b)
     {
         this.ENABLE_VISUALS = b;
@@ -145,13 +163,13 @@ public class GraphRendererScript : MonoBehaviour
         --numNodes;
     }
 
-    public void updateGraph() /* Simply needs to update edges, nodes will always re-render themselves when moved */
+    public void updateGraph()
     {
-        if (ENABLE_VISUALS)
-        {
-            repositionNodes2();
-            redrawEdges();
-        }
+        //if (ENABLE_VISUALS)
+        //{
+        //    repositionNodes2();
+        //    redrawEdges();
+        //}
         
         recalculateNetworkDensity();
         recalculateConnectivity();
@@ -187,12 +205,19 @@ public class GraphRendererScript : MonoBehaviour
     {
         foreach (NodeScript node in nodeList)
         {
+            
             Vector2 node_pos = node.getPosition();
-            if (!node.hasNeighbours()) continue;
+            if (!node.hasNeighbours())
+            {
+                node.setPosition(node_pos + towardsCentre(node_pos));
+                continue;
+            }
             Vector2 sum_repulsive = Vector2.zero;
             Vector2 sum_attractive = Vector2.zero;
             const float C = 0.000001f;
             const float K = 500f;
+            /* The force on a vertex is the sum of all attractive forces + the sum of all repulsive foces
+             *  (+ a little force towards the centre to stop the graph drifting away) */
             foreach (NodeScript other_node in nodeList)
             {
                 if (node == other_node) continue;
@@ -204,6 +229,7 @@ public class GraphRendererScript : MonoBehaviour
                     float distance = Vector2.Distance(node_pos, other_pos);
                     float attractive_force =
                         (distance * distance) / K;
+                    if (float.IsInfinity(attractive_force)) continue;
                     Vector2 direction = other_pos - node_pos;
                     direction.Normalize();
                     sum_attractive += direction * attractive_force;
@@ -214,6 +240,7 @@ public class GraphRendererScript : MonoBehaviour
                     float distance = Vector2.Distance(node_pos, other_pos);
                     float repulsive_force =
                         (-C*K*K) / distance;
+                    if (float.IsInfinity(repulsive_force)) continue;
                     Vector2 direction = other_pos - node_pos;
                     direction.Normalize();
                     sum_repulsive += direction * repulsive_force;
@@ -223,7 +250,7 @@ public class GraphRendererScript : MonoBehaviour
             //Debug.Log("Sum Attractive: " + sum_attractive);
             //Debug.Log("Sum Repulsive: " + sum_repulsive);
             //Debug.Log("Sum foces: " + sum_forces);
-            node.setPosition(node.getPosition() + sum_forces);
+            node.setPosition(node_pos + sum_forces);
         }
     }
 
@@ -375,7 +402,7 @@ public class GraphRendererScript : MonoBehaviour
 
     public Vector2 towardsCentre(Vector2 pos)
     {
-        return (centre - pos).normalized / l; /* opposite way around bc graph is in negative coordinate space */
+        return (centre - pos).normalized * Vector2.Distance(centre,pos) * 0.05f; /* opposite way around bc graph is in negative coordinate space */
     }
 
     //public List<NodeScript> getNodes(Agent[] agents)

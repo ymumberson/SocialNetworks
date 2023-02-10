@@ -37,7 +37,7 @@ public class NodeScript : MonoBehaviour
         lowerBound = Vector2.zero;
         upperBound = Vector2.zero;
     }
-    private void FixedUpdate()
+    private void Update()
     {
         keepInBounds();    
     }
@@ -68,14 +68,6 @@ public class NodeScript : MonoBehaviour
             Mathf.Clamp(pos.y, upperBound.y, lowerBound.y),
             0f
             );
-
-        //Vector2 pos = transform.position;
-        //Vector3 pp = new Vector3(
-        //    Mathf.Clamp(pos.x, upperBound.x, lowerBound.x),
-        //    Mathf.Clamp(pos.y, upperBound.y, lowerBound.y),
-        //    0f
-        //    );
-        //Debug.Log("Clamped pos: " + pp);
     }
 
     public void setPosition(Vector2 pos)
@@ -85,7 +77,6 @@ public class NodeScript : MonoBehaviour
 
     public Vector2 getPosition()
     {
-        if (transform == null) Debug.Log("So the script isn't null but the transform is?");
         return transform.position;
     }
 
