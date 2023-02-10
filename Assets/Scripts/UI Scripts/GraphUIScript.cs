@@ -25,6 +25,7 @@ public class GraphUIScript : MonoBehaviour
         Camera.main.transform.position = camera_position;
         Camera.main.orthographicSize = (camera_height / 2f) * 1.2f;
         graphRenderer.enableVisuals(true);
+        Landscape.Instance.disableDayLoop();
         CameraScript.Instance.setMaxSize(((camera_height / 2f) * 1.2f));
         CameraScript.Instance.setZoomFactor(this.zoomFactor);
     }
@@ -33,6 +34,7 @@ public class GraphUIScript : MonoBehaviour
     {
         graphUI.SetActive(false);
         graphRenderer.enableVisuals(false);
+        Landscape.Instance.enableDayLoop();
     }
 
     public void switchToGraphUI()

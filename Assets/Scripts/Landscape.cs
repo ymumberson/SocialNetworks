@@ -10,6 +10,7 @@ public class Landscape : MonoBehaviour
 
     /* Settings */
     [SerializeField] private bool AGENT_PATHFINDING;
+    [SerializeField] private bool ENABLE_DAY_LOOP;
 
     /* Externally visible variables */
     [SerializeField] private Texture2D MAP_IMAGE;
@@ -41,6 +42,7 @@ public class Landscape : MonoBehaviour
             Instance = this;
         }
         AGENT_PATHFINDING = true;
+        ENABLE_DAY_LOOP = true;
         terrain = new MapLoader().textureToGameArray(MAP_IMAGE,TILE_TEMPLATE); // TODO -> Doesn't like the 'new' keyword!
         this.width = terrain.GetLength(0); // Right now map is 50x50 so idk if these dimensions are correct :(
         this.height = terrain.GetLength(1);
@@ -65,6 +67,7 @@ public class Landscape : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!ENABLE_DAY_LOOP) return;
         //shuffleAgentOrder();
         turn_timer += Time.fixedDeltaTime;
         if (turn_timer >= Parameters.Instance.TURN_TIME)
@@ -88,6 +91,16 @@ public class Landscape : MonoBehaviour
         
     }
     
+    public void enableDayLoop()
+    {
+        this.ENABLE_DAY_LOOP = true;
+    }
+
+    public void disableDayLoop()
+    {
+        this.ENABLE_DAY_LOOP = false;
+    }
+
     public void shuffleAgentOrder()
     {
         for (int i=0; i<agents.Count; ++i)
