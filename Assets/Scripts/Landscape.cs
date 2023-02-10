@@ -127,7 +127,7 @@ public class Landscape : MonoBehaviour
                     updateWorkSchoolFriends();
                     tryArrangeSocialMeetups();
                     setAllAgentPathsToHomeOrSocial();
-                    updateSocialNetworkGraph();
+                    //recalculateGraphProperties();
                 }
                 break;
             case TimeState.WalkingToSocial:
@@ -150,7 +150,7 @@ public class Landscape : MonoBehaviour
                     updateSocialBuildingFriendsViaGroups();
                     setAllAgentPathsToHome();
                     removeAllSocialMeetupBuildings();
-                    updateSocialNetworkGraph();
+                    //recalculateGraphProperties();
                 }
                 break;
             case TimeState.HomeTime:
@@ -902,9 +902,9 @@ public class Landscape : MonoBehaviour
         graphRenderer.removeAgent(a);
     }
 
-    public void updateSocialNetworkGraph()
+    public void recalculateGraphProperties()
     {
-        graphRenderer.updateGraph();
+        graphRenderer.recalculateGraphProperties();
     }
 
     public GraphRendererScript getGraphRenderer()

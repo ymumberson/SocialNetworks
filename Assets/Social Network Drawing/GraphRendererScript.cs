@@ -53,8 +53,12 @@ public class GraphRendererScript : MonoBehaviour
     {
         if (ENABLE_VISUALS)
         {
+            System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
+            s.Start();
             repositionNodes2();
             redrawEdges();
+            s.Start();
+            Debug.Log("Drawing graph took " + s.ElapsedMilliseconds + "ms.");
         }
     }
 
@@ -163,18 +167,44 @@ public class GraphRendererScript : MonoBehaviour
         --numNodes;
     }
 
-    public void updateGraph()
+    public void recalculateGraphProperties()
     {
         //if (ENABLE_VISUALS)
         //{
         //    repositionNodes2();
         //    redrawEdges();
         //}
-        
+
+        //recalculateNetworkDensity(); // 0ms
+        //recalculateConnectivity(); // 133ms
+        //recalculateClusteringCoefficient(); // 3ms
+        //calculateAveragePathLength(); // 1854ms
+        //// total = 1991ms (Due to some prints as well)
+
+        System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
+        s.Start();
+        System.Diagnostics.Stopwatch s2 = new System.Diagnostics.Stopwatch();
+        s2.Start();
         recalculateNetworkDensity();
+        s2.Stop();
+        Debug.Log("Calulating network density took " + s2.ElapsedMilliseconds + "ms." + Random.value);
+        s2.Reset();
+        s2.Start();
         recalculateConnectivity();
+        s2.Stop();
+        Debug.Log("Calulating connectivity took " + s2.ElapsedMilliseconds + "ms." + Random.value);
+        s2.Reset();
+        s2.Start();
         recalculateClusteringCoefficient();
+        s2.Stop();
+        Debug.Log("Calulating clustering coefficient took " + s2.ElapsedMilliseconds + "ms." + Random.value);
+        s2.Reset();
+        s2.Start();
         calculateAveragePathLength();
+        s2.Stop();
+        Debug.Log("Calulating average path length took " + s2.ElapsedMilliseconds + "ms." + Random.value);
+        s.Stop();
+        Debug.Log("Network calculations took " + s.ElapsedMilliseconds + "ms." + Random.value);
     }
 
     public void repositionNodes()
@@ -402,7 +432,7 @@ public class GraphRendererScript : MonoBehaviour
 
     public Vector2 towardsCentre(Vector2 pos)
     {
-        return (centre - pos).normalized * Vector2.Distance(centre,pos) * 0.05f; /* opposite way around bc graph is in negative coordinate space */
+        return (centre - pos).normalized * Vector2.Distance(centre,pos) * 0.025f; /* opposite way around bc graph is in negative coordinate space */
     }
 
     //public List<NodeScript> getNodes(Agent[] agents)
