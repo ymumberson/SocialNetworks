@@ -80,6 +80,11 @@ public class NodeScript : MonoBehaviour
         return transform.position;
     }
 
+    public void moveRigidBodyPosition(Vector2 newPosition)
+    {
+        rb.MovePosition(newPosition);
+    }
+
     public void moveBy(Vector3 pos)
     {
         //transform.position += pos;

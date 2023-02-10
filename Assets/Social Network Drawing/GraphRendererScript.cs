@@ -239,7 +239,8 @@ public class GraphRendererScript : MonoBehaviour
             Vector2 node_pos = node.getPosition();
             if (!node.hasNeighbours())
             {
-                node.setPosition(node_pos + towardsCentre(node_pos));
+                //node.setPosition(node_pos + towardsCentre(node_pos));
+                node.moveRigidBodyPosition(node_pos + towardsCentre(node_pos));
                 continue;
             }
             Vector2 sum_repulsive = Vector2.zero;
@@ -280,7 +281,9 @@ public class GraphRendererScript : MonoBehaviour
             //Debug.Log("Sum Attractive: " + sum_attractive);
             //Debug.Log("Sum Repulsive: " + sum_repulsive);
             //Debug.Log("Sum foces: " + sum_forces);
-            node.setPosition(node_pos + sum_forces);
+
+            //node.setPosition(node_pos + sum_forces); /* Can be inside each other, but continues while paused */
+            node.moveRigidBodyPosition(node_pos + sum_forces); /* Can't be inside each other, but stops while paused */
         }
     }
 
@@ -291,6 +294,7 @@ public class GraphRendererScript : MonoBehaviour
         {
             ns.destroyAllEdges();
             Agent[] neighbours = ns.getNeighbours();
+            SpriteRenderer sr = ns.GetComponent<SpriteRenderer>();
             if (neighbours.Length > 0) /* ie only if there are neighbours */
             {
                 Vector2 pos = ns.getPosition();
@@ -303,6 +307,9 @@ public class GraphRendererScript : MonoBehaviour
                     {
                         /* Creates a new edge */
                         LineRenderer lr = Instantiate(EDGE_TEMPLATE).GetComponent<LineRenderer>();
+                        lr.startColor = sr.color;
+                        lr.endColor = sr.color;
+                        lr.sortingOrder = sr.sortingOrder;
                         lr.SetPosition(0, pos);
                         lr.SetPosition(1, neighbour_pos);
                         ns.addLineRenderer(lr);
