@@ -16,6 +16,7 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private bool ENABLE_VISUALS;
     [SerializeField] private GameObject NODE_TEMPLATE;
     [SerializeField] private GameObject EDGE_TEMPLATE;
+    [SerializeField] private GameObject BACKGROUND_TEMPLATE;
     [SerializeField] private float minX=-5, maxX=-105, minY=-5, maxY=-105;
     [SerializeField] private List<NodeScript> nodeList;
     [SerializeField] private int numNodes;
@@ -30,6 +31,7 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private float avgDepth;
     private Vector2 lower, upper;
     private Vector2 centre;
+    private GameObject background;
 
     /* For moving nodes */
     private float l;
@@ -47,18 +49,25 @@ public class GraphRendererScript : MonoBehaviour
         l = Mathf.Abs(maxX - minX) / 20f;
         //ENABLE_VISUALS = true;
         //l = 1000f;
+
+        /* Setting the size/position of the background */
+        float graph_width = Mathf.Abs(maxX - minX);
+        float graph_height = Mathf.Abs(maxY - minY);
+        background = Instantiate(BACKGROUND_TEMPLATE);
+        background.transform.localScale = new Vector3(graph_width, graph_height, 1f);
+        background.transform.position = new Vector3(minX + (maxX-minX)/2f, minY + (maxY - minY) / 2f, 0);
     }
 
     private void Update()
     {
         if (ENABLE_VISUALS)
         {
-            System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
-            s.Start();
+            //System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
+            //s.Start();
             repositionNodes2();
             redrawEdges();
-            s.Start();
-            Debug.Log("Drawing graph took " + s.ElapsedMilliseconds + "ms.");
+            //s.Stop();
+            //Debug.Log("Drawing graph took " + s.ElapsedMilliseconds + "ms.");
         }
     }
 
