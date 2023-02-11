@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ClickManager : MonoBehaviour
 {
+    private bool dragging_node = false;
+    private NodeScript clicked_node;
+
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -27,9 +30,19 @@ public class ClickManager : MonoBehaviour
                 if (ns != null)
                 {
                     Landscape.Instance.setHighlightedAgent(ns.getAgent());
+                    clicked_node = ns;
+                    dragging_node = true;
                     return;
                 }
             }
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            dragging_node = false;
+        }
+        else if (Input.GetMouseButton(0) && dragging_node)
+        {
+            clicked_node.moveRigidBodyPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
         }
     }
 }

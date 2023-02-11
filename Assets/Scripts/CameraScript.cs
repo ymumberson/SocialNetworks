@@ -9,7 +9,8 @@ public class CameraScript : MonoBehaviour
     private Camera cam;
     private float max_size = 31f;
     private Vector3 drag_position;
-    private bool dragging = false;
+    private bool dragging_camera = false;
+    private bool dragging_node = false;
     private Vector2 min_bounds = new Vector2(1,1);
     private Vector2 max_bounds = new Vector2(0,0);
 
@@ -39,22 +40,21 @@ public class CameraScript : MonoBehaviour
             putCameraWithinBounds();
         }
 
-        if (Input.GetMouseButtonDown(0))
+        else if (Input.GetMouseButtonDown(1))
         {
-            dragging = true;
+            dragging_camera = true;
             drag_position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        } else if (Input.GetMouseButtonUp(0))
+        } else if (Input.GetMouseButtonUp(1))
         {
-            dragging = false;
+            dragging_camera = false;
             putCameraWithinBounds();
-        } else if (Input.GetMouseButton(0))
+        } else if (Input.GetMouseButton(1) && dragging_camera)
         {
             Vector3 drag_diff = drag_position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
             drag_diff.z = 0f;
             Camera.main.transform.position += drag_diff;
             putCameraWithinBounds();
         }
-        
     }
 
     public void putCameraWithinBounds()
