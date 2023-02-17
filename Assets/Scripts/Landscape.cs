@@ -74,19 +74,6 @@ public class Landscape : MonoBehaviour
         {
             turn_timer = 0f;
             updateAgentPaths();
-
-            //num_adults = 0;
-            //num_children = 0;
-            //foreach (Agent a in agents)
-            //{
-            //    if (a.isAdult())
-            //    {
-            //        ++num_adults;
-            //    } else
-            //    {
-            //        ++num_children;
-            //    }
-            //}
         }
         
     }
@@ -121,7 +108,6 @@ public class Landscape : MonoBehaviour
         {
             case TimeState.Morning:
                 updateAllAgentPaths();
-                //teleportAgentsToDestinations();
                 if (allAgentsReachedDestination())
                 {
                     shuffleAgentOrder();
@@ -140,7 +126,6 @@ public class Landscape : MonoBehaviour
                     updateWorkSchoolFriends();
                     tryArrangeSocialMeetups();
                     setAllAgentPathsToHomeOrSocial();
-                    //recalculateGraphProperties();
                 }
                 break;
             case TimeState.WalkingToSocial:
@@ -158,12 +143,9 @@ public class Landscape : MonoBehaviour
                     shuffleAgentOrder();
                     timer = 0;
                     time = TimeState.HomeTime;
-                    
-                    //updateSocialBuildingFriends();
                     updateSocialBuildingFriendsViaGroups();
                     setAllAgentPathsToHome();
                     removeAllSocialMeetupBuildings();
-                    //recalculateGraphProperties();
                 }
                 break;
             case TimeState.HomeTime:
@@ -197,11 +179,9 @@ public class Landscape : MonoBehaviour
 
     public void dailyUpdateAllAgents()
     {
-        //foreach (Agent a in agents) /* Causes an issue bc list is modified by dailyUpdate() */
-        //{
-        //    a.dailyUpdate();
-        //}
-        Agent[] arr = agents.ToArray();
+        /* Convert to array bc list is modified by dailyUpdate() when agents die.
+         * -> Avoids enumeration error */
+        Agent[] arr = agents.ToArray(); 
         for (int i=0; i<arr.Length; ++i)
         {
             arr[i].dailyUpdate();
@@ -217,7 +197,6 @@ public class Landscape : MonoBehaviour
             foreach (Agent a in coworkers) {
                 arr[i].tryAddFriend(a);
             }
-            //arr[i].debug_printFriends();
         }
     }
 
@@ -587,34 +566,6 @@ public class Landscape : MonoBehaviour
         return a;
     }
 
-    //public House[] getAllHouses()
-    //{
-    //    Tile[] tile_ls = getAll(Tile.TileType.House);
-    //    House[] house_ls = new House[tile_ls.Length];
-    //    for (int i=0; i<tile_ls.Length; ++i)
-    //    {
-    //        house_ls[i] = (House)(tile_ls[i]);
-    //    }
-    //    return house_ls;
-    //}
-
-    //public Tile[] getAll(Tile.TileType tile_type)
-    //{
-    //    List<Tile> ls = new List<Tile>();
-
-    //    for (int j = 0; j < height; ++j)
-    //    {
-    //        for (int i = 0; i < width; ++i)
-    //        {
-    //            if (terrain[i, j].tile.tile_type == tile_type)
-    //            {
-    //                ls.Add(terrain[i, j].tile);
-    //            }
-    //        }
-    //    }
-    //    return ls.ToArray();
-    //}
-
     public int getDay()
     {
         return day;
@@ -808,7 +759,6 @@ public class Landscape : MonoBehaviour
         Workplace[] workplaces = getAllWorkplaces();
         School[] schools = getAllSchools();
         House h;
-        //foreach (House h in houses)
         for (int j=0; j<houses.Length/2; ++j) /* Default is full half of the houses */
         {
             h = houses[j];

@@ -369,6 +369,17 @@ public class Agent : MonoBehaviour
         return this.personality;
     }
 
+    public void setPersonalityAtIndex(int index, char c)
+    {
+        string s = this.personality.Remove(index, 1);
+        this.personality = s.Insert(index, c.ToString());
+    }
+
+    public void setPersonality(string s)
+    {
+        this.personality = s;
+    }
+
     public float comparePersonality(Agent other)
     {
         return this.comparePersonality(other.getPersonality());
@@ -734,5 +745,30 @@ public class Agent : MonoBehaviour
     public string getFriendIDs()
     {
         return this.close_friends.getAgentIDs();
+    }
+
+    public void personalityTransmission(List<Agent> agents)
+    {
+        foreach (Agent a in agents)
+        {
+            this.personalityTransmission(a);
+        }
+    }
+
+    public void personalityTransmission(Agent a)
+    {
+        int personality_length = this.personality.Length;
+        int random_index = Random.Range(0,personality_length);
+        char selected_bit = this.getPersonalityAtIndex(random_index);
+        if (a.getPersonalityAtIndex(random_index) != selected_bit)
+        {
+            string start = a.getPersonality();
+            a.setPersonalityAtIndex(random_index, selected_bit);
+            string finish = a.getPersonality();
+            Debug.Log("Personality: " + start
+                + ", changing bit " + random_index + " to " + selected_bit + ". -> " + finish);
+           
+            //Debug.Log("Personality changed: " + a.getPersonality());
+        }
     }
 }
