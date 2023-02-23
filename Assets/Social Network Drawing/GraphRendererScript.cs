@@ -14,11 +14,13 @@ public class GraphRendererScript : MonoBehaviour
      *      -> Ratio of actual edges to the maximum number of edges.
      */
     [SerializeField] private bool ENABLE_VISUALS;
+    [SerializeField] public bool SHOW_IDEAL_GRAPH;
     [SerializeField] private GameObject NODE_TEMPLATE;
     [SerializeField] private GameObject EDGE_TEMPLATE;
     [SerializeField] private GameObject BACKGROUND_TEMPLATE;
     [SerializeField] private float minX=-5, maxX=-105, minY=-5, maxY=-105;
     [SerializeField] private List<NodeScript> nodeList;
+    private List<IdealNode> idealNodeList;
     [SerializeField] private int numNodes;
     [SerializeField] private int numEdges;
     [SerializeField] private float density;
@@ -39,6 +41,7 @@ public class GraphRendererScript : MonoBehaviour
     private void Awake()
     {
         nodeList = new List<NodeScript>();
+        idealNodeList = new List<IdealNode>();
         numEdges = 0;
         numNodes = 0;
         density = 0;
@@ -64,10 +67,21 @@ public class GraphRendererScript : MonoBehaviour
         {
             //System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
             //s.Start();
-            repositionNodes2();
+            if (SHOW_IDEAL_GRAPH)
+            {
+                repositionNodes3();
+            }
+            else
+            {
+                repositionNodes2();
+            }
+            //s.Stop();
+            //Debug.Log("Repositioning nodes took " + s.ElapsedMilliseconds + "ms.");
+            //s.Reset();
+            //s.Start();
             redrawEdges();
             //s.Stop();
-            //Debug.Log("Drawing graph took " + s.ElapsedMilliseconds + "ms.");
+            //Debug.Log("Redrawing edges took " + s.ElapsedMilliseconds + "ms.");
         }
     }
 
@@ -149,6 +163,13 @@ public class GraphRendererScript : MonoBehaviour
         ns.setAgent(a);
         nodeList.Add(ns);
         ++numNodes;
+
+        IdealNode ideal = ns.GetComponent<IdealNode>();
+        ideal.setBounds(lower,upper);
+        ideal.setPosition(randomBoundedVector2());
+        ideal.setAgent(a);
+        ideal.setMinHeap(new MinHeap(a, a.getMaxNumFriends()));
+        idealNodeList.Add(ideal);
     }
 
     public void removeAgent(Agent a)
@@ -174,10 +195,40 @@ public class GraphRendererScript : MonoBehaviour
             nodeList.Remove(ns_to_remove);
         }
         --numNodes;
+        removeIdealNode(a);
+    }
+
+    private void removeIdealNode(Agent a)
+    {
+        IdealNode ns_to_remove = null;
+        foreach (IdealNode ns in idealNodeList)
+        {
+            if (ns.getAgent() == a)
+            {
+                ns_to_remove = ns;
+                ns.destroyAllEdges();
+
+                /* Could either destroy the object or set it to inactive */
+                Destroy(ns.gameObject);
+                //ns.gameObject.SetActive(false);
+
+                break;
+            }
+        }
+        if (ns_to_remove != null)
+        {
+            idealNodeList.Remove(ns_to_remove);
+        }
     }
 
     public void recalculateGraphProperties()
     {
+        if (SHOW_IDEAL_GRAPH)
+        {
+            calculateIdealGraphProperties();
+            return;
+        }
+        
         //if (ENABLE_VISUALS)
         //{
         //    repositionNodes2();
@@ -280,6 +331,73 @@ public class GraphRendererScript : MonoBehaviour
                     float distance = Vector2.Distance(node_pos, other_pos);
                     float repulsive_force =
                         (-C*K*K) / distance;
+                    if (float.IsInfinity(repulsive_force)) continue;
+                    Vector2 direction = other_pos - node_pos;
+                    direction.Normalize();
+                    sum_repulsive += direction * repulsive_force;
+                }
+            }
+            Vector2 sum_forces = sum_repulsive + sum_attractive + towardsCentre(node_pos);
+            //Debug.Log("Sum Attractive: " + sum_attractive);
+            //Debug.Log("Sum Repulsive: " + sum_repulsive);
+            //Debug.Log("Sum foces: " + sum_forces);
+
+            //node.setPosition(node_pos + sum_forces); /* Can be inside each other, but continues while paused */
+            node.moveRigidBodyPosition(node_pos + sum_forces); /* Can't be inside each other, but stops while paused */
+        }
+    }
+
+    public void repositionNodes3()
+    {
+        foreach (IdealNode id in idealNodeList)
+        {
+            id.setMinHeap(new MinHeap(id.getAgent(), id.getAgent().getMaxNumFriends()));
+            foreach (IdealNode other_id in idealNodeList)
+            {
+                if (id == other_id) continue;
+                id.getMinHeap().insert(other_id.getAgent());
+            }
+        }
+
+
+        foreach (IdealNode node in idealNodeList)
+        {
+
+            Vector2 node_pos = node.getPosition();
+            if (!node.hasNeighbours())
+            {
+                //node.setPosition(node_pos + towardsCentre(node_pos));
+                node.moveRigidBodyPosition(node_pos + towardsCentre(node_pos));
+                continue;
+            }
+            Vector2 sum_repulsive = Vector2.zero;
+            Vector2 sum_attractive = Vector2.zero;
+            const float C = 0.000001f;
+            const float K = 500f;
+            /* The force on a vertex is the sum of all attractive forces + the sum of all repulsive foces
+             *  (+ a little force towards the centre to stop the graph drifting away) */
+            foreach (IdealNode other_node in idealNodeList)
+            {
+                if (node == other_node) continue;
+                Vector2 other_pos = other_node.getPosition();
+
+                if (node.hasNeighbour(other_node.getAgent()))
+                {
+                    /* Calculate attractive force */
+                    float distance = Vector2.Distance(node_pos, other_pos);
+                    float attractive_force =
+                        (distance * distance) / K;
+                    if (float.IsInfinity(attractive_force)) continue;
+                    Vector2 direction = other_pos - node_pos;
+                    direction.Normalize();
+                    sum_attractive += direction * attractive_force;
+                }
+                else
+                {
+                    /* Calculate repulsive force */
+                    float distance = Vector2.Distance(node_pos, other_pos);
+                    float repulsive_force =
+                        (-C * K * K) / distance;
                     if (float.IsInfinity(repulsive_force)) continue;
                     Vector2 direction = other_pos - node_pos;
                     direction.Normalize();
@@ -541,5 +659,36 @@ public class GraphRendererScript : MonoBehaviour
         this.avgDepth /= max_depth_ls.Count;
         this.percent_nodes_that_can_reach_all_nodes = num_nodes_that_can_reach_all_nodes / numNodes;
         return path_lengths;
+    }
+
+
+    public void calculateIdealGraphProperties()
+    {
+        /* TODO: Change these to use the ideal graph nodes instead */
+        //recalculateNetworkDensity(); // 0ms
+        //recalculateConnectivity(); // 133ms
+        //recalculateClusteringCoefficient(); // 3ms
+        //calculateAveragePathLength(); // 1854ms
+        recalculateClusteringCoefficientIdeal();
+    }
+
+    public void recalculateClusteringCoefficientIdeal()
+    {
+        this.avgClusteringCoefficient = 0;
+        this.avgClusteringCoefficient_ifHasFriends = 0;
+        int count = 0;
+        foreach (IdealNode ns in idealNodeList)
+        {
+            ns.calculateClusteringCoefficient();
+            avgClusteringCoefficient += ns.getClusteringCoefficient();
+            //if (ns.getAgent().getNumFriends() > 0)
+            if (ns.hasNeighbours())
+            {
+                avgClusteringCoefficient_ifHasFriends += ns.getClusteringCoefficient();
+                ++count;
+            }
+        }
+        avgClusteringCoefficient /= numNodes;
+        avgClusteringCoefficient_ifHasFriends /= count;
     }
 }

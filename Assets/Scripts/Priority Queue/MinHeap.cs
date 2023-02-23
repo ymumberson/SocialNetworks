@@ -150,6 +150,7 @@ public class MinHeap
         if (this.contains(a))
         {
             //Debug.Log("Rejecting because I already contain.");
+            if (Landscape.Instance.ENABLE_PERSONALITY_TRANSMISSION) a.personalityTransmission(this.owner);
             return false; /* Don't insert if already contained */
         }
 
@@ -250,24 +251,30 @@ public class MinHeap
     public string toString()
     {
         string s = "Max size: " + max_size;
-        //for (int i = 0; i < size / 2; ++i)
-        //{
-        //    s += "| Parent node: " + cost(i);
-        //    if (left(i) < size)
-        //    {
-        //        s += "| left node: " + cost(left(i));
-        //    }
-        //    if (right(i) < size)
-        //    {
-        //        s += "| right node: " + cost(right(i));
-        //    }
-        //    s += "/";
-        //}
         for (int i=0; i<size; ++i)
         {
             s += "| " + cost(i);
         }
         return s;
+    }
+
+    public string toJSON(int index)
+    {
+        if (index < 0 || index >= size) return "{}";
+        return "{\"agentID\":" + agents[index].getAgentID() + ",\"cost\":" + cost(index) + "}";
+    }
+
+    public string toJSON()
+    {
+        string json = "{\"maxsize:\"" + max_size + ",\"agents\":{";
+
+        json += toJSON(0);
+        for (int i = 1; i < max_size; ++i)
+        {
+            json += "," + toJSON(i);
+        }
+
+        return json + "}}";
     }
 
     public string getAgentIDs()

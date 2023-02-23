@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8293821972963226626}
   - component: {fileID: -5198399620202139189}
   - component: {fileID: -3815241889640090132}
+  - component: {fileID: 5005737882206444518}
   m_Layer: 6
   m_Name: NodeTP2
   m_TagString: Untagged
@@ -99,6 +100,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
   degreeOfConnectivity: 0
+  clusteringCoefficient: 0
+  canReachAllNodes: 0
+  avgPathLength: 0
+  maxDepth: 0
 --- !u!50 &-5198399620202139189
 Rigidbody2D:
   serializedVersion: 4
@@ -136,3 +141,21 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &5005737882206444518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3403897210632306119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30621bc654c32be4eb0693ee00c2eb40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 0}
+  degreeOfConnectivity: 0
+  clusteringCoefficient: 0
+  canReachAllNodes: 0
+  avgPathLength: 0
+  maxDepth: 0

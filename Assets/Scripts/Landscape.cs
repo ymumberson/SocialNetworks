@@ -9,8 +9,9 @@ public class Landscape : MonoBehaviour
     public enum TimeState { Morning, Midday, WalkingToSocial, SocialTime, HomeTime,  NightTime }
 
     /* Settings */
-    [SerializeField] private bool AGENT_PATHFINDING;
-    [SerializeField] private bool ENABLE_DAY_LOOP;
+    [SerializeField] public bool AGENT_PATHFINDING;
+    [SerializeField] public bool ENABLE_DAY_LOOP;
+    [SerializeField] public bool ENABLE_PERSONALITY_TRANSMISSION;
 
     /* Externally visible variables */
     [SerializeField] private Texture2D MAP_IMAGE;
@@ -74,6 +75,7 @@ public class Landscape : MonoBehaviour
         {
             turn_timer = 0f;
             updateAgentPaths();
+            //print(this.agents[Random.Range(0, agents.Count)].toJSON());
         }
         
     }
@@ -107,11 +109,9 @@ public class Landscape : MonoBehaviour
         switch (time)
         {
             case TimeState.Morning:
-                updateAllAgentPaths();
-                if (allAgentsReachedDestination())
+                if (updateAllAgentPaths())
                 {
-                    shuffleAgentOrder();
-                    time = TimeState.Midday;
+                    morning();
                 }
                 break;
             case TimeState.Midday:
@@ -119,62 +119,91 @@ public class Landscape : MonoBehaviour
                 timer += Time.fixedDeltaTime;
                 if (timer > Parameters.Instance.TIME_AT_WORK_SCHOOL)
                 {
-                    shuffleAgentOrder();
-                    dailyUpdateAllAgents(); /* Update their states halfway through the day ie at work/school */
-                    timer = 0;
-                    time = TimeState.WalkingToSocial;
-                    updateWorkSchoolFriends();
-                    tryArrangeSocialMeetups();
-                    setAllAgentPathsToHomeOrSocial();
+                    midday();
                 }
                 break;
             case TimeState.WalkingToSocial:
-                updateAllAgentPaths();
-                if (allAgentsReachedDestination())
+                if (updateAllAgentPaths())
                 {
-                    shuffleAgentOrder();
-                    time = TimeState.SocialTime;
+                    walkingToSocial();
                 }
                 break;
             case TimeState.SocialTime:
                 timer += Time.fixedDeltaTime;
                 if (timer > Parameters.Instance.TIME_AT_SOCIAL)
                 {
-                    shuffleAgentOrder();
-                    timer = 0;
-                    time = TimeState.HomeTime;
-                    updateSocialBuildingFriendsViaGroups();
-                    setAllAgentPathsToHome();
-                    removeAllSocialMeetupBuildings();
+                    socialTime();
                 }
                 break;
             case TimeState.HomeTime:
-                updateAllAgentPaths();
-                if (allAgentsReachedDestination())
+                if (updateAllAgentPaths())
                 {
-                    shuffleAgentOrder();
-                    time = TimeState.NightTime;
+                    homeTime();
                 }
                 break;
             case TimeState.NightTime:
                 timer += Time.fixedDeltaTime;
                 if (timer > Parameters.Instance.TIME_AT_HOME)
                 {
-                    shuffleAgentOrder();
-                    timer = 0;
-                    time = TimeState.Morning;
-                    setAllAgentPathsToWorkSchool();
-                    ++day;
-                    if (day >= Parameters.Instance.DAYS_PER_YEAR)
-                    {
-                        day = 0;
-                        ++year;
-                        ageAllAgents();
-                    }
-                    resetAllAgentSocialMeetupCounters();
+                    nightTime();
                 }
                 break;
         }
+    }
+
+    private void morning()
+    {
+        shuffleAgentOrder();
+        time = TimeState.Midday;
+    }
+
+    private void midday()
+    {
+        shuffleAgentOrder();
+        dailyUpdateAllAgents(); /* Update their states halfway through the day ie at work/school */
+        timer = 0;
+        time = TimeState.WalkingToSocial;
+        updateWorkSchoolFriends();
+        tryArrangeSocialMeetups();
+        setAllAgentPathsToHomeOrSocial();
+    }
+
+    private void walkingToSocial()
+    {
+        shuffleAgentOrder();
+        time = TimeState.SocialTime;
+    }
+
+    private void socialTime()
+    {
+        shuffleAgentOrder();
+        timer = 0;
+        time = TimeState.HomeTime;
+        updateSocialBuildingFriendsViaGroups();
+        setAllAgentPathsToHome();
+        removeAllSocialMeetupBuildings();
+    }
+
+    private void homeTime()
+    {
+        shuffleAgentOrder();
+        time = TimeState.NightTime;
+    }
+
+    private void nightTime()
+    {
+        shuffleAgentOrder();
+        timer = 0;
+        time = TimeState.Morning;
+        setAllAgentPathsToWorkSchool();
+        ++day;
+        if (day >= Parameters.Instance.DAYS_PER_YEAR)
+        {
+            day = 0;
+            ++year;
+            ageAllAgents();
+        }
+        resetAllAgentSocialMeetupCounters();
     }
 
     public void dailyUpdateAllAgents()
@@ -240,21 +269,8 @@ public class Landscape : MonoBehaviour
                 if (group.Count == 0) Debug.Log("Empty group");
                 foreach (Agent group_member in group)
                 {
-
                     if (a == group_member) continue;
                     a.tryAddFriend(group_member);
-
-                    //float worst = a.getWorstFriendValue();
-                    //if (a.tryAddFriend(group_member))
-                    //{
-                    //    Debug.Log(a.getAgentID() + " added " + group_member.getAgentID() + " as a friend (" +
-                    //        a.comparePersonality(group_member) + " > " + worst + ")");
-                    //} 
-                    //else
-                    //{
-                    //    Debug.Log(a.getAgentID() + " did not add " + group_member.getAgentID() + " as a friend (" +
-                    //        a.comparePersonality(group_member) + " <= " + worst + ")");
-                    //}
                 }
             }
         }
@@ -901,5 +917,10 @@ public class Landscape : MonoBehaviour
                 this.setHighlightedAgent(a);
             }
         }
+    }
+
+    public void personalityTransmissionRule1()
+    {
+
     }
 }

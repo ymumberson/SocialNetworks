@@ -13,6 +13,7 @@ public class Agent : MonoBehaviour
     [SerializeField] private int MAX_AGE;
     [SerializeField] private int MAX_NUM_OFFSPRING;
     [SerializeField] private NodeScript node;
+    [SerializeField] public IdealNode ideal_node;
     [SerializeField] private Agent[] parents;
     [SerializeField] private int age;
     [SerializeField] private AgeState age_state;
@@ -243,8 +244,9 @@ public class Agent : MonoBehaviour
         home.removeOccupant(this);
         Landscape.Instance.removeAgent(this);
         //Debug.Log("Oh no am ded :(");
-        //Destroy(this.gameObject);
-        (this.gameObject).SetActive(false);
+
+        Destroy(this.gameObject);
+        //(this.gameObject).SetActive(false);
     }
 
     public bool lookingForSpouse() /* Redefine later */
@@ -700,6 +702,7 @@ public class Agent : MonoBehaviour
         {
             a.highlightAgent();
         }
+        if (this.ideal_node) this.ideal_node.highlightFriendsMagenta();
     }
 
     public void unHighlightAgentAndFriends()
@@ -725,6 +728,7 @@ public class Agent : MonoBehaviour
         sr.color = Color.white;
         sr.sortingOrder = 0;
         if (this.node) this.node.unHighlight();
+        if (this.ideal_node) this.ideal_node.unHighlight();
     }
 
     public string getCloseFriendsString()
@@ -762,13 +766,14 @@ public class Agent : MonoBehaviour
         char selected_bit = this.getPersonalityAtIndex(random_index);
         if (a.getPersonalityAtIndex(random_index) != selected_bit)
         {
-            string start = a.getPersonality();
             a.setPersonalityAtIndex(random_index, selected_bit);
-            string finish = a.getPersonality();
-            Debug.Log("Personality: " + start
-                + ", changing bit " + random_index + " to " + selected_bit + ". -> " + finish);
-           
-            //Debug.Log("Personality changed: " + a.getPersonality());
         }
+    }
+
+    public string toJSON()
+    {
+        //string json = "{";
+        //return json + "}";
+        return JsonUtility.ToJson(this);
     }
 }
