@@ -712,6 +712,7 @@ public class Agent : MonoBehaviour
         {
             a.unHighlightAgent();
         }
+        this.ideal_node.unHighlightSelfAndFriends();
     }
 
     public void highlightAgent()

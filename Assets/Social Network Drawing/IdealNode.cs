@@ -292,14 +292,28 @@ public class IdealNode : MonoBehaviour
     public void highlightGreen()
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        sr.color = Color.green;
+        //sr.color = Color.green;
+        sr.color = Color.blue;
         sr.sortingOrder = 1;
     }
 
     public void highlightMagenta()
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        sr.color = Color.magenta;
+        //sr.color = Color.magenta;
+        if (sr.color == Color.blue)
+        {
+            highlightsomething();
+            return;
+        }
+        sr.color = Color.yellow;
+        sr.sortingOrder = 1;
+    }
+
+    public void highlightsomething()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        sr.color = Color.green;
         sr.sortingOrder = 1;
     }
 
@@ -316,5 +330,19 @@ public class IdealNode : MonoBehaviour
         {
             a.ideal_node.highlightMagenta();
         }
+    }
+
+    public void unHighlightFriends()
+    {
+        foreach (Agent a in this.neighbours.getAgents())
+        {
+            a.ideal_node.unHighlight();
+        }
+    }
+
+    public void unHighlightSelfAndFriends()
+    {
+        this.unHighlight();
+        this.unHighlightFriends();
     }
 }

@@ -364,7 +364,8 @@ public class NodeScript : MonoBehaviour
     public void highlightGreen()
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        sr.color = Color.green;
+        //sr.color = Color.green;
+        sr.color = Color.blue;
         sr.sortingOrder = 1;
     }
 
