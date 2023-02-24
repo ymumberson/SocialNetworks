@@ -694,15 +694,13 @@ public class Agent : MonoBehaviour
 
     public void highlightAgentAndFriends()
     {
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        sr.color = Color.red;
-        sr.sortingOrder = 2;
-        if (this.node) this.node.highlightRed();
+        this.highlightAgent();
+        if (this.node) this.node.highlight();
         foreach (Agent a in this.getFriends())
         {
-            a.highlightAgent();
+            a.highlightAgentAsFriend();
         }
-        if (this.ideal_node) this.ideal_node.highlightFriendsMagenta();
+        if (this.ideal_node) this.ideal_node.highlightIdealFriends();
     }
 
     public void unHighlightAgentAndFriends()
@@ -718,15 +716,23 @@ public class Agent : MonoBehaviour
     public void highlightAgent()
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        sr.color = Color.green;
+        sr.color = Parameters.Instance.HIGHLIGHTED_AGENT_COLOUR;
+        sr.sortingOrder = 2;
+        if (this.node) this.node.highlight();
+    }
+
+    public void highlightAgentAsFriend()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        sr.color = Parameters.Instance.HIGHLIGHTED_FRIEND_COLOUR;
         sr.sortingOrder = 1;
-        if (this.node) this.node.highlightGreen();
+        if (this.node) this.node.highlightAsFriend();
     }
 
     public void unHighlightAgent()
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        sr.color = Color.white;
+        sr.color = Parameters.Instance.UNHIGHLIGHTED_AGENT_COLOR;
         sr.sortingOrder = 0;
         if (this.node) this.node.unHighlight();
         if (this.ideal_node) this.ideal_node.unHighlight();

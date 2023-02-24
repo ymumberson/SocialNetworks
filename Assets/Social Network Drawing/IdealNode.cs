@@ -282,53 +282,51 @@ public class IdealNode : MonoBehaviour
         return this.maxDepth;
     }
 
-    public void highlightRed()
+    public void highlight()
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        sr.color = Color.red;
+        sr.color = Parameters.Instance.HIGHLIGHTED_AGENT_COLOUR;
         sr.sortingOrder = 2;
     }
 
-    public void highlightGreen()
+    public void highlightAsFriend()
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        //sr.color = Color.green;
-        sr.color = Color.blue;
+        sr.color = Parameters.Instance.HIGHLIGHTED_FRIEND_COLOUR;
         sr.sortingOrder = 1;
     }
 
-    public void highlightMagenta()
+    public void highlightAsIdealFriend()
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        //sr.color = Color.magenta;
-        if (sr.color == Color.blue)
+        if (sr.color == Parameters.Instance.HIGHLIGHTED_FRIEND_COLOUR)
         {
-            highlightsomething();
+            highlightAsPerfectFriend();
             return;
         }
-        sr.color = Color.yellow;
+        sr.color = Parameters.Instance.HIGHLIGHTED_IDEAL_FRIEND_COLOUR;
         sr.sortingOrder = 1;
     }
 
-    public void highlightsomething()
+    public void highlightAsPerfectFriend()
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        sr.color = Color.green;
+        sr.color = Parameters.Instance.HIGHLIGHT_PERFECT_FRIEND;
         sr.sortingOrder = 1;
     }
 
     public void unHighlight()
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        sr.color = Color.white;
+        sr.color = Parameters.Instance.UNHIGHLIGHTED_AGENT_COLOR;
         sr.sortingOrder = 0;
     }
 
-    public void highlightFriendsMagenta()
+    public void highlightIdealFriends()
     {
         foreach (Agent a in this.neighbours.getAgents())
         {
-            a.ideal_node.highlightMagenta();
+            a.ideal_node.highlightAsIdealFriend();
         }
     }
 

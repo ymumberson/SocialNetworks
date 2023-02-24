@@ -43,6 +43,13 @@ public class Parameters : MonoBehaviour
     /* Terrain Generation Parameters */
     [SerializeField] public float PERCENT_CHILD_SOCIAL_BUILDINGS = 0.2f;
 
+    /* Colours for highlighting */
+    [SerializeField] public Color HIGHLIGHTED_AGENT_COLOUR = Color.red;
+    [SerializeField] public Color HIGHLIGHTED_FRIEND_COLOUR = Color.blue;
+    [SerializeField] public Color HIGHLIGHTED_IDEAL_FRIEND_COLOUR = Color.yellow;
+    [SerializeField] public Color UNHIGHLIGHTED_AGENT_COLOR = Color.white;
+    [SerializeField] public Color HIGHLIGHT_PERFECT_FRIEND = Color.green;
+
     private void Awake()
     {
         if (Instance)

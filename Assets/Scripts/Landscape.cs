@@ -32,6 +32,7 @@ public class Landscape : MonoBehaviour
     [SerializeField] private int num_adults;
     [SerializeField] private int num_children;
     [SerializeField] private Agent highlighted_agent;
+    private float testestestest = 0.1f;
 
     private void Awake()
     {
@@ -44,6 +45,7 @@ public class Landscape : MonoBehaviour
         }
         AGENT_PATHFINDING = true;
         ENABLE_DAY_LOOP = true;
+        ENABLE_PERSONALITY_TRANSMISSION = false;
         terrain = new MapLoader().textureToGameArray(MAP_IMAGE,TILE_TEMPLATE); // TODO -> Doesn't like the 'new' keyword!
         this.width = terrain.GetLength(0); // Right now map is 50x50 so idk if these dimensions are correct :(
         this.height = terrain.GetLength(1);
@@ -77,9 +79,18 @@ public class Landscape : MonoBehaviour
             updateAgentPaths();
             //print(this.agents[Random.Range(0, agents.Count)].toJSON());
         }
-        
     }
     
+    public void togglePathfinding()
+    {
+        this.AGENT_PATHFINDING = !this.AGENT_PATHFINDING;
+    }
+
+    public void togglePersonalityTransmission()
+    {
+        this.ENABLE_PERSONALITY_TRANSMISSION = !this.ENABLE_PERSONALITY_TRANSMISSION;
+    }
+
     public void enableDayLoop()
     {
         this.ENABLE_DAY_LOOP = true;

@@ -493,6 +493,10 @@ public class GraphRendererScript : MonoBehaviour
         return path_lengths;
     }
 
+    public void toggleIdeal()
+    {
+        this.SHOW_IDEAL_GRAPH = !this.SHOW_IDEAL_GRAPH;
+    }
 
     public void calculateIdealGraphProperties()
     {

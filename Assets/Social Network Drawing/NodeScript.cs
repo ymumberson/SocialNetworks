@@ -354,25 +354,24 @@ public class NodeScript : MonoBehaviour
         return this.maxDepth;
     }
 
-    public void highlightRed()
+    public void highlight()
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        sr.color = Color.red;
+        sr.color = Parameters.Instance.HIGHLIGHTED_AGENT_COLOUR;
         sr.sortingOrder = 2;
     }
 
-    public void highlightGreen()
+    public void highlightAsFriend()
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        //sr.color = Color.green;
-        sr.color = Color.blue;
+        sr.color = Parameters.Instance.HIGHLIGHTED_FRIEND_COLOUR;
         sr.sortingOrder = 1;
     }
 
     public void unHighlight()
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        sr.color = Color.white;
+        sr.color = Parameters.Instance.UNHIGHLIGHTED_AGENT_COLOR;
         sr.sortingOrder = 0;
     }
 }
