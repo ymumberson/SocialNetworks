@@ -76,8 +76,6 @@ public class Landscape : MonoBehaviour
         {
             turn_timer = 0f;
             updateAgentPaths();
-            //print(this.agents[Random.Range(0, agents.Count)].toJSON());
-            print(this.toTxt());
         }
     }
     
@@ -99,6 +97,59 @@ public class Landscape : MonoBehaviour
     public void disableDayLoop()
     {
         this.ENABLE_DAY_LOOP = false;
+    }
+
+    public void sortAgents()
+    {
+        sortAgents(0, agents.Count - 1);
+    }
+
+    private void sortAgents(int start, int end)
+    {
+        if (start >= end) return;
+        int p = partition(start, end);
+        sortAgents(start, p - 1);
+        sortAgents(p + 1, end);
+    }
+
+    private int partition(int start, int end)
+    {
+        int pivot = agents[start].getAgentID();
+
+        int count = 0;
+        for (int n=start+1; n<=end; ++n)
+        {
+            if (agents[n].getAgentID() <= pivot)
+            {
+                ++count;
+            }
+        }
+
+        int pivotIndex = start + count;
+        Agent temp = agents[pivotIndex];
+        agents[pivotIndex] = agents[start];
+        agents[start] = temp;
+
+        int i = start;
+        int j = end;
+        while (i < pivotIndex && j > pivotIndex)
+        {
+            while (agents[i].getAgentID() <= pivot)
+            {
+                ++i;
+            }
+            while (agents[j].getAgentID() > pivot)
+            {
+                --j;
+            }
+            if (i < pivotIndex && j > pivotIndex)
+            {
+                temp = agents[i];
+                agents[i] = agents[j];
+                agents[j] = temp;
+            }
+        }
+        return pivotIndex;
     }
 
     public void shuffleAgentOrder()
@@ -941,10 +992,17 @@ public class Landscape : MonoBehaviour
         json += "\"Num_children\":" + this.getNumChildren() + ",\n";
         json += "\"Agents\":{\n";
         for (int i=0; i<agents.Count; ++i)
-        {
-            json += agents[i].toJSON() + ",\n";
+        {   
+            json += agents[i].toTxt() + ",\n";
         }
-        json += agents[agents.Count - 1].toJSON() + "\n},\n";
+        json += agents[agents.Count - 1].toTxt() + "\n},\n";
         return json + "}";
+    }
+
+    public void saveDebugTxt()
+    {
+        FileWriterScript f = new FileWriterScript();
+        string filename = f.writeDebugTxt(this, graphRenderer);
+        print("File written to: " + filename);
     }
 }

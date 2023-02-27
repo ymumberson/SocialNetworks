@@ -777,7 +777,7 @@ public class Agent : MonoBehaviour
         }
     }
 
-    public string toJSON()
+    public string toTxt()
     {
         string json = "{";
 
@@ -812,7 +812,7 @@ public class Agent : MonoBehaviour
 
         json += "\"Personality\":" + this.personality + ",";
         json += "\"MAX_NUM_FRIENDS\":" + this.MAX_NUM_FRIENDS + ",";
-        json += "\"Close_friends\":" + this.close_friends.toJSON();
+        json += "\"Close_friends\":" + this.close_friends.toTxt();
 
 
         return json + "}";

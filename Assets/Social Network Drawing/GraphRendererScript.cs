@@ -377,6 +377,7 @@ public class GraphRendererScript : MonoBehaviour
     private void recalculateNetworkDensity()
     {
         /* Directed network so density = E / (N(N-1)) */
+        this.redrawEdges();
         density = numEdges / (float)(numNodes * (numNodes - 1));
     }
 
@@ -510,6 +511,21 @@ public class GraphRendererScript : MonoBehaviour
         this.avgDepth /= max_depth_ls.Count;
         this.percent_nodes_that_can_reach_all_nodes = num_nodes_that_can_reach_all_nodes / numNodes;
         return path_lengths;
+    }
+
+    public string toTxt()
+    {
+        string json = "{\n";
+
+        json += "\"Density\":" + this.density + ",\n";
+        json += "\"Connectivity\":" + this.avgConnectivity + ",\n";
+        json += "\"Clustering\":" + this.avgClusteringCoefficient + ",\n";
+        json += "\"Average_path_length\":" + this.avgPathLength + ",\n";
+        json += "\"Max_depth\":" + this.maxDepth + ",\n";
+        json += "\"Average_depth\":" + this.getAverageDepth() + ",\n";
+        json += "\"Can_reach_all\":" + this.getPercentCanReachAll() + "\n}";
+
+        return json;
     }
 
     public void toggleIdeal()

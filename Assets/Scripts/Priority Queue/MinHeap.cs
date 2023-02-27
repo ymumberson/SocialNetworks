@@ -258,20 +258,20 @@ public class MinHeap
         return s;
     }
 
-    public string toJSON(int index)
+    public string toTxt(int index)
     {
         if (index < 0 || index >= size) return "{}";
         return "{\"agentID\":" + agents[index].getAgentID() + ",\"cost\":" + cost(index) + "}";
     }
 
-    public string toJSON()
+    public string toTxt()
     {
         string json = "{\"maxsize:\"" + max_size + ",\"agents\":{";
 
-        json += toJSON(0);
+        json += toTxt(0);
         for (int i = 1; i < max_size; ++i)
         {
-            json += "," + toJSON(i);
+            json += "," + toTxt(i);
         }
 
         return json + "}}";
