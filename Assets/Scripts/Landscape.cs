@@ -623,7 +623,7 @@ public class Landscape : MonoBehaviour
             case TimeState.SocialTime:
                 return "Home";
             case TimeState.WalkingToSocial:
-                return "Home";
+                return "Walking to social";
         }
         return "TimE iSNt rEaL MaN";
     }
@@ -935,7 +935,7 @@ public class Landscape : MonoBehaviour
         string json = "{\n";
         json += "\"Day\":" + this.day + ",\n";
         json += "\"Year\":" + this.year + ",\n";
-        json += "\"Time\":" + this.time + ",\n";
+        json += "\"Time\":" + this.getTimeString() + ",\n";
         json += "\"Num_agents\":" + this.agents.Count + ",\n";
         json += "\"Num_adults\":" + this.getNumAdults() + ",\n";
         json += "\"Num_children\":" + this.getNumChildren() + ",\n";
