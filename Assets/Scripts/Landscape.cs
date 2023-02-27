@@ -32,7 +32,6 @@ public class Landscape : MonoBehaviour
     [SerializeField] private int num_adults;
     [SerializeField] private int num_children;
     [SerializeField] private Agent highlighted_agent;
-    private float testestestest = 0.1f;
 
     private void Awake()
     {
@@ -48,7 +47,7 @@ public class Landscape : MonoBehaviour
         ENABLE_PERSONALITY_TRANSMISSION = false;
         terrain = new MapLoader().textureToGameArray(MAP_IMAGE,TILE_TEMPLATE); // TODO -> Doesn't like the 'new' keyword!
         this.width = terrain.GetLength(0); // Right now map is 50x50 so idk if these dimensions are correct :(
-        this.height = terrain.GetLength(1);
+        this.height = terrain.GetLength(1); // height and width might be the wrong way around :(
 
         agents = new List<Agent>();
 
@@ -78,6 +77,7 @@ public class Landscape : MonoBehaviour
             turn_timer = 0f;
             updateAgentPaths();
             //print(this.agents[Random.Range(0, agents.Count)].toJSON());
+            print(this.toTxt());
         }
     }
     
@@ -930,8 +930,21 @@ public class Landscape : MonoBehaviour
         }
     }
 
-    public void personalityTransmissionRule1()
+    public string toTxt()
     {
-
+        string json = "{\n";
+        json += "\"Day\":" + this.day + ",\n";
+        json += "\"Year\":" + this.year + ",\n";
+        json += "\"Time\":" + this.time + ",\n";
+        json += "\"Num_agents\":" + this.agents.Count + ",\n";
+        json += "\"Num_adults\":" + this.getNumAdults() + ",\n";
+        json += "\"Num_children\":" + this.getNumChildren() + ",\n";
+        json += "\"Agents\":{\n";
+        for (int i=0; i<agents.Count; ++i)
+        {
+            json += agents[i].toJSON() + ",\n";
+        }
+        json += agents[agents.Count - 1].toJSON() + "\n},\n";
+        return json + "}";
     }
 }

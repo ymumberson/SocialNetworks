@@ -779,8 +779,43 @@ public class Agent : MonoBehaviour
 
     public string toJSON()
     {
-        //string json = "{";
-        //return json + "}";
-        return JsonUtility.ToJson(this);
+        string json = "{";
+
+        json += "\"AgentID\":" + this.AGENT_ID + ",";
+        json += "\"MAX_AGE\":" + this.MAX_AGE + ",";
+        json += "\"MAX_NUM_OFFSPRING\":" + this.MAX_NUM_OFFSPRING + ",";
+
+        json += "\"Parents\":" + 
+            (this.parents != null ? ("{" + parents[0].getAgentID() + "," + parents[1].getAgentID() + "}") : "NULL")
+            + ",";
+
+        json += "\"Age\":" + this.age + ",";
+        json += "\"Gender\":" + (this.gender == 0 ? "Male" : "Female") + ",";
+        json += "\"Home_owner\":" + this.home_owner + ",";
+        json += "\"Spouse\":" + (this.spouse ? this.spouse.getAgentID().ToString() : "NULL") + ",";
+
+        json += "\"MAX_NUM_OFFSPRING\":" + this.MAX_NUM_OFFSPRING + ",";
+        json += "\"Offspring\":";
+        if (this.numOffspring() > 0)
+        {
+            json += "{";
+            for (int i=0; i<this.numOffspring()-1; ++i)
+            {
+                json += this.offspring[i].getAgentID() + ",";
+            }
+            json += this.offspring[offspring.Count - 1].getAgentID() + "}";
+        } 
+        else
+        {
+            json += "NULL";
+        }
+
+        json += "\"Personality\":" + this.personality + ",";
+        json += "\"MAX_NUM_FRIENDS\":" + this.MAX_NUM_FRIENDS + ",";
+        json += "\"Close_friends\":" + this.close_friends.toJSON();
+
+
+        return json + "}";
+        //return JsonUtility.ToJson(this);
     }
 }

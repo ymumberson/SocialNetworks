@@ -255,7 +255,7 @@ public class GraphRendererScript : MonoBehaviour
         Debug.Log("Network calculations took " + s.ElapsedMilliseconds + "ms." + Random.value);
     }
 
-    public void repositionNodes()
+    public bool repositionNodes()
     {
         foreach (NodeScript node in nodeList)
         {
@@ -280,6 +280,8 @@ public class GraphRendererScript : MonoBehaviour
                 
                 if (node.hasNeighbour(other_node.getAgent()))
                 {
+                    //s.Restart();
+                    //s.Start();
                     /* Calculate attractive force */
                     float distance = Vector2.Distance(node_pos, other_pos);
                     float attractive_force =
@@ -288,9 +290,13 @@ public class GraphRendererScript : MonoBehaviour
                     Vector2 direction = other_pos - node_pos;
                     direction.Normalize();
                     sum_attractive += direction * attractive_force;
+                    //s.Stop();
+                    //print("Time to calculate attractive force: " + s.Elapsed.TotalMilliseconds + "ms.");
                 }
                 else
                 {
+                    //s.Reset();
+                    //s.Start();
                     /* Calculate repulsive force */
                     float distance = Vector2.Distance(node_pos, other_pos);
                     float repulsive_force =
@@ -299,16 +305,29 @@ public class GraphRendererScript : MonoBehaviour
                     Vector2 direction = other_pos - node_pos;
                     direction.Normalize();
                     sum_repulsive += direction * repulsive_force;
+                    //s.Stop();
+                    //print("Time to calculate repulsive force: " + s.Elapsed.TotalMilliseconds + "ms.");
                 }
             }
+            //s.Reset();
+            //s.Start();
             Vector2 sum_forces = sum_repulsive + sum_attractive + towardsCentre(node_pos);
+            //s.Stop();
+            //print("Time to calculate total force: " + s.Elapsed.TotalMilliseconds + "ms.");
+
             //Debug.Log("Sum Attractive: " + sum_attractive);
             //Debug.Log("Sum Repulsive: " + sum_repulsive);
             //Debug.Log("Sum foces: " + sum_forces);
 
             //node.setPosition(node_pos + sum_forces); /* Can be inside each other, but continues while paused */
+
+            //s.Reset();
+            //s.Start();
             node.moveRigidBodyPosition(node_pos + sum_forces); /* Can't be inside each other, but stops while paused */
+            //s.Stop();
+            //print("Time to move rigidbody: " + s.Elapsed.TotalMilliseconds + "ms.");
         }
+        return true;
     }
 
     private void redrawEdges()
