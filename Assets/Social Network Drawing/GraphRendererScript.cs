@@ -229,30 +229,30 @@ public class GraphRendererScript : MonoBehaviour
         //calculateAveragePathLength(); // 1854ms
         //// total = 1991ms (Due to some prints as well)
 
-        System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
-        s.Start();
-        System.Diagnostics.Stopwatch s2 = new System.Diagnostics.Stopwatch();
-        s2.Start();
+        //System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
+        //s.Start();
+        //System.Diagnostics.Stopwatch s2 = new System.Diagnostics.Stopwatch();
+        //s2.Start();
         recalculateNetworkDensity();
-        s2.Stop();
-        Debug.Log("Calulating network density took " + s2.ElapsedMilliseconds + "ms." + Random.value);
-        s2.Reset();
-        s2.Start();
+        //s2.Stop();
+        //Debug.Log("Calulating network density took " + s2.ElapsedMilliseconds + "ms." + Random.value);
+        //s2.Reset();
+        //s2.Start();
         recalculateConnectivity();
-        s2.Stop();
-        Debug.Log("Calulating connectivity took " + s2.ElapsedMilliseconds + "ms." + Random.value);
-        s2.Reset();
-        s2.Start();
+        //s2.Stop();
+        //Debug.Log("Calulating connectivity took " + s2.ElapsedMilliseconds + "ms." + Random.value);
+        //s2.Reset();
+        //s2.Start();
         recalculateClusteringCoefficient();
-        s2.Stop();
-        Debug.Log("Calulating clustering coefficient took " + s2.ElapsedMilliseconds + "ms." + Random.value);
-        s2.Reset();
-        s2.Start();
+        //s2.Stop();
+        //Debug.Log("Calulating clustering coefficient took " + s2.ElapsedMilliseconds + "ms." + Random.value);
+        //s2.Reset();
+        //s2.Start();
         calculateAveragePathLength();
-        s2.Stop();
-        Debug.Log("Calulating average path length took " + s2.ElapsedMilliseconds + "ms." + Random.value);
-        s.Stop();
-        Debug.Log("Network calculations took " + s.ElapsedMilliseconds + "ms." + Random.value);
+        //s2.Stop();
+        //Debug.Log("Calulating average path length took " + s2.ElapsedMilliseconds + "ms." + Random.value);
+        //s.Stop();
+        //Debug.Log("Network calculations took " + s.ElapsedMilliseconds + "ms." + Random.value);
     }
 
     public bool repositionNodes()
@@ -515,15 +515,16 @@ public class GraphRendererScript : MonoBehaviour
 
     public string toTxt()
     {
+        string TAB = "    ";
         string json = "{\n";
 
-        json += "\"Density\":" + this.density + ",\n";
-        json += "\"Connectivity\":" + this.avgConnectivity + ",\n";
-        json += "\"Clustering\":" + this.avgClusteringCoefficient + ",\n";
-        json += "\"Average_path_length\":" + this.avgPathLength + ",\n";
-        json += "\"Max_depth\":" + this.maxDepth + ",\n";
-        json += "\"Average_depth\":" + this.getAverageDepth() + ",\n";
-        json += "\"Can_reach_all\":" + this.getPercentCanReachAll() + "\n}";
+        json += TAB + "\"Density\":" + this.density + ",\n";
+        json += TAB + "\"Connectivity\":" + this.avgConnectivity + ",\n";
+        json += TAB + "\"Clustering\":" + this.avgClusteringCoefficient + ",\n";
+        json += TAB + "\"Average_path_length\":" + this.avgPathLength + ",\n";
+        json += TAB + "\"Max_depth\":" + this.maxDepth + ",\n";
+        json += TAB + "\"Average_depth\":" + this.getAverageDepth() + ",\n";
+        json += TAB + "\"Can_reach_all\":" + this.getPercentCanReachAll() + "\n}";
 
         return json;
     }

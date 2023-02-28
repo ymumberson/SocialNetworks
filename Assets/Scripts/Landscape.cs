@@ -11,7 +11,6 @@ public class Landscape : MonoBehaviour
     /* Settings */
     [SerializeField] public bool AGENT_PATHFINDING;
     [SerializeField] public bool ENABLE_DAY_LOOP;
-    [SerializeField] public bool ENABLE_PERSONALITY_TRANSMISSION;
 
     /* Externally visible variables */
     [SerializeField] private Texture2D MAP_IMAGE;
@@ -44,7 +43,6 @@ public class Landscape : MonoBehaviour
         }
         AGENT_PATHFINDING = true;
         ENABLE_DAY_LOOP = true;
-        ENABLE_PERSONALITY_TRANSMISSION = false;
         terrain = new MapLoader().textureToGameArray(MAP_IMAGE,TILE_TEMPLATE); // TODO -> Doesn't like the 'new' keyword!
         this.width = terrain.GetLength(0); // Right now map is 50x50 so idk if these dimensions are correct :(
         this.height = terrain.GetLength(1); // height and width might be the wrong way around :(
@@ -86,7 +84,7 @@ public class Landscape : MonoBehaviour
 
     public void togglePersonalityTransmission()
     {
-        this.ENABLE_PERSONALITY_TRANSMISSION = !this.ENABLE_PERSONALITY_TRANSMISSION;
+        Parameters.Instance.ENABLE_PERSONALITY_TRANSMISSION = !Parameters.Instance.ENABLE_PERSONALITY_TRANSMISSION;
     }
 
     public void enableDayLoop()
@@ -628,6 +626,14 @@ public class Landscape : MonoBehaviour
     {
         this.agents.Remove(a);
         removeAgentFromGraphRenderer(a);
+        if (a.isAdult())
+        {
+            --num_adults;
+        } 
+        else
+        {
+            --num_children;
+        }
     }
 
     public void addAgent(Agent a)
@@ -983,19 +989,20 @@ public class Landscape : MonoBehaviour
 
     public string toTxt()
     {
+        string TAB = "    ";
         string json = "{\n";
-        json += "\"Day\":" + this.day + ",\n";
-        json += "\"Year\":" + this.year + ",\n";
-        json += "\"Time\":" + this.getTimeString() + ",\n";
-        json += "\"Num_agents\":" + this.agents.Count + ",\n";
-        json += "\"Num_adults\":" + this.getNumAdults() + ",\n";
-        json += "\"Num_children\":" + this.getNumChildren() + ",\n";
-        json += "\"Agents\":{\n";
+        json += TAB + "Day\":" + this.day + ",\n";
+        json += TAB + "\"Year\":" + this.year + ",\n";
+        json += TAB + "\"Time\":" + this.getTimeString() + ",\n";
+        json += TAB + "\"Num_agents\":" + this.agents.Count + ",\n";
+        json += TAB + "\"Num_adults\":" + this.getNumAdults() + ",\n";
+        json += TAB + "\"Num_children\":" + this.getNumChildren() + ",\n";
+        json += TAB + "\"Agents\":{\n";
         for (int i=0; i<agents.Count; ++i)
         {   
-            json += agents[i].toTxt() + ",\n";
+            json += TAB + TAB + agents[i].toTxt() + ",\n";
         }
-        json += agents[agents.Count - 1].toTxt() + "\n},\n";
+        json += TAB + TAB + agents[agents.Count - 1].toTxt() + "\n" + TAB + "},\n";
         return json + "}";
     }
 

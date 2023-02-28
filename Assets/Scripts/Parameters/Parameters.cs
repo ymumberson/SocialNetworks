@@ -9,6 +9,7 @@ public class Parameters : MonoBehaviour
     /* General Simulation Parameters */
     [SerializeField] public float TURN_TIME = 0.1f;
     [SerializeField] public int DAYS_PER_YEAR = 365;
+    [SerializeField] public bool ENABLE_PERSONALITY_TRANSMISSION = false;
 
     /* Agent Parameters */
     [SerializeField] public int AGE_TURN_ADULT = 18;

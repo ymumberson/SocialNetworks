@@ -150,7 +150,7 @@ public class MinHeap
         if (this.contains(a))
         {
             //Debug.Log("Rejecting because I already contain.");
-            if (Landscape.Instance.ENABLE_PERSONALITY_TRANSMISSION) a.personalityTransmission(this.owner);
+            if (Parameters.Instance.ENABLE_PERSONALITY_TRANSMISSION) a.personalityTransmission(this.owner);
             return false; /* Don't insert if already contained */
         }
 
