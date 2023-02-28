@@ -29,7 +29,7 @@ public class FileWriterScript
         l.sortAgents();
         writer.Write("\n<<Simulation Parameters>>\n" + JsonUtility.ToJson(Parameters.Instance, true) + "\n\n");
         writer.Write("\n<<Graph Renderer>>\n" + g.toTxt() + "\n\n");
-        writer.Write("\n<<Landscape>>\n" + l.toTxt() + "\n\n");
+        writer.Write("\n<<Landscape Controller>>\n" + l.toTxt() + "\n\n");
         writer.Close();
     }
 }

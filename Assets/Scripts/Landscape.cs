@@ -994,6 +994,13 @@ public class Landscape : MonoBehaviour
         json += TAB + "Day\":" + this.day + ",\n";
         json += TAB + "\"Year\":" + this.year + ",\n";
         json += TAB + "\"Time\":" + this.getTimeString() + ",\n";
+        json += TAB + "\"Width\":" + this.width + ",\n";
+        json += TAB + "\"Height\":" + this.height + ",\n";
+        json += TAB + "\"Num_houses\":" + this.getAllHouses().Length + ",\n";
+        json += TAB + "\"Num_workplaces\":" + this.getAllWorkplaces().Length + ",\n";
+        json += TAB + "\"Num_schools\":" + this.getAllSchools().Length + ",\n";
+        json += TAB + "\"Num_adult_socials\":" + this.getAllAdultSocials().Length + ",\n";
+        json += TAB + "\"Num_child_socials\":" + this.getAllChildSocials().Length + ",\n";
         json += TAB + "\"Num_agents\":" + this.agents.Count + ",\n";
         json += TAB + "\"Num_adults\":" + this.getNumAdults() + ",\n";
         json += TAB + "\"Num_children\":" + this.getNumChildren() + ",\n";
