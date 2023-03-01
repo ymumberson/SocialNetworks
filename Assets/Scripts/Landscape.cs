@@ -44,7 +44,7 @@ public class Landscape : MonoBehaviour
             Instance = this;
         }
         HAS_BEEN_INITIALISED = false;
-        HAS_TERMINATED = false;
+        HAS_TERMINATED = true;
 
         //AGENT_PATHFINDING = true;
         //ENABLE_DAY_LOOP = true;
@@ -1099,5 +1099,10 @@ public class Landscape : MonoBehaviour
     {
         this.saveDebugTxt();
         this.HAS_TERMINATED = true;
+    }
+
+    public bool hasTerminated()
+    {
+        return HAS_TERMINATED;
     }
 }
