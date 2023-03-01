@@ -31,6 +31,8 @@ public class Landscape : MonoBehaviour
     [SerializeField] private int num_adults;
     [SerializeField] private int num_children;
     [SerializeField] private Agent highlighted_agent;
+    private bool HAS_BEEN_INITIALISED;
+    private bool HAS_TERMINATED;
 
     private void Awake()
     {
@@ -41,11 +43,49 @@ public class Landscape : MonoBehaviour
         {
             Instance = this;
         }
-        AGENT_PATHFINDING = true;
+        HAS_BEEN_INITIALISED = false;
+        HAS_TERMINATED = false;
+
+        //AGENT_PATHFINDING = true;
+        //ENABLE_DAY_LOOP = true;
+        //terrain = new MapLoader().textureToGameArray(MAP_IMAGE,TILE_TEMPLATE); // TODO -> Doesn't like the 'new' keyword!
+        //this.width = terrain.GetLength(0); // Right now map is 50x50 so idk if these dimensions are correct :(
+        //this.height = terrain.GetLength(1); // height and width might be the wrong way around :(
+
+        //agents = new List<Agent>();
+
+        //InitialPopulationRule1();
+        //initialiseGraphRenderer();
+
+        //day = 1;
+        //year = 1;
+        //time = TimeState.Morning;
+        //setAllAgentPathsToWorkSchool();
+    }
+
+    public void TestInitialise()
+    {
+        print("Initialising map.");
+        Initialise(MAP_IMAGE);
+        print("Initialised map.");
+        //this.ResetLandscape();
+    }
+
+    public void Initialise(Texture2D map_img)
+    {
+        if (HAS_BEEN_INITIALISED) ResetLandscape();
+        this.HAS_BEEN_INITIALISED = true;
+
+        AGENT_PATHFINDING = !Parameters.Instance.DISABLE_PATHFINDING;
         ENABLE_DAY_LOOP = true;
-        terrain = new MapLoader().textureToGameArray(MAP_IMAGE,TILE_TEMPLATE); // TODO -> Doesn't like the 'new' keyword!
+        HAS_TERMINATED = false;
+        terrain = new MapLoader().textureToGameArray(map_img, TILE_TEMPLATE); // TODO -> Doesn't like the 'new' keyword!
         this.width = terrain.GetLength(0); // Right now map is 50x50 so idk if these dimensions are correct :(
         this.height = terrain.GetLength(1); // height and width might be the wrong way around :(
+
+        inGameUI.calculateCameraBounds(width, height);
+        inGameUI.hideGraphUI();
+        inGameUI.showUI();
 
         agents = new List<Agent>();
 
@@ -58,6 +98,36 @@ public class Landscape : MonoBehaviour
         setAllAgentPathsToWorkSchool();
     }
 
+    public void ResetLandscape()
+    {
+        /* Need to destroy all agents and tiles */
+        destroyAllAgents();
+        destroyMap();
+        destroyGraph();
+    }
+
+    public void destroyAllAgents()
+    {
+        Agent[] arr = agents.ToArray();
+        for (int i=0; i<arr.Length; ++i)
+        {
+            arr[i].die();
+        }
+    }
+
+    public void destroyMap()
+    {
+        foreach (TileInfo t in terrain)
+        {
+            Destroy(t.gameObject);
+        }
+    }
+
+    public void destroyGraph()
+    {
+        graphRenderer.destroyAll();
+    }
+
     private void Update()
     {
         updateHighlightedAgent();
@@ -67,6 +137,7 @@ public class Landscape : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (HAS_TERMINATED) return;
         if (!ENABLE_DAY_LOOP) return;
         //shuffleAgentOrder();
         turn_timer += Time.fixedDeltaTime;
@@ -262,6 +333,10 @@ public class Landscape : MonoBehaviour
             day = 0;
             ++year;
             ageAllAgents();
+            if (year >= Parameters.Instance.NUM_YEARS_TO_RUN)
+            {
+                this.terminate();
+            }
         }
         resetAllAgentSocialMeetupCounters();
     }
@@ -1018,5 +1093,11 @@ public class Landscape : MonoBehaviour
         FileWriterScript f = new FileWriterScript();
         string filename = f.writeDebugTxt(this, graphRenderer);
         print("File written to: " + filename);
+    }
+
+    private void terminate()
+    {
+        this.saveDebugTxt();
+        this.HAS_TERMINATED = true;
     }
 }

@@ -81,6 +81,20 @@ public class GraphRendererScript : MonoBehaviour
         }
     }
 
+    public void destroyAll()
+    {
+        foreach (NodeScript ns in nodeList)
+        {
+            ns.destroyAllEdges();
+            Destroy(ns.gameObject);
+        }
+        foreach (IdealNode id in idealNodeList)
+        {
+            id.destroyAllEdges();
+            Destroy(id.gameObject);
+        }
+    }
+
     public void enableVisuals(bool b)
     {
         this.ENABLE_VISUALS = b;

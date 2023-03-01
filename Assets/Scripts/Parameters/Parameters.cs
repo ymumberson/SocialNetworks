@@ -6,6 +6,11 @@ public class Parameters : MonoBehaviour
 {
     public static Parameters Instance;
 
+    /* Testing Parameters */
+    [SerializeField] public int NUM_YEARS_TO_RUN = 100;
+    [SerializeField] public bool DISABLE_PATHFINDING = false;
+    [SerializeField] public int TEST_ID = 1;
+    
     /* General Simulation Parameters */
     [SerializeField] public float TURN_TIME = 0.1f;
     [SerializeField] public int DAYS_PER_YEAR = 365;
@@ -42,6 +47,7 @@ public class Parameters : MonoBehaviour
     [SerializeField] public int MAX_INITIAL_CHILD_AGE = 17;
 
     /* Terrain Generation Parameters */
+    [SerializeField] public int SELECTED_MAP_INDEX = 0;
     [SerializeField] public float PERCENT_CHILD_SOCIAL_BUILDINGS = 0.2f;
 
     /* Colours for highlighting */
@@ -55,6 +61,7 @@ public class Parameters : MonoBehaviour
     {
         if (Instance)
         {
+            print("Destroying duplicate instance of Parameters.");
             Destroy(this.gameObject);
         } else
         {

@@ -64,15 +64,27 @@ public class InGameScript : MonoBehaviour
         selectButton(NORMAL_SPEED_BUTTON);
     }
 
-    private void Start()
+    //private void Start()
+    //{
+    //    /* Centre the camera */
+    //    float tileWidth = 1f;
+    //    this.camera_height = tileWidth * Landscape.Instance.getHeight();
+    //    this.camera_position = new Vector3(tileWidth * Landscape.Instance.getWidth() / 2f, camera_height / 2f, -10f);
+    //    Camera.main.transform.position = camera_position;
+    //    Camera.main.orthographicSize = (camera_height / 2f) * 1.1f;
+    //    CameraScript.Instance.setMaxSize((camera_height / 2f) * 1.1f);
+    //}
+
+    public void calculateCameraBounds(float width, float height)
     {
-        /* Centre the camera */
         float tileWidth = 1f;
-        this.camera_height = tileWidth * Landscape.Instance.getHeight();
-        this.camera_position = new Vector3(tileWidth * Landscape.Instance.getWidth() / 2f, camera_height / 2f, -10f);
-        Camera.main.transform.position = camera_position;
-        Camera.main.orthographicSize = (camera_height / 2f) * 1.1f;
-        CameraScript.Instance.setMaxSize((camera_height / 2f) * 1.1f);
+        this.camera_height = tileWidth * height;
+        this.camera_position = new Vector3(tileWidth * width / 2f, camera_height / 2f, -10f);
+    }
+
+    public void hideGraphUI()
+    {
+        graphUI.hideGraphUI();
     }
 
     public void switchToGraphUI()

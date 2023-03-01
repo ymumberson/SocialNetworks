@@ -26,11 +26,6 @@ public class CameraScript : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        //this.cam = Camera.main;
-    }
-
     private void Update()
     {
         if (Input.GetAxis("Mouse ScrollWheel") != 0)
