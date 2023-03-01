@@ -9,7 +9,7 @@ public class Parameters : MonoBehaviour
     /* Testing Parameters */
     [SerializeField] public int NUM_YEARS_TO_RUN = 100;
     [SerializeField] public bool DISABLE_PATHFINDING = false;
-    [SerializeField] public int TEST_ID = 1;
+    [SerializeField] public string TEST_NAME = "1";
     
     /* General Simulation Parameters */
     [SerializeField] public float TURN_TIME = 0.1f;

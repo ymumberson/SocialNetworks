@@ -1,7 +1,7 @@
 {
     "NUM_YEARS_TO_RUN": 50,
     "DISABLE_PATHFINDING": false,
-    "TEST_ID": 1,
+    "TEST_NAME": "Test 1",
     "TURN_TIME": 0.0,
     "DAYS_PER_YEAR": 1,
     "ENABLE_PERSONALITY_TRANSMISSION": false,
