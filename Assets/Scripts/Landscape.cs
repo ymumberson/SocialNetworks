@@ -9,7 +9,6 @@ public class Landscape : MonoBehaviour
     public enum TimeState { Morning, Midday, WalkingToSocial, SocialTime, HomeTime,  NightTime }
 
     /* Settings */
-    [SerializeField] public bool AGENT_PATHFINDING;
     [SerializeField] public bool ENABLE_DAY_LOOP;
 
     /* Externally visible variables */
@@ -45,22 +44,6 @@ public class Landscape : MonoBehaviour
         }
         HAS_BEEN_INITIALISED = false;
         HAS_TERMINATED = true;
-
-        //AGENT_PATHFINDING = true;
-        //ENABLE_DAY_LOOP = true;
-        //terrain = new MapLoader().textureToGameArray(MAP_IMAGE,TILE_TEMPLATE); // TODO -> Doesn't like the 'new' keyword!
-        //this.width = terrain.GetLength(0); // Right now map is 50x50 so idk if these dimensions are correct :(
-        //this.height = terrain.GetLength(1); // height and width might be the wrong way around :(
-
-        //agents = new List<Agent>();
-
-        //InitialPopulationRule1();
-        //initialiseGraphRenderer();
-
-        //day = 1;
-        //year = 1;
-        //time = TimeState.Morning;
-        //setAllAgentPathsToWorkSchool();
     }
 
     public void TestInitialise()
@@ -76,7 +59,6 @@ public class Landscape : MonoBehaviour
         if (HAS_BEEN_INITIALISED) ResetLandscape();
         this.HAS_BEEN_INITIALISED = true;
 
-        AGENT_PATHFINDING = !Parameters.Instance.DISABLE_PATHFINDING;
         ENABLE_DAY_LOOP = true;
         HAS_TERMINATED = false;
         terrain = new MapLoader().textureToGameArray(map_img, TILE_TEMPLATE); // TODO -> Doesn't like the 'new' keyword!
@@ -86,6 +68,8 @@ public class Landscape : MonoBehaviour
         inGameUI.calculateCameraBounds(width, height);
         inGameUI.hideGraphUI();
         inGameUI.showUI();
+        inGameUI.setPathFindingToggle(!Parameters.Instance.DISABLE_PATHFINDING);
+        inGameUI.setPersonalityTransmissionToggle(Parameters.Instance.ENABLE_PERSONALITY_TRANSMISSION);
 
         agents = new List<Agent>();
 
@@ -150,7 +134,7 @@ public class Landscape : MonoBehaviour
     
     public void togglePathfinding()
     {
-        this.AGENT_PATHFINDING = !this.AGENT_PATHFINDING;
+        Parameters.Instance.DISABLE_PATHFINDING = !Parameters.Instance.DISABLE_PATHFINDING;
     }
 
     public void togglePersonalityTransmission()
@@ -456,7 +440,7 @@ public class Landscape : MonoBehaviour
 
     public bool updateAllAgentPaths()
     {
-        if (!AGENT_PATHFINDING) return teleportAgentsToDestinations();
+        if (Parameters.Instance.DISABLE_PATHFINDING) return teleportAgentsToDestinations();
 
         bool allreached = true;
         foreach (Agent a in agents)

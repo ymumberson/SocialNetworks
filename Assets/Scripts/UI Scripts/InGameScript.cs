@@ -9,12 +9,16 @@ public class InGameScript : MonoBehaviour
     /* Zoom */
     [SerializeField] private float zoomFactor = 1f;
     
-    /* InGame UIs */
+    /* UIs */
     [SerializeField] GameObject inGameUI;
     [SerializeField] GraphUIScript graphUI;
     
     /* Search UI */
     [SerializeField] private TextMeshProUGUI SEARCH_AGENT_ID_TEXT;
+
+    /* Toggles */
+    [SerializeField] private Toggle PATHFINDING_TOGGLE;
+    [SerializeField] private Toggle PERSONALITY_TRANSMISSION_TOGGLE;
 
     /* Time Buttons */
     [SerializeField] private Button PAUSE_BUTTON;
@@ -242,5 +246,15 @@ public class InGameScript : MonoBehaviour
         GR_MAX_DEPTH_TEXT.text = "Max Depth: " + gr.getMaxDepth();
         GR_AVG_DEPTH_TEXT.text = "Avg Depth: " + gr.getAverageDepth();
         GR_CAN_REACH_ALL_TEXT.text = "Can Reach All: " + gr.getPercentCanReachAll();
+    }
+
+    public void setPathFindingToggle(bool b)
+    {
+        this.PATHFINDING_TOGGLE.isOn = b;
+    }
+
+    public void setPersonalityTransmissionToggle(bool b)
+    {
+        this.PERSONALITY_TRANSMISSION_TOGGLE.isOn = b;
     }
 }

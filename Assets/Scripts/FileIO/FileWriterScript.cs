@@ -8,16 +8,27 @@ public class FileWriterScript
 
     public string writeDebugTxt(Landscape l, GraphRendererScript g)
     {
-        string filename = "Debug_log_" +
-            "Year" + System.DateTime.Now.Year + "_" +
-            "Month" + System.DateTime.Now.Month + "_" +
-            "Day" + System.DateTime.Now.Day + "_" +
-            "Hour" + System.DateTime.Now.Hour + "_" +
-            "Min" + System.DateTime.Now.Minute + "_" +
-            "Sec" + System.DateTime.Now.Second + "_" +
-            "Milli" + System.DateTime.Now.Millisecond +
-            ".txt";
-        
+        //string filename =
+        //    "Debug_log_" +
+        //    "Year" + System.DateTime.Now.Year + "_" +
+        //    "Month" + System.DateTime.Now.Month + "_" +
+        //    "Day" + System.DateTime.Now.Day + "_" +
+        //    "Hour" + System.DateTime.Now.Hour + "_" +
+        //    "Min" + System.DateTime.Now.Minute + "_" +
+        //    "Sec" + System.DateTime.Now.Second + "_" +
+        //    "Milli" + System.DateTime.Now.Millisecond +
+        //    ".txt";
+
+        string filename =
+            Parameters.Instance.TEST_NAME.Replace(" ", "-") + "(" +
+            System.DateTime.Now.Year + "-" +
+            System.DateTime.Now.Month + "-" +
+            System.DateTime.Now.Day + "-" +
+            System.DateTime.Now.Hour + "-" +
+            System.DateTime.Now.Minute + "-" +
+            System.DateTime.Now.Second +
+            ").txt";
+
         this.writeDebugTxt(filename,l, g);
         return filename;
     }

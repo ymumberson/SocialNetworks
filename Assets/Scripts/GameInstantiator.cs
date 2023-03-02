@@ -4,9 +4,19 @@ using UnityEngine;
 
 public class GameInstantiator : MonoBehaviour
 {
+    [SerializeField] private bool IS_SEEDED;
+    [SerializeField] private int SEED = 123456789;
     [SerializeField] private Texture2D[] maps;
     [SerializeField] private List<string> filenames;
     private string foldername = "Tests\\";
+
+    private void Awake()
+    {
+        if (this.IS_SEEDED)
+        {
+            Random.InitState(SEED);
+        }
+    }
 
     private void Start()
     {

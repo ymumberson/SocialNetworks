@@ -2744,6 +2744,8 @@ MonoBehaviour:
   inGameUI: {fileID: 462747934}
   graphUI: {fileID: 1857769221}
   SEARCH_AGENT_ID_TEXT: {fileID: 1122389635}
+  PATHFINDING_TOGGLE: {fileID: 994706076}
+  PERSONALITY_TRANSMISSION_TOGGLE: {fileID: 1870516339}
   PAUSE_BUTTON: {fileID: 1935652087}
   NORMAL_SPEED_BUTTON: {fileID: 1532061356}
   HALF_SPEED_BUTTON: {fileID: 1454009268}
@@ -4223,7 +4225,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &1006050731
 GameObject:
   m_ObjectHideFlags: 0
@@ -4422,6 +4424,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NUM_YEARS_TO_RUN: 50
+  DISABLE_PATHFINDING: 0
+  TEST_NAME: SANDBOX
   TURN_TIME: 0
   DAYS_PER_YEAR: 1
   ENABLE_PERSONALITY_TRANSMISSION: 0
@@ -5752,7 +5756,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69ea4c7b0903acf4b89c243b673df0e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AGENT_PATHFINDING: 0
   ENABLE_DAY_LOOP: 0
   MAP_IMAGE: {fileID: 2800000, guid: 6f9a0ff126e59fb4ebfb7fff0323a072, type: 3}
   TILE_TEMPLATE: {fileID: 5565839179423602630, guid: 20100528dc8055649873138ca42f89e1, type: 3}
@@ -8401,8 +8404,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 416d376b67d451d4bb7418d9e762dd4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maps: []
-  selected_map: 0
+  IS_SEEDED: 1
+  SEED: 123456789
+  maps:
+  - {fileID: 2800000, guid: fc35b027ce1f27b43aafd391f9b530ed, type: 3}
+  - {fileID: 2800000, guid: 1b3329181ca9d254eb95df70543bb9c5, type: 3}
+  - {fileID: 2800000, guid: 6f9a0ff126e59fb4ebfb7fff0323a072, type: 3}
+  - {fileID: 2800000, guid: 1fdccdcf1c73e27469517546ef4a2d01, type: 3}
+  filenames: []
 --- !u!4 &1743455883
 Transform:
   m_ObjectHideFlags: 0
