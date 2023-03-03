@@ -63,6 +63,10 @@ public class Landscape : MonoBehaviour
         {
             Random.InitState(Parameters.Instance.SEED);
         }
+        else
+        {
+            Random.InitState(Random.Range(int.MinValue, int.MaxValue));
+        }
 
         ENABLE_DAY_LOOP = true;
         HAS_TERMINATED = false;
