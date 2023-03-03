@@ -59,6 +59,11 @@ public class Landscape : MonoBehaviour
         if (HAS_BEEN_INITIALISED) ResetLandscape();
         this.HAS_BEEN_INITIALISED = true;
 
+        if (Parameters.Instance.IS_SEEDED)
+        {
+            Random.InitState(Parameters.Instance.SEED);
+        }
+
         ENABLE_DAY_LOOP = true;
         HAS_TERMINATED = false;
         terrain = new MapLoader().textureToGameArray(map_img, TILE_TEMPLATE); // TODO -> Doesn't like the 'new' keyword!

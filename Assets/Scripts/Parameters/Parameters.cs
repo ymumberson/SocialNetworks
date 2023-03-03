@@ -10,6 +10,8 @@ public class Parameters : MonoBehaviour
     [SerializeField] public int NUM_YEARS_TO_RUN = 100;
     [SerializeField] public bool DISABLE_PATHFINDING = false;
     [SerializeField] public string TEST_NAME = "1";
+    [SerializeField] public bool IS_SEEDED = true;
+    [SerializeField] public int SEED = 123456789;
     
     /* General Simulation Parameters */
     [SerializeField] public float TURN_TIME = 0.1f;

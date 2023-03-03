@@ -2,6 +2,8 @@
     "NUM_YEARS_TO_RUN": 500,
     "DISABLE_PATHFINDING": true,
     "TEST_NAME": "Medium Social Meetup chance",
+    "IS_SEEDED": true,
+    "SEED": 123456789,
     "TURN_TIME": 0.0,
     "DAYS_PER_YEAR": 1,
     "ENABLE_PERSONALITY_TRANSMISSION": false,
