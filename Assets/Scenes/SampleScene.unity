@@ -4423,7 +4423,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b104e9eb257260041a6761fd990449f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NUM_YEARS_TO_RUN: 50
+  NUM_YEARS_TO_RUN: 9999999
   DISABLE_PATHFINDING: 0
   TEST_NAME: SANDBOX
   TURN_TIME: 0
@@ -4436,8 +4436,8 @@ MonoBehaviour:
   MAX_OFFSPRING_AMOUNT: 3
   MIN_FERTILITY_AGE: 20
   MAX_FERTILITY_AGE: 50
-  MIN_FRIENDS: 3
-  MAX_FRIENDS: 7
+  MIN_FRIENDS: 1
+  MAX_FRIENDS: 1
   PERSONALITY_LENGTH: 20
   PERSONALITY_THRESHOLD: 0.5
   MAX_NUMBER_OF_SOCIAL_MEETUPS_PER_WEEK: 2
@@ -8404,6 +8404,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 416d376b67d451d4bb7418d9e762dd4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SANDBOX_MODE: 0
+  SANDBOX_MAP: {fileID: 2800000, guid: fc35b027ce1f27b43aafd391f9b530ed, type: 3}
   IS_SEEDED: 1
   SEED: 123456789
   maps:

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameInstantiator : MonoBehaviour
 {
+    [SerializeField] private bool SANDBOX_MODE;
+    [SerializeField] private Texture2D SANDBOX_MAP;
     [SerializeField] private bool IS_SEEDED;
     [SerializeField] private int SEED = 123456789;
     [SerializeField] private Texture2D[] maps;
@@ -20,6 +22,12 @@ public class GameInstantiator : MonoBehaviour
 
     private void Start()
     {
+        if (SANDBOX_MODE)
+        {
+            Landscape.Instance.Initialise(SANDBOX_MAP);
+            return;
+        }
+
         string[] temp = System.IO.Directory.GetFiles(foldername);
         foreach (string filename in temp)
         {

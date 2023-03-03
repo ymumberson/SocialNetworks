@@ -68,8 +68,12 @@ public class Landscape : MonoBehaviour
         inGameUI.calculateCameraBounds(width, height);
         inGameUI.hideGraphUI();
         inGameUI.showUI();
-        inGameUI.setPathFindingToggle(!Parameters.Instance.DISABLE_PATHFINDING);
-        inGameUI.setPersonalityTransmissionToggle(Parameters.Instance.ENABLE_PERSONALITY_TRANSMISSION);
+        inGameUI.setPathFindingToggle(!Parameters.Instance.DISABLE_PATHFINDING); //Setting it also toggles it xD
+        //if (inGameUI.getPathFindingToggleIsOn() != Parameters.Instance.DISABLE_PATHFINDING)
+        //{
+        //    this.togglePathfinding();
+        //}
+        //inGameUI.setPersonalityTransmissionToggle(Parameters.Instance.ENABLE_PERSONALITY_TRANSMISSION);
 
         agents = new List<Agent>();
 

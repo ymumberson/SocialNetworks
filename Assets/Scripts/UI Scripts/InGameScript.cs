@@ -250,7 +250,14 @@ public class InGameScript : MonoBehaviour
 
     public void setPathFindingToggle(bool b)
     {
+        if (this.PATHFINDING_TOGGLE.isOn == b) return;
         this.PATHFINDING_TOGGLE.isOn = b;
+        Landscape.Instance.togglePathfinding(); //Setting 'isOn' also triggers the toggle, so we counteract it here.
+    }
+
+    public bool getPathFindingToggleIsOn()
+    {
+        return this.PATHFINDING_TOGGLE.isOn;
     }
 
     public void setPersonalityTransmissionToggle(bool b)
