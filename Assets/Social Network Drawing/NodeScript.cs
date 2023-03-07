@@ -21,6 +21,10 @@ public class NodeScript : MonoBehaviour
     private Vector2 upperBound;
     private List<NodeScript> reachableInN;
 
+    /* Just keeping these here for debugging reasons */
+    [SerializeField] private int community_id;
+    private Color community_color;
+
     /// <summary>
     /// This stores the value of clustering coefficient from when it was last calculated.
     /// </summary>
@@ -64,6 +68,18 @@ public class NodeScript : MonoBehaviour
     public List<NodeScript> getReachableInN()
     {
         return this.reachableInN;
+    }
+
+    public void setCommunity(int id, Color c)
+    {
+        this.community_id = id;
+        this.community_color = c;
+        this.agent.setCommunity(id, c);
+    }
+
+    public int getCommunityID()
+    {
+        return this.agent.getCommunityID();
     }
 
     public Agent getAgent()
@@ -383,6 +399,13 @@ public class NodeScript : MonoBehaviour
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         sr.color = Parameters.Instance.UNHIGHLIGHTED_AGENT_COLOR;
+        sr.sortingOrder = 0;
+    }
+
+    public void highlightCommunity()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        sr.color = this.community_color;
         sr.sortingOrder = 0;
     }
 }

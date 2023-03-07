@@ -30,6 +30,8 @@ public class Agent : MonoBehaviour
     [SerializeField] private int total_num_social_meetups_attended;
     [SerializeField] private Social social_meetup_building;
     [SerializeField] private int social_group_index;
+    [SerializeField] private int community_id;
+    private Color community_color;
     private List<Vector2> path;
     //private List<Vector2> path_to_work;
 
@@ -55,6 +57,22 @@ public class Agent : MonoBehaviour
     public int getAgentID()
     {
         return this.AGENT_ID;
+    }
+
+    public void setCommunity(int id, Color c)
+    {
+        this.community_id = id;
+        this.community_color = c;
+    }
+
+    public int getCommunityID()
+    {
+        return this.community_id;
+    }
+
+    public Color getCommunityColor()
+    {
+        return this.community_color;
     }
 
     public void initialise_agent(int age, Gender gender, House home, Building work_school, Agent[] parents, bool home_owner, string personality)
@@ -811,6 +829,7 @@ public class Agent : MonoBehaviour
         }
 
         json += "\"Personality\":" + this.personality + ",";
+        json += "\"Community\":" + (community_id != -1 ? community_id.ToString() : "NULL") + ",";
         json += "\"MAX_NUM_FRIENDS\":" + this.MAX_NUM_FRIENDS + ",";
         json += "\"Close_friends\":" + this.close_friends.toTxt();
 

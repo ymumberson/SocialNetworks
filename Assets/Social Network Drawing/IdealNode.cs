@@ -53,7 +53,7 @@ public class IdealNode : MonoBehaviour
     {
         this.agent = a;
         a.ideal_node = this;
-        this.gameObject.name = "IdealNode: " + a.getAgentID();
+        //this.gameObject.name = "IdealNode: " + a.getAgentID();
     }
 
     public Agent getAgent()

@@ -15,12 +15,16 @@ public class GraphRendererScript : MonoBehaviour
      */
     [SerializeField] private bool ENABLE_VISUALS;
     [SerializeField] public bool SHOW_IDEAL_GRAPH;
+    [SerializeField] public bool SHOW_COMMUNITIES;
     [SerializeField] private GameObject NODE_TEMPLATE;
     [SerializeField] private GameObject EDGE_TEMPLATE;
     [SerializeField] private GameObject BACKGROUND_TEMPLATE;
     [SerializeField] private float minX=-5, maxX=-105, minY=-5, maxY=-105;
     [SerializeField] private List<NodeScript> nodeList;
     [SerializeField] private int COMMUNITY_PATH_LENGTH_CUTOFF = 2;
+    [SerializeField] private int MIN_COMMUNITY_SIZE = 3;
+    [SerializeField] private int num_communities;
+    [SerializeField] private float avg_community_size;
     private List<IdealNode> idealNodeList;
     [SerializeField] private int numNodes;
     [SerializeField] private int numEdges;
@@ -100,6 +104,20 @@ public class GraphRendererScript : MonoBehaviour
     {
         this.ENABLE_VISUALS = b;
         calculateIdealNeighbours();
+    }
+
+    public void toggleShowCommunities()
+    {
+        if (SHOW_COMMUNITIES)
+        {
+            this.SHOW_COMMUNITIES = false;
+            Landscape.Instance.unhighlightAllAgents();
+        }
+        else
+        {
+            this.SHOW_COMMUNITIES = true;
+            this.recalculateGraphProperties();
+        }
     }
 
     public Vector2 getCentre()
@@ -549,6 +567,14 @@ public class GraphRendererScript : MonoBehaviour
 
     public void calculateCommunities()
     {
+        List<List<NodeScript>> all_communities = new List<List<NodeScript>>();
+
+        /* Reset each node's community_id */
+        foreach (NodeScript node in nodeList)
+        {
+            node.setCommunity(-1,Color.white);
+        }
+
         /*
          * Calculate all groups of nodes who can reach each other
          * within N steps -> N = COMMUNITY_PATH_LENGTH_CUTOFF
@@ -574,19 +600,74 @@ public class GraphRendererScript : MonoBehaviour
                     }
                 }
             }
-            if (common_nodes.Count >= 3) /* min size of community */
+            if (common_nodes.Count >= MIN_COMMUNITY_SIZE) /* min size of community */
             {
-                string s = "";
-                foreach (NodeScript n in common_nodes)
+                //string s = "";
+                //foreach (NodeScript n in common_nodes)
+                //{
+                //    s += n.name + ", ";
+                //}
+                //Debug.Log("Found a community! -> " + s);
+
+                /*
+                 * Found a community, check that it isn't a subset of another community.
+                 * If a community is a subset of this community, then replace the subset with this.
+                 */
+                bool subset_or_replaced = false;
+                //foreach (List<NodeScript> community in all_communities)
+                for (int i=0; i<all_communities.Count; ++i)
                 {
-                    s += n.name + ", ";
+                    List<NodeScript> community = all_communities[i];
+                    int num_matches = 0;
+                    foreach (NodeScript n in community)
+                    {
+                        if (common_nodes.Contains(n)) ++num_matches;
+                    }
+
+
+                    if (num_matches == community.Count && common_nodes.Count > community.Count)
+                    {
+                        /* Community is subset */
+                        all_communities[i] = common_nodes;
+                        subset_or_replaced = true;
+                        break;
+                    }
+                    if (num_matches == common_nodes.Count)
+                    {
+                        /* common_nodes is subset so remove (skip) */
+                        subset_or_replaced = true;
+                        break;
+                    }
                 }
-                Debug.Log("Found a community! -> " + s);
-            } else
-            {
-                Debug.Log("No community: size = " + common_nodes.Count);
+                if (!subset_or_replaced)
+                {
+                    all_communities.Add(common_nodes);
+                }
             }
+            //else
+            //{
+            //    Debug.Log("No community: size = " + common_nodes.Count);
+            //}
         }
+
+        this.num_communities = all_communities.Count;
+        //Debug.Log("Number of communities -> " + all_communities.Count);
+        //foreach (List<NodeScript> community in all_communities)
+        float tally = 0;
+        for (int i=0; i<all_communities.Count; ++i)
+        {
+            List<NodeScript> community = all_communities[i];
+            Color community_color = new Color(Random.value,Random.value,Random.value);
+            tally += community.Count;
+            //string s = "";
+            foreach (NodeScript n in community)
+            {
+                //s += n.name + ",";
+                n.setCommunity(i, community_color);
+            }
+            //print("Community: " + s);
+        }
+        this.avg_community_size = (tally / all_communities.Count);
     }
 
     public string toTxt()
@@ -600,6 +681,8 @@ public class GraphRendererScript : MonoBehaviour
         json += TAB + "\"Average_path_length\":" + this.avgPathLength + ",\n";
         json += TAB + "\"Max_depth\":" + this.maxDepth + ",\n";
         json += TAB + "\"Average_depth\":" + this.getAverageDepth() + ",\n";
+        json += TAB + "\"Num_communities\":" + this.num_communities + ",\n";
+        json += TAB + "\"Average_community_size\":" + this.avg_community_size + ",\n";
         json += TAB + "\"Can_reach_all\":" + this.getPercentCanReachAll() + "\n}";
 
         return json;

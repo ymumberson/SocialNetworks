@@ -1031,6 +1031,14 @@ public class Landscape : MonoBehaviour
         return this.graphRenderer;
     }
 
+    public void unhighlightAllAgents()
+    {
+        foreach (Agent a in agents)
+        {
+            a.unHighlightAgent();
+        }
+    }
+
     public void setHighlightedAgent(Agent a)
     {
         if (highlighted_agent != null)
@@ -1042,10 +1050,24 @@ public class Landscape : MonoBehaviour
 
     private void updateHighlightedAgent()
     {
+        if (graphRenderer.SHOW_COMMUNITIES)
+        {
+            this.highlightCommunities();
+            return;
+        }
+        
         if (highlighted_agent == null) return;
         highlighted_agent.unHighlightAgentAndFriends();
         highlighted_agent.highlightAgentAndFriends();
         inGameUI.updateSelectedAgentText(highlighted_agent);
+    }
+
+    private void highlightCommunities()
+    {
+        foreach (Agent a in agents)
+        {
+            a.getNode().highlightCommunity();
+        }
     }
 
     public void setHighlightedAgent(int agentID)
