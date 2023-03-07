@@ -632,9 +632,17 @@ public class GraphRendererScript : MonoBehaviour
                         subset_or_replaced = true;
                         break;
                     }
-                    if (num_matches == common_nodes.Count)
+                    /* Nodes can be in two sets */
+                    //if (num_matches == common_nodes.Count)
+                    //{
+                    //    /* common_nodes is subset so remove (skip) */
+                    //    subset_or_replaced = true;
+                    //    break;
+                    //}
+
+                    /* Nodes cannot be in two sets */
+                    if (num_matches > 0)
                     {
-                        /* common_nodes is subset so remove (skip) */
                         subset_or_replaced = true;
                         break;
                     }
