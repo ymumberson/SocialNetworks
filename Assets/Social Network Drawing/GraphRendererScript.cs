@@ -20,6 +20,7 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private GameObject BACKGROUND_TEMPLATE;
     [SerializeField] private float minX=-5, maxX=-105, minY=-5, maxY=-105;
     [SerializeField] private List<NodeScript> nodeList;
+    [SerializeField] private int COMMUNITY_PATH_LENGTH_CUTOFF = 2;
     private List<IdealNode> idealNodeList;
     [SerializeField] private int numNodes;
     [SerializeField] private int numEdges;
@@ -267,6 +268,8 @@ public class GraphRendererScript : MonoBehaviour
         //Debug.Log("Calulating average path length took " + s2.ElapsedMilliseconds + "ms." + Random.value);
         //s.Stop();
         //Debug.Log("Network calculations took " + s.ElapsedMilliseconds + "ms." + Random.value);
+
+        calculateCommunities();
     }
 
     public bool repositionNodes()
@@ -481,9 +484,13 @@ public class GraphRendererScript : MonoBehaviour
             List<NodeScript> visited_nodes = new List<NodeScript>();
             Queue<int> depth_queue = new Queue<int>();
 
+            /* List of nodes reachable within N steps */
+            List<NodeScript> reachableWithinN = new List<NodeScript>();
+            //reachableWithinN.Add(root);
+
             visited_nodes.Add(root);
             nodes_to_visit.Enqueue(root);
-            depth_queue.Enqueue(1);
+            depth_queue.Enqueue(0);
             int maxDepth = 0;
             float avgDepth = 0;
             while (nodes_to_visit.Count > 0)
@@ -491,6 +498,11 @@ public class GraphRendererScript : MonoBehaviour
                 NodeScript ns = nodes_to_visit.Dequeue();
                 int depth = depth_queue.Dequeue();
                 maxDepth = depth;
+                /* Add to reachable within N if depth<=n */
+                if (depth <= COMMUNITY_PATH_LENGTH_CUTOFF)
+                {
+                    reachableWithinN.Add(ns);
+                }
                 foreach (NodeScript neighbour in ns.getNeighbourNodes())
                 {
                     if (!visited_nodes.Contains(neighbour)) /* if not visited */
@@ -500,6 +512,12 @@ public class GraphRendererScript : MonoBehaviour
                         nodes_to_visit.Enqueue(neighbour);
                         depth_queue.Enqueue(depth + 1);
                         avgDepth += depth;
+
+                        ///* Add to reachable within N if depth<=n */
+                        //if (depth <= COMMUNITY_PATH_LENGTH_CUTOFF)
+                        //{
+                        //    reachableWithinN.Add(neighbour);
+                        //}
                     }
                 }
             }
@@ -507,6 +525,8 @@ public class GraphRendererScript : MonoBehaviour
             root.setMaxDepth(maxDepth);
             root.setAvgPathLength(avgDepth / visited_nodes.Count);
             root.setCanReachAllNodes(visited_nodes.Count == numNodes);
+            root.setReachableInN(reachableWithinN);
+            //Debug.Log(root.name + " can reach " + reachableWithinN.Count + " nodes in " + COMMUNITY_PATH_LENGTH_CUTOFF + " steps.");
             if (root.getCanReachAlNodes())
             {
                 ++num_nodes_that_can_reach_all_nodes;
@@ -525,6 +545,48 @@ public class GraphRendererScript : MonoBehaviour
         this.avgDepth /= max_depth_ls.Count;
         this.percent_nodes_that_can_reach_all_nodes = num_nodes_that_can_reach_all_nodes / numNodes;
         return path_lengths;
+    }
+
+    public void calculateCommunities()
+    {
+        /*
+         * Calculate all groups of nodes who can reach each other
+         * within N steps -> N = COMMUNITY_PATH_LENGTH_CUTOFF
+         */
+        foreach (NodeScript ns in nodeList)
+        {
+            NodeScript[] neighbours = ns.getReachableInN().ToArray();
+            List<NodeScript> common_nodes = new List<NodeScript>();
+            //common_nodes.Add(ns);
+            foreach (NodeScript n in neighbours)
+            {
+                common_nodes.Add(n);
+            }
+            foreach (NodeScript other in neighbours)
+            {
+                List<NodeScript> reachable = other.getReachableInN();
+                foreach (NodeScript common in common_nodes.ToArray())
+                {
+                    if (!reachable.Contains(common))
+                    {
+                        common_nodes.Remove(common);
+                        //Debug.Log(other.name + " cannot reach " + common + " in " + COMMUNITY_PATH_LENGTH_CUTOFF + " steps.");
+                    }
+                }
+            }
+            if (common_nodes.Count >= 3) /* min size of community */
+            {
+                string s = "";
+                foreach (NodeScript n in common_nodes)
+                {
+                    s += n.name + ", ";
+                }
+                Debug.Log("Found a community! -> " + s);
+            } else
+            {
+                Debug.Log("No community: size = " + common_nodes.Count);
+            }
+        }
     }
 
     public string toTxt()

@@ -1,1 +1,4 @@
 Currently we don't use the max number of social meetups (Maybe look into later? Idk how to work with it with time.)
+
+I think the reason for flickering lines when you highlight a node in the graph, are that two nodes may EACH have
+a line between each other, and they're constantly drawing over each other (same layer) in a random order?

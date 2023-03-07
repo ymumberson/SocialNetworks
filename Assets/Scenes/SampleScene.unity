@@ -4426,6 +4426,8 @@ MonoBehaviour:
   NUM_YEARS_TO_RUN: 9999999
   DISABLE_PATHFINDING: 0
   TEST_NAME: SANDBOX
+  IS_SEEDED: 1
+  SEED: 123456789
   TURN_TIME: 0
   DAYS_PER_YEAR: 1
   ENABLE_PERSONALITY_TRANSMISSION: 0
@@ -8404,10 +8406,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 416d376b67d451d4bb7418d9e762dd4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SANDBOX_MODE: 0
+  SANDBOX_MODE: 1
   SANDBOX_MAP: {fileID: 2800000, guid: fc35b027ce1f27b43aafd391f9b530ed, type: 3}
-  IS_SEEDED: 1
-  SEED: 123456789
   maps:
   - {fileID: 2800000, guid: fc35b027ce1f27b43aafd391f9b530ed, type: 3}
   - {fileID: 2800000, guid: 1b3329181ca9d254eb95df70543bb9c5, type: 3}

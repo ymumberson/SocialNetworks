@@ -10,14 +10,6 @@ public class GameInstantiator : MonoBehaviour
     [SerializeField] private List<string> filenames;
     private string foldername = "Tests\\";
 
-    //private void Awake()
-    //{
-    //    if (this.IS_SEEDED)
-    //    {
-    //        Random.InitState(SEED);
-    //    }
-    //}
-
     private void Start()
     {
         if (SANDBOX_MODE)

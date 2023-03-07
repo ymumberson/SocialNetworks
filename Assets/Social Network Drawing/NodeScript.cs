@@ -19,6 +19,7 @@ public class NodeScript : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 lowerBound;
     private Vector2 upperBound;
+    private List<NodeScript> reachableInN;
 
     /// <summary>
     /// This stores the value of clustering coefficient from when it was last calculated.
@@ -53,6 +54,16 @@ public class NodeScript : MonoBehaviour
         this.agent = a;
         this.agent.setNode(this);
         this.gameObject.name = "Node: " + a.getAgentID();
+    }
+
+    public void setReachableInN(List<NodeScript> ls)
+    {
+        this.reachableInN = ls;
+    }
+
+    public List<NodeScript> getReachableInN()
+    {
+        return this.reachableInN;
     }
 
     public Agent getAgent()
