@@ -1,7 +1,7 @@
 {
-    "NUM_YEARS_TO_RUN": 1000,
+    "NUM_YEARS_TO_RUN": 500,
     "DISABLE_PATHFINDING": true,
-    "TEST_NAME": "Baseline",
+    "TEST_NAME": "Medium Social Meetup chance",
     "IS_SEEDED": true,
     "SEED": 123456789,
     "TURN_TIME": 0.0,
@@ -19,7 +19,7 @@
     "PERSONALITY_LENGTH": 20,
     "PERSONALITY_THRESHOLD": 0.5,
     "MAX_NUMBER_OF_SOCIAL_MEETUPS_PER_WEEK": 2,
-    "DAILY_CHANCE_OF_SOCIAL_MEETUP": 0.25,
+    "DAILY_CHANCE_OF_SOCIAL_MEETUP": 0.5,
     "TIME_AT_WORK_SCHOOL": 0.0,
     "TIME_AT_HOME": 0.0,
     "TIME_AT_SOCIAL": 0.0,

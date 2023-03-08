@@ -1,0 +1,140 @@
+
+<<Graph Renderer>>
+{
+    "Density":0.06685633,
+    "Connectivity":4.947369,
+    "Clustering":0.4254385,
+    "Average_path_length":3.793153,
+    "Max_depth":13,
+    "Average_depth":7.552631,
+    "Num_communities":4,
+    "Average_community_size":3.5,
+    "Can_reach_all":0
+}
+
+
+<<Simulation Parameters>>
+{
+    "NUM_YEARS_TO_RUN": 500,
+    "DISABLE_PATHFINDING": true,
+    "TEST_NAME": "Map 1",
+    "IS_SEEDED": true,
+    "SEED": 123456789,
+    "TURN_TIME": 0.0,
+    "DAYS_PER_YEAR": 1,
+    "ENABLE_PERSONALITY_TRANSMISSION": false,
+    "AGE_TURN_ADULT": 18,
+    "MIN_DEATH_AGE": 70,
+    "MAX_DEATH_AGE": 100,
+    "MIN_OFFSPRING_AMOUNT": 0,
+    "MAX_OFFSPRING_AMOUNT": 3,
+    "MIN_FERTILITY_AGE": 20,
+    "MAX_FERTILITY_AGE": 50,
+    "MIN_FRIENDS": 3,
+    "MAX_FRIENDS": 5,
+    "PERSONALITY_LENGTH": 20,
+    "PERSONALITY_THRESHOLD": 0.5,
+    "MAX_NUMBER_OF_SOCIAL_MEETUPS_PER_WEEK": 2,
+    "DAILY_CHANCE_OF_SOCIAL_MEETUP": 0.25,
+    "TIME_AT_WORK_SCHOOL": 0.0,
+    "TIME_AT_HOME": 0.0,
+    "TIME_AT_SOCIAL": 0.0,
+    "MIN_INITIAL_CHILDREN": 0,
+    "MAX_INITIAL_CHILDREN": 3,
+    "MIN_INITIAL_PARENT_AGE": 20,
+    "MAX_INITIAL_PARENT_AGE": 40,
+    "MIN_INITIAL_CHILD_AGE": 0,
+    "MAX_INITIAL_CHILD_AGE": 17,
+    "SELECTED_MAP_INDEX": 1,
+    "PERCENT_CHILD_SOCIAL_BUILDINGS": 0.20000000298023225,
+    "HIGHLIGHTED_AGENT_COLOUR": {
+        "r": 1.0,
+        "g": 0.0,
+        "b": 0.0,
+        "a": 1.0
+    },
+    "HIGHLIGHTED_FRIEND_COLOUR": {
+        "r": 0.0,
+        "g": 0.0,
+        "b": 1.0,
+        "a": 1.0
+    },
+    "HIGHLIGHTED_IDEAL_FRIEND_COLOUR": {
+        "r": 1.0,
+        "g": 0.9215686321258545,
+        "b": 0.01568627543747425,
+        "a": 1.0
+    },
+    "UNHIGHLIGHTED_AGENT_COLOR": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+    },
+    "HIGHLIGHT_PERFECT_FRIEND": {
+        "r": 0.0,
+        "g": 1.0,
+        "b": 0.0,
+        "a": 1.0
+    }
+}
+
+
+<<Landscape Controller>>
+{
+    Day":0,
+    "Year":500,
+    "Time":Morning,
+    "Width":80,
+    "Height":50,
+    "Num_houses":34,
+    "Num_workplaces":18,
+    "Num_schools":2,
+    "Num_adult_socials":9,
+    "Num_child_socials":3,
+    "Num_agents":38,
+    "Num_adults":29,
+    "Num_children":9,
+    "Agents":{
+        {"AgentID":10434,"MAX_AGE":94,"MAX_NUM_OFFSPRING":3,"Parents":{10416,10422},"Age":93,"Gender":Female,"Home_owner":True,"Spouse":10445,"MAX_NUM_OFFSPRING":3,"Offspring":{10449,10456}"Personality":01011011011011001001,"Community":NULL,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10456,"cost":0.8},{"agentID":10439,"cost":0.85},{"agentID":10415,"cost":0.8},{"agentID":10404,"cost":0.85}}}},
+        {"AgentID":10439,"MAX_AGE":92,"MAX_NUM_OFFSPRING":3,"Parents":{10415,10396},"Age":87,"Gender":Male,"Home_owner":True,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":{10457}"Personality":11011011011011010001,"Community":0,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10456,"cost":0.85},{"agentID":10415,"cost":0.85},{"agentID":10457,"cost":0.9},{"agentID":10442,"cost":0.85}}}},
+        {"AgentID":10440,"MAX_AGE":97,"MAX_NUM_OFFSPRING":3,"Parents":{10421,10406},"Age":85,"Gender":Male,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":00101011110110111100,"Community":NULL,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10436,"cost":0.7},{"agentID":10446,"cost":0.7},{"agentID":10447,"cost":0.75},{"agentID":10433,"cost":0.9}}}},
+        {"AgentID":10443,"MAX_AGE":92,"MAX_NUM_OFFSPRING":3,"Parents":{10423,10414},"Age":77,"Gender":Male,"Home_owner":True,"Spouse":10453,"MAX_NUM_OFFSPRING":3,"Offspring":{10461,10467,10472}"Personality":11011011010101101000,"Community":2,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10405,"cost":0.9},{"agentID":10423,"cost":1},{"agentID":10454,"cost":0.95}}}},
+        {"AgentID":10445,"MAX_AGE":76,"MAX_NUM_OFFSPRING":3,"Parents":{10423,10414},"Age":71,"Gender":Male,"Home_owner":True,"Spouse":10434,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":10011011010100111100,"Community":NULL,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10454,"cost":0.75},{"agentID":10418,"cost":0.75},{"agentID":10429,"cost":0.8}}}},
+        {"AgentID":10446,"MAX_AGE":94,"MAX_NUM_OFFSPRING":3,"Parents":{10435,10436},"Age":70,"Gender":Female,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":00001011111101011000,"Community":1,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10458,"cost":0.8},{"agentID":10447,"cost":0.85},{"agentID":10425,"cost":0.85}}}},
+        {"AgentID":10447,"MAX_AGE":79,"MAX_NUM_OFFSPRING":3,"Parents":{10435,10436},"Age":69,"Gender":Female,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":00001011110001011100,"Community":1,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10433,"cost":0.85},{"agentID":10436,"cost":0.85},{"agentID":10446,"cost":0.85}}}},
+        {"AgentID":10448,"MAX_AGE":70,"MAX_NUM_OFFSPRING":3,"Parents":{10435,10436},"Age":68,"Gender":Female,"Home_owner":True,"Spouse":10449,"MAX_NUM_OFFSPRING":3,"Offspring":{10458,10460,10465,10468}"Personality":01101001101001111100,"Community":NULL,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10447,"cost":0.7},{"agentID":10435,"cost":0.75},{"agentID":10436,"cost":0.75}}}},
+        {"AgentID":10449,"MAX_AGE":71,"MAX_NUM_OFFSPRING":3,"Parents":{10434,10424},"Age":68,"Gender":Male,"Home_owner":True,"Spouse":10448,"MAX_NUM_OFFSPRING":3,"Offspring":{10468}"Personality":11010001011101001000,"Community":NULL,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10437,"cost":0.85},{"agentID":10450,"cost":0.85},{"agentID":10416,"cost":0.95},{"agentID":10424,"cost":0.9}}}},
+        {"AgentID":10450,"MAX_AGE":85,"MAX_NUM_OFFSPRING":3,"Parents":{10426,10437},"Age":67,"Gender":Female,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":11010011010101000000,"Community":NULL,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10426,"cost":0.9},{"agentID":10437,"cost":0.9},{"agentID":10416,"cost":0.9}}}},
+        {"AgentID":10451,"MAX_AGE":70,"MAX_NUM_OFFSPRING":3,"Parents":{10437,10426},"Age":64,"Gender":Female,"Home_owner":True,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":{10459,10462,10463}"Personality":11011011000101000000,"Community":NULL,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10442,"cost":0.75},{"agentID":10423,"cost":0.85},{"agentID":10462,"cost":0.8},{"agentID":10443,"cost":0.85}}}},
+        {"AgentID":10452,"MAX_AGE":97,"MAX_NUM_OFFSPRING":3,"Parents":{10438,10408},"Age":62,"Gender":Male,"Home_owner":True,"Spouse":10462,"MAX_NUM_OFFSPRING":3,"Offspring":{10470,10473,10476}"Personality":00110010001000011000,"Community":NULL,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10441,"cost":0.7},{"agentID":10444,"cost":0.75},{"agentID":10455,"cost":0.75}}}},
+        {"AgentID":10453,"MAX_AGE":79,"MAX_NUM_OFFSPRING":3,"Parents":{10437,10426},"Age":60,"Gender":Female,"Home_owner":True,"Spouse":10443,"MAX_NUM_OFFSPRING":3,"Offspring":{10461,10467,10472}"Personality":11011010000101000000,"Community":3,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10437,"cost":0.85},{"agentID":10467,"cost":0.9},{"agentID":10461,"cost":1},{"agentID":10426,"cost":0.95}}}},
+        {"AgentID":10454,"MAX_AGE":83,"MAX_NUM_OFFSPRING":3,"Parents":{10427,10423},"Age":57,"Gender":Female,"Home_owner":True,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":{10464}"Personality":01011011010101101000,"Community":2,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10464,"cost":0.8},{"agentID":10420,"cost":0.8},{"agentID":10443,"cost":0.95},{"agentID":10429,"cost":0.85}}}},
+        {"AgentID":10455,"MAX_AGE":76,"MAX_NUM_OFFSPRING":3,"Parents":{10438,10408},"Age":55,"Gender":Male,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":10010011001110011000,"Community":NULL,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10452,"cost":0.75},{"agentID":10438,"cost":0.85},{"agentID":10428,"cost":0.85}}}},
+        {"AgentID":10456,"MAX_AGE":91,"MAX_NUM_OFFSPRING":3,"Parents":{10434,10424},"Age":50,"Gender":Male,"Home_owner":True,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":{10466,10469}"Personality":11011001001011011001,"Community":0,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10466,"cost":0.8},{"agentID":10439,"cost":0.85},{"agentID":10457,"cost":0.85}}}},
+        {"AgentID":10457,"MAX_AGE":84,"MAX_NUM_OFFSPRING":3,"Parents":{10438,10439},"Age":46,"Gender":Female,"Home_owner":True,"Spouse":10463,"MAX_NUM_OFFSPRING":3,"Offspring":{10471,10474,10478}"Personality":10011011001011010001,"Community":0,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10466,"cost":0.85},{"agentID":10456,"cost":0.85},{"agentID":10439,"cost":0.9},{"agentID":10438,"cost":0.9}}}},
+        {"AgentID":10458,"MAX_AGE":85,"MAX_NUM_OFFSPRING":3,"Parents":{10448,10430},"Age":42,"Gender":Male,"Home_owner":True,"Spouse":10468,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":11000011111101111000,"Community":1,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10465,"cost":0.8},{"agentID":10428,"cost":0.8},{"agentID":10446,"cost":0.8},{"agentID":10435,"cost":0.8}}}},
+        {"AgentID":10459,"MAX_AGE":81,"MAX_NUM_OFFSPRING":3,"Parents":{10451,10442},"Age":39,"Gender":Female,"Home_owner":True,"Spouse":10465,"MAX_NUM_OFFSPRING":3,"Offspring":{10475,10477}"Personality":11011011011101100001,"Community":NULL,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10443,"cost":0.85},{"agentID":10462,"cost":0.9},{"agentID":10442,"cost":0.95},{"agentID":10463,"cost":0.95}}}},
+        {"AgentID":10460,"MAX_AGE":87,"MAX_NUM_OFFSPRING":3,"Parents":{10448,10430},"Age":38,"Gender":Male,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":01011011101001110100,"Community":NULL,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10442,"cost":0.7},{"agentID":10469,"cost":0.75},{"agentID":10462,"cost":0.75}}}},
+        {"AgentID":10461,"MAX_AGE":74,"MAX_NUM_OFFSPRING":3,"Parents":{10443,10453},"Age":37,"Gender":Male,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":11011010000101000000,"Community":3,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10467,"cost":0.9},{"agentID":10426,"cost":0.95},{"agentID":10453,"cost":1}}}},
+        {"AgentID":10462,"MAX_AGE":71,"MAX_NUM_OFFSPRING":3,"Parents":{10442,10451},"Age":36,"Gender":Female,"Home_owner":True,"Spouse":10452,"MAX_NUM_OFFSPRING":3,"Offspring":{10470,10473,10476}"Personality":11011011001101110001,"Community":NULL,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10457,"cost":0.8},{"agentID":10442,"cost":0.95},{"agentID":10459,"cost":0.9},{"agentID":10463,"cost":0.95}}}},
+        {"AgentID":10463,"MAX_AGE":94,"MAX_NUM_OFFSPRING":3,"Parents":{10451,10442},"Age":35,"Gender":Male,"Home_owner":True,"Spouse":10457,"MAX_NUM_OFFSPRING":3,"Offspring":{10471,10474,10478}"Personality":11011011011101110001,"Community":NULL,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10459,"cost":0.95},{"agentID":10462,"cost":0.95},{"agentID":10442,"cost":1}}}},
+        {"AgentID":10464,"MAX_AGE":71,"MAX_NUM_OFFSPRING":3,"Parents":{10454,10419},"Age":33,"Gender":Female,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":01011011100100001000,"Community":2,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10461,"cost":0.75},{"agentID":10454,"cost":0.8},{"agentID":10467,"cost":0.85}}}},
+        {"AgentID":10465,"MAX_AGE":93,"MAX_NUM_OFFSPRING":3,"Parents":{10448,10430},"Age":29,"Gender":Male,"Home_owner":True,"Spouse":10459,"MAX_NUM_OFFSPRING":3,"Offspring":{10475,10477}"Personality":10100011101101111100,"Community":NULL,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10447,"cost":0.65},{"agentID":10445,"cost":0.65},{"agentID":10458,"cost":0.8},{"agentID":10446,"cost":0.7}}}},
+        {"AgentID":10466,"MAX_AGE":88,"MAX_NUM_OFFSPRING":3,"Parents":{10456,10444},"Age":28,"Gender":Female,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":10011001000010010001,"Community":0,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10462,"cost":0.65},{"agentID":10439,"cost":0.75},{"agentID":10456,"cost":0.8},{"agentID":10457,"cost":0.85}}}},
+        {"AgentID":10467,"MAX_AGE":93,"MAX_NUM_OFFSPRING":3,"Parents":{10453,10443},"Age":27,"Gender":Female,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":11011011000101001000,"Community":3,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10453,"cost":0.9},{"agentID":10461,"cost":0.9},{"agentID":10472,"cost":0.95}}}},
+        {"AgentID":10468,"MAX_AGE":95,"MAX_NUM_OFFSPRING":3,"Parents":{10449,10448},"Age":24,"Gender":Female,"Home_owner":True,"Spouse":10458,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":11101001001001001000,"Community":NULL,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10458,"cost":0.6},{"agentID":10464,"cost":0.6},{"agentID":10473,"cost":0.65},{"agentID":10461,"cost":0.65}}}},
+        {"AgentID":10469,"MAX_AGE":73,"MAX_NUM_OFFSPRING":3,"Parents":{10456,10444},"Age":23,"Gender":Male,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":01011011001001011001,"Community":NULL,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10467,"cost":0.75},{"agentID":10463,"cost":0.75},{"agentID":10462,"cost":0.8}}}},
+        {"AgentID":10470,"MAX_AGE":87,"MAX_NUM_OFFSPRING":3,"Parents":{10462,10452},"Age":14,"Gender":Male,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":11010010001000010001,"Community":NULL,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10468,"cost":0.55},{"agentID":10471,"cost":0.65},{"agentID":10473,"cost":0.8},{"agentID":10476,"cost":0.75}}}},
+        {"AgentID":10471,"MAX_AGE":72,"MAX_NUM_OFFSPRING":3,"Parents":{10463,10457},"Age":14,"Gender":Male,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":10011011011101110001,"Community":NULL,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10465,"cost":0.6},{"agentID":10476,"cost":0.7},{"agentID":10470,"cost":0.65},{"agentID":10473,"cost":0.75}}}},
+        {"AgentID":10472,"MAX_AGE":91,"MAX_NUM_OFFSPRING":3,"Parents":{10453,10443},"Age":13,"Gender":Female,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":11011010000101001000,"Community":3,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10478,"cost":0.65},{"agentID":10475,"cost":0.65},{"agentID":10469,"cost":0.7},{"agentID":10467,"cost":0.95}}}},
+        {"AgentID":10473,"MAX_AGE":72,"MAX_NUM_OFFSPRING":3,"Parents":{10462,10452},"Age":10,"Gender":Female,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":10011010001001011001,"Community":NULL,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10468,"cost":0.65},{"agentID":10470,"cost":0.8},{"agentID":10471,"cost":0.75},{"agentID":10476,"cost":0.95}}}},
+        {"AgentID":10474,"MAX_AGE":81,"MAX_NUM_OFFSPRING":3,"Parents":{10457,10463},"Age":9,"Gender":Female,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":11011011011111110001,"Community":NULL,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10477,"cost":0.7},{"agentID":10469,"cost":0.7},{"agentID":10478,"cost":0.85}}}},
+        {"AgentID":10475,"MAX_AGE":73,"MAX_NUM_OFFSPRING":3,"Parents":{10465,10459},"Age":7,"Gender":Male,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":10000011011101101000,"Community":NULL,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10474,"cost":0.65},{"agentID":10472,"cost":0.65},{"agentID":10477,"cost":0.95}}}},
+        {"AgentID":10476,"MAX_AGE":83,"MAX_NUM_OFFSPRING":3,"Parents":{10462,10452},"Age":5,"Gender":Male,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":10011010001001011000,"Community":NULL,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10471,"cost":0.7},{"agentID":10473,"cost":0.95},{"agentID":10470,"cost":0.75},{}}}},
+        {"AgentID":10477,"MAX_AGE":82,"MAX_NUM_OFFSPRING":3,"Parents":{10459,10465},"Age":5,"Gender":Male,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":10000011011101101001,"Community":NULL,"MAX_NUM_FRIENDS":3,"Close_friends":{"maxsize:"3,"agents":{{"agentID":10478,"cost":0.65},{"agentID":10474,"cost":0.7},{"agentID":10475,"cost":0.95}}}},
+        {"AgentID":10478,"MAX_AGE":96,"MAX_NUM_OFFSPRING":3,"Parents":{10457,10463},"Age":4,"Gender":Female,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":11011011011001010001,"Community":NULL,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10475,"cost":0.6},{"agentID":10477,"cost":0.65},{"agentID":10472,"cost":0.65},{"agentID":10474,"cost":0.85}}}},
+        {"AgentID":10478,"MAX_AGE":96,"MAX_NUM_OFFSPRING":3,"Parents":{10457,10463},"Age":4,"Gender":Female,"Home_owner":False,"Spouse":NULL,"MAX_NUM_OFFSPRING":3,"Offspring":NULL"Personality":11011011011001010001,"Community":NULL,"MAX_NUM_FRIENDS":4,"Close_friends":{"maxsize:"4,"agents":{{"agentID":10475,"cost":0.6},{"agentID":10477,"cost":0.65},{"agentID":10472,"cost":0.65},{"agentID":10474,"cost":0.85}}}}
+    },
+}
+

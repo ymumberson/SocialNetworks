@@ -1,5 +1,5 @@
 {
-    "NUM_YEARS_TO_RUN": 1000,
+    "NUM_YEARS_TO_RUN": 500,
     "DISABLE_PATHFINDING": true,
     "TEST_NAME": "Baseline",
     "IS_SEEDED": true,
