@@ -25,6 +25,8 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private int MIN_COMMUNITY_SIZE = 3;
     [SerializeField] private int num_communities;
     [SerializeField] private float avg_community_size;
+    [SerializeField] private float max_community_size;
+    [SerializeField] private float min_community_size;
     private List<IdealNode> idealNodeList;
     [SerializeField] private int numNodes;
     [SerializeField] private int numEdges;
@@ -659,6 +661,8 @@ public class GraphRendererScript : MonoBehaviour
         }
 
         this.num_communities = all_communities.Count;
+        this.max_community_size = float.MinValue;
+        this.min_community_size = float.MaxValue;
         //Debug.Log("Number of communities -> " + all_communities.Count);
         //foreach (List<NodeScript> community in all_communities)
         float tally = 0;
@@ -667,6 +671,16 @@ public class GraphRendererScript : MonoBehaviour
             List<NodeScript> community = all_communities[i];
             Color community_color = new Color(Random.value,Random.value,Random.value);
             tally += community.Count;
+
+            if (community.Count < min_community_size)
+            {
+                min_community_size = community.Count;
+            }
+            if (community.Count > max_community_size)
+            {
+                max_community_size = community.Count;
+            }
+
             //string s = "";
             foreach (NodeScript n in community)
             {
@@ -691,6 +705,8 @@ public class GraphRendererScript : MonoBehaviour
         json += TAB + "\"Average_depth\":" + this.getAverageDepth() + ",\n";
         json += TAB + "\"Num_communities\":" + this.num_communities + ",\n";
         json += TAB + "\"Average_community_size\":" + this.avg_community_size + ",\n";
+        json += TAB + "\"Maximum_community_size\":" + this.max_community_size + ",\n";
+        json += TAB + "\"Minimum_community_size\":" + this.min_community_size + ",\n";
         json += TAB + "\"Can_reach_all\":" + this.getPercentCanReachAll() + "\n}";
 
         return json;
