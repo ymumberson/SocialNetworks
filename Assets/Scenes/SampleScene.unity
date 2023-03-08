@@ -3149,6 +3149,8 @@ MonoBehaviour:
   MIN_COMMUNITY_SIZE: 3
   num_communities: 0
   avg_community_size: 0
+  max_community_size: 0
+  min_community_size: 0
   numNodes: 0
   numEdges: 0
   density: 0
@@ -8662,7 +8664,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 416d376b67d451d4bb7418d9e762dd4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SANDBOX_MODE: 1
+  SANDBOX_MODE: 0
   SANDBOX_MAP: {fileID: 2800000, guid: fc35b027ce1f27b43aafd391f9b530ed, type: 3}
   maps:
   - {fileID: 2800000, guid: fc35b027ce1f27b43aafd391f9b530ed, type: 3}

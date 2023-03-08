@@ -527,11 +527,11 @@ public class GraphRendererScript : MonoBehaviour
                 {
                     if (!visited_nodes.Contains(neighbour)) /* if not visited */
                     {
-                        path_lengths.Add(depth);
+                        path_lengths.Add(depth+1);
                         visited_nodes.Add(neighbour);
                         nodes_to_visit.Enqueue(neighbour);
                         depth_queue.Enqueue(depth + 1);
-                        avgDepth += depth;
+                        avgDepth += depth+1;
 
                         ///* Add to reachable within N if depth<=n */
                         //if (depth <= COMMUNITY_PATH_LENGTH_CUTOFF)
@@ -543,7 +543,7 @@ public class GraphRendererScript : MonoBehaviour
             }
             max_depth_ls.Add(maxDepth);
             root.setMaxDepth(maxDepth);
-            root.setAvgPathLength(avgDepth / visited_nodes.Count);
+            root.setAvgPathLength(avgDepth / (visited_nodes.Count-1)); // -1 to account for self
             root.setCanReachAllNodes(visited_nodes.Count == numNodes);
             root.setReachableInN(reachableWithinN);
             //Debug.Log(root.name + " can reach " + reachableWithinN.Count + " nodes in " + COMMUNITY_PATH_LENGTH_CUTOFF + " steps.");
