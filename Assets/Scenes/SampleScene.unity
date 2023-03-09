@@ -3147,10 +3147,6 @@ MonoBehaviour:
   nodeList: []
   COMMUNITY_PATH_LENGTH_CUTOFF: 2
   MIN_COMMUNITY_SIZE: 3
-  num_communities: 0
-  avg_community_size: 0
-  max_community_size: 0
-  min_community_size: 0
   numNodes: 0
   numEdges: 0
   density: 0
@@ -3161,6 +3157,23 @@ MonoBehaviour:
   percent_nodes_that_can_reach_all_nodes: 0
   maxDepth: 0
   avgDepth: 0
+  num_communities: 0
+  avg_community_size: 0
+  max_community_size: 0
+  min_community_size: 0
+  idealNumEdges: 0
+  idealDensity: 0
+  idealAvgConnectivity: 0
+  idealAvgClusteringCoefficient: 0
+  idealAvgClusteringCoefficient_ifHasFriends: 0
+  idealAvgPathLength: 0
+  idealPercent_nodes_that_can_reach_all_nodes: 0
+  idealMaxDepth: 0
+  idealAvgDepth: 0
+  idealNum_communities: 0
+  idealAvg_community_size: 0
+  idealMax_community_size: 0
+  idealMin_community_size: 0
 --- !u!1 &778579654
 GameObject:
   m_ObjectHideFlags: 0
@@ -4681,9 +4694,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NUM_YEARS_TO_RUN: 9999999
-  DISABLE_PATHFINDING: 0
+  DISABLE_PATHFINDING: 1
   TEST_NAME: SANDBOX
-  IS_SEEDED: 1
+  IS_SEEDED: 0
   SEED: 123456789
   TURN_TIME: 0
   DAYS_PER_YEAR: 1
@@ -8664,8 +8677,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 416d376b67d451d4bb7418d9e762dd4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SANDBOX_MODE: 0
-  SANDBOX_MAP: {fileID: 2800000, guid: fc35b027ce1f27b43aafd391f9b530ed, type: 3}
+  SANDBOX_MODE: 1
+  SANDBOX_MAP: {fileID: 2800000, guid: 1b3329181ca9d254eb95df70543bb9c5, type: 3}
   maps:
   - {fileID: 2800000, guid: fc35b027ce1f27b43aafd391f9b530ed, type: 3}
   - {fileID: 2800000, guid: 1b3329181ca9d254eb95df70543bb9c5, type: 3}
