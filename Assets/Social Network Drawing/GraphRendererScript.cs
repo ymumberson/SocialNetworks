@@ -23,11 +23,9 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private List<NodeScript> nodeList;
     [SerializeField] private int COMMUNITY_PATH_LENGTH_CUTOFF = 2;
     [SerializeField] private int MIN_COMMUNITY_SIZE = 3;
-    [SerializeField] private int num_communities;
-    [SerializeField] private float avg_community_size;
-    [SerializeField] private float max_community_size;
-    [SerializeField] private float min_community_size;
     private List<IdealNode> idealNodeList;
+
+    /* Network properties */
     [SerializeField] private int numNodes;
     [SerializeField] private int numEdges;
     [SerializeField] private float density;
@@ -38,6 +36,26 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private float percent_nodes_that_can_reach_all_nodes;
     [SerializeField] private float maxDepth;
     [SerializeField] private float avgDepth;
+    [SerializeField] private int num_communities;
+    [SerializeField] private float avg_community_size;
+    [SerializeField] private float max_community_size;
+    [SerializeField] private float min_community_size;
+
+    /* Ideal network properties */
+    [SerializeField] private int idealNumEdges;
+    [SerializeField] private float idealDensity;
+    [SerializeField] private float idealAvgConnectivity;
+    [SerializeField] private float idealAvgClusteringCoefficient;
+    [SerializeField] private float idealAvgClusteringCoefficient_ifHasFriends;
+    [SerializeField] private float idealAvgPathLength;
+    [SerializeField] private float idealPercent_nodes_that_can_reach_all_nodes;
+    [SerializeField] private float idealMaxDepth;
+    [SerializeField] private float idealAvgDepth;
+    [SerializeField] private int idealNum_communities;
+    [SerializeField] private float idealAvg_community_size;
+    [SerializeField] private float idealMax_community_size;
+    [SerializeField] private float idealMin_community_size;
+
     private Vector2 lower, upper;
     private Vector2 centre;
     private GameObject background;
@@ -106,6 +124,7 @@ public class GraphRendererScript : MonoBehaviour
     {
         this.ENABLE_VISUALS = b;
         calculateIdealNeighbours();
+        calculateIdealGraphProperties();
     }
 
     public void toggleShowCommunities()
@@ -118,7 +137,15 @@ public class GraphRendererScript : MonoBehaviour
         else
         {
             this.SHOW_COMMUNITIES = true;
-            this.recalculateGraphProperties();
+            //this.recalculateGraphProperties();
+            if (SHOW_IDEAL_GRAPH)
+            {
+                this.calculateIdealGraphProperties();
+            }
+            else
+            {
+                this.recalculateGraphProperties();
+            }
         }
     }
 
@@ -719,35 +746,69 @@ public class GraphRendererScript : MonoBehaviour
 
     public void calculateIdealGraphProperties()
     {
-        /* TODO: Change these to use the ideal graph nodes instead */
-        //recalculateNetworkDensity(); // 0ms
-        //recalculateConnectivity(); // 133ms
-        //recalculateClusteringCoefficient(); // 3ms
-        //calculateAveragePathLength(); // 1854ms
-
+        /* Calculate ideal graph properties */
+        recalculateNetworkDensityIdeal();
+        recalculateConnectivityIdeal();
         recalculateClusteringCoefficientIdeal();
         calculateAveragePathLengthIdeal();
         calculateCommunitiesIdeal();
     }
 
+    private void recalculateNetworkDensityIdeal()
+    {
+        /* Directed network so density = E / (N(N-1)) */
+        this.redrawEdgesIdeal();
+        idealDensity = idealNumEdges / (float)(numNodes * (numNodes - 1)); /* ideal num nodes == num nodes */
+    }
+
+    public void recalculateConnectivityIdeal()
+    {
+        foreach (IdealNode ns in idealNodeList)
+        {
+            ns.resetDegreeOfConnectivity();
+        }
+        foreach (IdealNode ns in idealNodeList)
+        {
+            Agent[] neighbours = ns.getNeighbours();
+            if (neighbours.Length > 0)
+            {
+                foreach (IdealNode other in idealNodeList)
+                {
+                    if (ns.hasNeighbour(other.getAgent()))
+                    {
+                        ns.incrementDegreeOfConnectivity();
+                        other.incrementDegreeOfConnectivity();
+                    }
+                }
+            }
+        }
+
+        this.idealAvgConnectivity = 0;
+        foreach (IdealNode ns in idealNodeList)
+        {
+            this.idealAvgConnectivity += ns.getDegreeOfConnectivity();
+        }
+        this.idealAvgConnectivity /= idealNodeList.Count;
+    }
+
     public void recalculateClusteringCoefficientIdeal()
     {
-        this.avgClusteringCoefficient = 0;
-        this.avgClusteringCoefficient_ifHasFriends = 0;
+        this.idealAvgClusteringCoefficient = 0;
+        this.idealAvgClusteringCoefficient_ifHasFriends = 0;
         int count = 0;
         foreach (IdealNode ns in idealNodeList)
         {
             ns.calculateClusteringCoefficient();
-            avgClusteringCoefficient += ns.getClusteringCoefficient();
+            idealAvgClusteringCoefficient += ns.getClusteringCoefficient();
             //if (ns.getAgent().getNumFriends() > 0)
             if (ns.hasNeighbours())
             {
-                avgClusteringCoefficient_ifHasFriends += ns.getClusteringCoefficient();
+                idealAvgClusteringCoefficient_ifHasFriends += ns.getClusteringCoefficient();
                 ++count;
             }
         }
-        avgClusteringCoefficient /= numNodes;
-        avgClusteringCoefficient_ifHasFriends /= count;
+        idealAvgClusteringCoefficient /= numNodes;
+        idealAvgClusteringCoefficient_ifHasFriends /= count;
     }
 
     private void redrawEdgesIdeal()
@@ -761,7 +822,7 @@ public class GraphRendererScript : MonoBehaviour
         }
         previously_drew_ideal = true;
 
-        numEdges = 0;
+        this.idealNumEdges = 0;
         foreach (IdealNode ns in idealNodeList)
         {
             ns.destroyAllEdges();
@@ -785,7 +846,7 @@ public class GraphRendererScript : MonoBehaviour
                         lr.SetPosition(0, pos);
                         lr.SetPosition(1, neighbour_pos);
                         ns.addLineRenderer(lr);
-                        ++numEdges;
+                        ++idealNumEdges;
                     }
 
                 }
@@ -876,7 +937,7 @@ public class GraphRendererScript : MonoBehaviour
         {
             total += i;
         }
-        this.avgPathLength = total / ls.Count;
+        this.idealAvgPathLength = total / ls.Count;
     }
 
     /// <summary>
@@ -943,18 +1004,18 @@ public class GraphRendererScript : MonoBehaviour
                 ++num_nodes_that_can_reach_all_nodes;
             }
         }
-        this.avgDepth = 0;
-        this.maxDepth = 0;
+        this.idealAvgDepth = 0;
+        this.idealMaxDepth = 0;
         foreach (int dep in max_depth_ls)
         {
-            avgDepth += dep;
-            if (dep > maxDepth)
+            idealAvgDepth += dep;
+            if (dep > idealMaxDepth)
             {
-                maxDepth = dep;
+                idealMaxDepth = dep;
             }
         }
-        this.avgDepth /= max_depth_ls.Count;
-        this.percent_nodes_that_can_reach_all_nodes = num_nodes_that_can_reach_all_nodes / numNodes;
+        this.idealAvgDepth /= max_depth_ls.Count;
+        this.idealPercent_nodes_that_can_reach_all_nodes = num_nodes_that_can_reach_all_nodes / numNodes;
         return path_lengths;
     }
 
@@ -1032,9 +1093,9 @@ public class GraphRendererScript : MonoBehaviour
             }
         }
 
-        this.num_communities = all_communities.Count;
-        this.max_community_size = float.MinValue;
-        this.min_community_size = float.MaxValue;
+        this.idealNum_communities = all_communities.Count;
+        this.idealMax_community_size = float.MinValue;
+        this.idealMin_community_size = float.MaxValue;
         float tally = 0;
         for (int i = 0; i < all_communities.Count; ++i)
         {
@@ -1042,13 +1103,13 @@ public class GraphRendererScript : MonoBehaviour
             Color community_color = new Color(Random.value, Random.value, Random.value);
             tally += community.Count;
 
-            if (community.Count < min_community_size)
+            if (community.Count < idealMin_community_size)
             {
-                min_community_size = community.Count;
+                idealMin_community_size = community.Count;
             }
-            if (community.Count > max_community_size)
+            if (community.Count > idealMax_community_size)
             {
-                max_community_size = community.Count;
+                idealMax_community_size = community.Count;
             }
 
             //string s = "";
@@ -1059,6 +1120,26 @@ public class GraphRendererScript : MonoBehaviour
             }
             //print("Community: " + s);
         }
-        this.avg_community_size = (tally / all_communities.Count);
+        this.idealAvg_community_size = (tally / all_communities.Count);
+    }
+
+    public string toTxtIdeal()
+    {
+        string TAB = "    ";
+        string json = "{\n";
+
+        json += TAB + "\"Density\":" + this.idealDensity + ",\n";
+        json += TAB + "\"Connectivity\":" + this.idealAvgConnectivity + ",\n";
+        json += TAB + "\"Clustering\":" + this.idealAvgClusteringCoefficient + ",\n";
+        json += TAB + "\"Average_path_length\":" + this.idealAvgPathLength + ",\n";
+        json += TAB + "\"Max_depth\":" + this.idealMaxDepth + ",\n";
+        json += TAB + "\"Average_depth\":" + this.idealAvgDepth + ",\n";
+        json += TAB + "\"Num_communities\":" + this.idealNum_communities + ",\n";
+        json += TAB + "\"Average_community_size\":" + this.idealAvg_community_size + ",\n";
+        json += TAB + "\"Maximum_community_size\":" + this.idealMax_community_size + ",\n";
+        json += TAB + "\"Minimum_community_size\":" + this.idealMin_community_size + ",\n";
+        json += TAB + "\"Can_reach_all\":" + this.idealPercent_nodes_that_can_reach_all_nodes + "\n}";
+
+        return json;
     }
 }

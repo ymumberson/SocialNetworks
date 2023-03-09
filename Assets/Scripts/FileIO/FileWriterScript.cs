@@ -38,8 +38,11 @@ public class FileWriterScript
         System.IO.StreamWriter writer = new System.IO.StreamWriter(foldername + filename, true);
 
         g.recalculateGraphProperties();
+        g.calculateIdealNeighbours();
+        g.calculateIdealGraphProperties();
         l.sortAgents();
-        writer.Write("\n<<Graph Renderer>>\n" + g.toTxt() + "\n\n");
+        writer.Write("\n<<Graph Properties>>\n" + g.toTxt() + "\n\n");
+        writer.Write("\n<<Ideal Graph Properties>>\n" + g.toTxtIdeal() + "\n\n");
         writer.Write("\n<<Simulation Parameters>>\n" + JsonUtility.ToJson(Parameters.Instance, true) + "\n\n");
         writer.Write("\n<<Landscape Controller>>\n" + l.toTxt() + "\n\n");
         writer.Close();
