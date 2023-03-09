@@ -20,6 +20,7 @@ public class IdealNode : MonoBehaviour
     private Vector2 lowerBound;
     private Vector2 upperBound;
     private MinHeap neighbours;
+    private List<IdealNode> reachableInN;
 
     /// <summary>
     /// This stores the value of clustering coefficient from when it was last calculated.
@@ -28,6 +29,10 @@ public class IdealNode : MonoBehaviour
     [SerializeField] private bool canReachAllNodes;
     [SerializeField] private float avgPathLength;
     [SerializeField] private int maxDepth;
+
+    /* Just keeping these here for debugging reasons */
+    [SerializeField] private int community_id;
+    private Color community_color;
 
     private void Awake()
     {
@@ -47,6 +52,27 @@ public class IdealNode : MonoBehaviour
     {
         lowerBound = lower;
         upperBound = upper;
+    }
+
+    public void setReachableInN(List<IdealNode> ls)
+    {
+        this.reachableInN = ls;
+    }
+    public List<IdealNode> getReachableInN()
+    {
+        return this.reachableInN;
+    }
+
+    public void setCommunity(int id, Color c)
+    {
+        this.community_id = id;
+        this.community_color = c;
+        this.agent.setCommunity(id, c);
+    }
+
+    public int getCommunityID()
+    {
+        return this.agent.getCommunityID();
     }
 
     public void setAgent(Agent a)
@@ -342,5 +368,12 @@ public class IdealNode : MonoBehaviour
     {
         this.unHighlight();
         this.unHighlightFriends();
+    }
+
+    public void highlightCommunity()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        sr.color = this.community_color;
+        sr.sortingOrder = 0;
     }
 }

@@ -726,6 +726,8 @@ public class GraphRendererScript : MonoBehaviour
         //calculateAveragePathLength(); // 1854ms
 
         recalculateClusteringCoefficientIdeal();
+        calculateAveragePathLengthIdeal();
+        calculateCommunitiesIdeal();
     }
 
     public void recalculateClusteringCoefficientIdeal()
@@ -859,5 +861,204 @@ public class GraphRendererScript : MonoBehaviour
             //node.setPosition(node_pos + sum_forces); /* Can be inside each other, but continues while paused */
             node.moveRigidBodyPosition(node_pos + sum_forces); /* Can't be inside each other, but stops while paused */
         }
+    }
+
+    /// <summary>
+    /// Calculates the average shortest path lengths of REACHABLE nodes for each node. 
+    /// This means that a low average shortest path length might actually indicate isolated clusters, and not 
+    /// a low complete reachability.
+    /// </summary>
+    public void calculateAveragePathLengthIdeal()
+    {
+        float total = 0;
+        List<int> ls = calculateAllShortestPathsIdeal();
+        foreach (int i in ls)
+        {
+            total += i;
+        }
+        this.avgPathLength = total / ls.Count;
+    }
+
+    /// <summary>
+    /// Returns all shortest paths of REACHABLE nodes for each node.
+    /// </summary>
+    /// <returns></returns>
+    public List<int> calculateAllShortestPathsIdeal()
+    {
+        List<int> path_lengths = new List<int>();
+        List<int> max_depth_ls = new List<int>();
+        float num_nodes_that_can_reach_all_nodes = 0;
+        foreach (IdealNode root in idealNodeList)
+        {
+            /* Want to reset each time */
+            Queue<IdealNode> nodes_to_visit = new Queue<IdealNode>();
+            List<IdealNode> visited_nodes = new List<IdealNode>();
+            Queue<int> depth_queue = new Queue<int>();
+
+            /* List of nodes reachable within N steps */
+            List<IdealNode> reachableWithinN = new List<IdealNode>();
+            //reachableWithinN.Add(root);
+
+            visited_nodes.Add(root);
+            nodes_to_visit.Enqueue(root);
+            depth_queue.Enqueue(0);
+            int maxDepth = 0;
+            float avgDepth = 0;
+            while (nodes_to_visit.Count > 0)
+            {
+                IdealNode ns = nodes_to_visit.Dequeue();
+                int depth = depth_queue.Dequeue();
+                maxDepth = depth;
+                /* Add to reachable within N if depth<=n */
+                if (depth <= COMMUNITY_PATH_LENGTH_CUTOFF)
+                {
+                    reachableWithinN.Add(ns);
+                }
+                foreach (IdealNode neighbour in ns.getNeighbourNodes())
+                {
+                    if (!visited_nodes.Contains(neighbour)) /* if not visited */
+                    {
+                        path_lengths.Add(depth + 1);
+                        visited_nodes.Add(neighbour);
+                        nodes_to_visit.Enqueue(neighbour);
+                        depth_queue.Enqueue(depth + 1);
+                        avgDepth += depth + 1;
+
+                        ///* Add to reachable within N if depth<=n */
+                        //if (depth <= COMMUNITY_PATH_LENGTH_CUTOFF)
+                        //{
+                        //    reachableWithinN.Add(neighbour);
+                        //}
+                    }
+                }
+            }
+            max_depth_ls.Add(maxDepth);
+            root.setMaxDepth(maxDepth);
+            root.setAvgPathLength(avgDepth / (visited_nodes.Count - 1)); // -1 to account for self
+            root.setCanReachAllNodes(visited_nodes.Count == numNodes);
+            root.setReachableInN(reachableWithinN);
+            //Debug.Log(root.name + " can reach " + reachableWithinN.Count + " nodes in " + COMMUNITY_PATH_LENGTH_CUTOFF + " steps.");
+            if (root.getCanReachAlNodes())
+            {
+                ++num_nodes_that_can_reach_all_nodes;
+            }
+        }
+        this.avgDepth = 0;
+        this.maxDepth = 0;
+        foreach (int dep in max_depth_ls)
+        {
+            avgDepth += dep;
+            if (dep > maxDepth)
+            {
+                maxDepth = dep;
+            }
+        }
+        this.avgDepth /= max_depth_ls.Count;
+        this.percent_nodes_that_can_reach_all_nodes = num_nodes_that_can_reach_all_nodes / numNodes;
+        return path_lengths;
+    }
+
+    public void calculateCommunitiesIdeal()
+    {
+        List<List<IdealNode>> all_communities = new List<List<IdealNode>>();
+
+        /* Reset each node's community_id */
+        foreach (IdealNode node in idealNodeList)
+        {
+            node.setCommunity(-1, Color.white);
+        }
+
+        /*
+         * Calculate all groups of nodes who can reach each other
+         * within N steps -> N = COMMUNITY_PATH_LENGTH_CUTOFF
+         */
+        foreach (IdealNode ns in idealNodeList)
+        {
+            IdealNode[] neighbours = ns.getReachableInN().ToArray();
+            List<IdealNode> common_nodes = new List<IdealNode>();
+            //common_nodes.Add(ns);
+            foreach (IdealNode n in neighbours)
+            {
+                common_nodes.Add(n);
+            }
+            foreach (IdealNode other in neighbours)
+            {
+                List<IdealNode> reachable = other.getReachableInN();
+                foreach (IdealNode common in common_nodes.ToArray())
+                {
+                    if (!reachable.Contains(common))
+                    {
+                        common_nodes.Remove(common);
+                    }
+                }
+            }
+            if (common_nodes.Count >= MIN_COMMUNITY_SIZE) /* min size of community */
+            {
+                /*
+                 * Found a community, check that it isn't a subset of another community.
+                 * If a community is a subset of this community, then replace the subset with this.
+                 */
+                bool subset_or_replaced = false;
+                //foreach (List<NodeScript> community in all_communities)
+                for (int i = 0; i < all_communities.Count; ++i)
+                {
+                    List<IdealNode> community = all_communities[i];
+                    int num_matches = 0;
+                    foreach (IdealNode n in community)
+                    {
+                        if (common_nodes.Contains(n)) ++num_matches;
+                    }
+
+
+                    if (num_matches == community.Count && common_nodes.Count > community.Count)
+                    {
+                        /* Community is subset */
+                        all_communities[i] = common_nodes;
+                        subset_or_replaced = true;
+                        break;
+                    }
+
+                    /* Nodes cannot be in two sets */
+                    if (num_matches > 0)
+                    {
+                        subset_or_replaced = true;
+                        break;
+                    }
+                }
+                if (!subset_or_replaced)
+                {
+                    all_communities.Add(common_nodes);
+                }
+            }
+        }
+
+        this.num_communities = all_communities.Count;
+        this.max_community_size = float.MinValue;
+        this.min_community_size = float.MaxValue;
+        float tally = 0;
+        for (int i = 0; i < all_communities.Count; ++i)
+        {
+            List<IdealNode> community = all_communities[i];
+            Color community_color = new Color(Random.value, Random.value, Random.value);
+            tally += community.Count;
+
+            if (community.Count < min_community_size)
+            {
+                min_community_size = community.Count;
+            }
+            if (community.Count > max_community_size)
+            {
+                max_community_size = community.Count;
+            }
+
+            //string s = "";
+            foreach (IdealNode n in community)
+            {
+                //s += n.name + ",";
+                n.setCommunity(i, community_color);
+            }
+            //print("Community: " + s);
+        }
+        this.avg_community_size = (tally / all_communities.Count);
     }
 }

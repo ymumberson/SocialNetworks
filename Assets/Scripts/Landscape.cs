@@ -1052,8 +1052,17 @@ public class Landscape : MonoBehaviour
     {
         if (graphRenderer.SHOW_COMMUNITIES)
         {
-            this.highlightCommunities();
-            return;
+            if (graphRenderer.SHOW_IDEAL_GRAPH)
+            {
+                this.highlightIdealCommunities();
+                return;
+            }
+            else
+            {
+                this.highlightCommunities();
+                return;
+            }
+            
         }
         
         if (highlighted_agent == null) return;
@@ -1067,6 +1076,14 @@ public class Landscape : MonoBehaviour
         foreach (Agent a in agents)
         {
             a.getNode().highlightCommunity();
+        }
+    }
+
+    private void highlightIdealCommunities()
+    {
+        foreach (Agent a in agents)
+        {
+            a.ideal_node.highlightCommunity();
         }
     }
 
