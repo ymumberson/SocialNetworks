@@ -33,6 +33,8 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private float avgClusteringCoefficient;
     [SerializeField] private float avgClusteringCoefficient_ifHasFriends;
     [SerializeField] private float avgPathLength;
+    [SerializeField] private float medianPathLength;
+    [SerializeField] private float avgPercentCanReach;
     [SerializeField] private float percent_nodes_that_can_reach_all_nodes;
     [SerializeField] private float maxDepth;
     [SerializeField] private float avgDepth;
@@ -40,6 +42,7 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private float avg_community_size;
     [SerializeField] private float max_community_size;
     [SerializeField] private float min_community_size;
+    [SerializeField] private float skewness;
 
     /* Ideal network properties */
     [SerializeField] private int idealNumEdges;
@@ -48,6 +51,8 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private float idealAvgClusteringCoefficient;
     [SerializeField] private float idealAvgClusteringCoefficient_ifHasFriends;
     [SerializeField] private float idealAvgPathLength;
+    [SerializeField] private float idealMedianPathLength;
+    [SerializeField] private float idealAvgPercentCanReach;
     [SerializeField] private float idealPercent_nodes_that_can_reach_all_nodes;
     [SerializeField] private float idealMaxDepth;
     [SerializeField] private float idealAvgDepth;
@@ -55,6 +60,7 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private float idealAvg_community_size;
     [SerializeField] private float idealMax_community_size;
     [SerializeField] private float idealMin_community_size;
+    [SerializeField] private float idealSkewness;
 
     private Vector2 lower, upper;
     private Vector2 centre;
@@ -273,49 +279,21 @@ public class GraphRendererScript : MonoBehaviour
 
     public void recalculateGraphProperties()
     {
+        if (numNodes <= 0) /* Graph is empty ie whole population died */
+        {
+            setAllPropertiesToZero();
+            return;
+        }
+        
         if (SHOW_IDEAL_GRAPH)
         {
             calculateIdealGraphProperties();
             return;
         }
-        
-        //if (ENABLE_VISUALS)
-        //{
-        //    repositionNodes2();
-        //    redrawEdges();
-        //}
-
-        //recalculateNetworkDensity(); // 0ms
-        //recalculateConnectivity(); // 133ms
-        //recalculateClusteringCoefficient(); // 3ms
-        //calculateAveragePathLength(); // 1854ms
-        //// total = 1991ms (Due to some prints as well)
-
-        //System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
-        //s.Start();
-        //System.Diagnostics.Stopwatch s2 = new System.Diagnostics.Stopwatch();
-        //s2.Start();
         recalculateNetworkDensity();
-        //s2.Stop();
-        //Debug.Log("Calulating network density took " + s2.ElapsedMilliseconds + "ms." + Random.value);
-        //s2.Reset();
-        //s2.Start();
         recalculateConnectivity();
-        //s2.Stop();
-        //Debug.Log("Calulating connectivity took " + s2.ElapsedMilliseconds + "ms." + Random.value);
-        //s2.Reset();
-        //s2.Start();
         recalculateClusteringCoefficient();
-        //s2.Stop();
-        //Debug.Log("Calulating clustering coefficient took " + s2.ElapsedMilliseconds + "ms." + Random.value);
-        //s2.Reset();
-        //s2.Start();
         calculateAveragePathLength();
-        //s2.Stop();
-        //Debug.Log("Calulating average path length took " + s2.ElapsedMilliseconds + "ms." + Random.value);
-        //s.Stop();
-        //Debug.Log("Network calculations took " + s.ElapsedMilliseconds + "ms." + Random.value);
-
         calculateCommunities();
     }
 
@@ -468,11 +446,33 @@ public class GraphRendererScript : MonoBehaviour
         }
 
         this.avgConnectivity = 0;
+        List<int> ls = new List<int>();
         foreach (NodeScript ns in nodeList)
         {
             this.avgConnectivity += ns.getDegreeOfConnectivity();
+            ls.Add(ns.getDegreeOfConnectivity());
         }
         this.avgConnectivity /= nodeList.Count;
+
+        ls.Sort();
+        float median = ls[ls.Count / 2];
+
+        /* Calculate standard deviation */
+        float standard_deviation = 0;
+        foreach (NodeScript ns in nodeList)
+        {
+            standard_deviation += Mathf.Pow((ns.getDegreeOfConnectivity() - this.avgConnectivity), 2);
+        }
+        standard_deviation /= nodeList.Count - 1;
+        standard_deviation = Mathf.Sqrt(standard_deviation);
+
+        float n = nodeList.Count;
+        float sum = 0;
+        for (int i=0; i<n; ++i)
+        {
+            sum += Mathf.Pow((nodeList[i].getDegreeOfConnectivity() - this.avgConnectivity) / (standard_deviation),3);
+        }
+        this.skewness = (n / ((n - 1) * (n - 2))) * sum;
     }
 
     public void recalculateClusteringCoefficient()
@@ -508,6 +508,15 @@ public class GraphRendererScript : MonoBehaviour
     {
         float total = 0;
         List<int> ls = calculateAllShortestPaths();
+        ls.Sort();
+        if (ls.Count > 0)
+        {
+            this.medianPathLength = ls[ls.Count / 2];
+        }
+        else
+        {
+            this.medianPathLength = 0;
+        }
         foreach (int i in ls)
         {
             total += i;
@@ -524,6 +533,7 @@ public class GraphRendererScript : MonoBehaviour
         List<int> path_lengths = new List<int>();
         List<int> max_depth_ls = new List<int>();
         float num_nodes_that_can_reach_all_nodes = 0;
+        this.avgPercentCanReach = 0;
         foreach (NodeScript root in nodeList)
         {
             /* Want to reset each time */
@@ -578,6 +588,10 @@ public class GraphRendererScript : MonoBehaviour
             {
                 ++num_nodes_that_can_reach_all_nodes;
             }
+
+            float numNodesCanReach = visited_nodes.Count-1; // -1 to account for self
+            float percentNodesCanReach = numNodesCanReach / numNodes;
+            this.avgPercentCanReach += percentNodesCanReach;
         }
         this.avgDepth = 0;
         this.maxDepth = 0;
@@ -591,6 +605,7 @@ public class GraphRendererScript : MonoBehaviour
         }
         this.avgDepth /= max_depth_ls.Count;
         this.percent_nodes_that_can_reach_all_nodes = num_nodes_that_can_reach_all_nodes / numNodes;
+        this.avgPercentCanReach /= numNodes;
         return path_lengths;
     }
 
@@ -727,7 +742,10 @@ public class GraphRendererScript : MonoBehaviour
         json += TAB + "\"Density\":" + this.density + ",\n";
         json += TAB + "\"Connectivity\":" + this.avgConnectivity + ",\n";
         json += TAB + "\"Clustering\":" + this.avgClusteringCoefficient + ",\n";
+        json += TAB + "\"Skewness\":" + this.skewness + ",\n";
         json += TAB + "\"Average_path_length\":" + this.avgPathLength + ",\n";
+        json += TAB + "\"Median_path_length\":" + this.medianPathLength + ",\n";
+        json += TAB + "\"Average_percent_can_reach\":" + this.avgPercentCanReach + ",\n";
         json += TAB + "\"Max_depth\":" + this.maxDepth + ",\n";
         json += TAB + "\"Average_depth\":" + this.getAverageDepth() + ",\n";
         json += TAB + "\"Num_communities\":" + this.num_communities + ",\n";
@@ -789,6 +807,23 @@ public class GraphRendererScript : MonoBehaviour
             this.idealAvgConnectivity += ns.getDegreeOfConnectivity();
         }
         this.idealAvgConnectivity /= idealNodeList.Count;
+
+        /* Calculate standard deviation */
+        float standard_deviation = 0;
+        foreach (IdealNode ns in idealNodeList)
+        {
+            standard_deviation += Mathf.Pow((ns.getDegreeOfConnectivity() - this.idealAvgConnectivity), 2);
+        }
+        standard_deviation /= idealNodeList.Count - 1;
+        standard_deviation = Mathf.Sqrt(standard_deviation);
+
+        float n = idealNodeList.Count;
+        float sum = 0;
+        for (int i = 0; i < n; ++i)
+        {
+            sum += Mathf.Pow((idealNodeList[i].getDegreeOfConnectivity() - this.avgConnectivity) / (standard_deviation), 3);
+        }
+        this.idealSkewness = (n / ((n - 1) * (n - 2))) * sum;
     }
 
     public void recalculateClusteringCoefficientIdeal()
@@ -933,6 +968,15 @@ public class GraphRendererScript : MonoBehaviour
     {
         float total = 0;
         List<int> ls = calculateAllShortestPathsIdeal();
+        ls.Sort();
+        if (ls.Count > 0)
+        {
+            this.idealMedianPathLength = ls[ls.Count / 2];
+        }
+        else
+        {
+            this.idealMedianPathLength = 0;
+        }
         foreach (int i in ls)
         {
             total += i;
@@ -949,6 +993,7 @@ public class GraphRendererScript : MonoBehaviour
         List<int> path_lengths = new List<int>();
         List<int> max_depth_ls = new List<int>();
         float num_nodes_that_can_reach_all_nodes = 0;
+        this.idealAvgPercentCanReach = 0;
         foreach (IdealNode root in idealNodeList)
         {
             /* Want to reset each time */
@@ -1003,6 +1048,10 @@ public class GraphRendererScript : MonoBehaviour
             {
                 ++num_nodes_that_can_reach_all_nodes;
             }
+
+            float numNodesCanReach = visited_nodes.Count - 1; // -1 to account for self
+            float percentNodesCanReach = numNodesCanReach / numNodes;
+            this.idealAvgPercentCanReach += percentNodesCanReach;
         }
         this.idealAvgDepth = 0;
         this.idealMaxDepth = 0;
@@ -1016,6 +1065,7 @@ public class GraphRendererScript : MonoBehaviour
         }
         this.idealAvgDepth /= max_depth_ls.Count;
         this.idealPercent_nodes_that_can_reach_all_nodes = num_nodes_that_can_reach_all_nodes / numNodes;
+        this.idealAvgPercentCanReach /= numNodes;
         return path_lengths;
     }
 
@@ -1131,7 +1181,10 @@ public class GraphRendererScript : MonoBehaviour
         json += TAB + "\"Density\":" + this.idealDensity + ",\n";
         json += TAB + "\"Connectivity\":" + this.idealAvgConnectivity + ",\n";
         json += TAB + "\"Clustering\":" + this.idealAvgClusteringCoefficient + ",\n";
+        json += TAB + "\"Skewness\":" + this.idealSkewness + ",\n";
         json += TAB + "\"Average_path_length\":" + this.idealAvgPathLength + ",\n";
+        json += TAB + "\"Median_path_length\":" + this.idealMedianPathLength + ",\n";
+        json += TAB + "\"Average_percent_can_reach\":" + this.idealAvgPercentCanReach + ",\n";
         json += TAB + "\"Max_depth\":" + this.idealMaxDepth + ",\n";
         json += TAB + "\"Average_depth\":" + this.idealAvgDepth + ",\n";
         json += TAB + "\"Num_communities\":" + this.idealNum_communities + ",\n";
@@ -1141,5 +1194,44 @@ public class GraphRendererScript : MonoBehaviour
         json += TAB + "\"Can_reach_all\":" + this.idealPercent_nodes_that_can_reach_all_nodes + "\n}";
 
         return json;
+    }
+
+    public void setAllPropertiesToZero()
+    {
+        /* Network properties */
+        this.numNodes = 0;
+        this.numEdges = 0;
+        this.density = 0;
+        this.avgConnectivity = 0;
+        this.avgClusteringCoefficient = 0;
+        this.avgClusteringCoefficient_ifHasFriends = 0;
+        this.avgPathLength = 0;
+        this.medianPathLength = 0;
+        this.percent_nodes_that_can_reach_all_nodes = 0;
+        this.maxDepth = 0;
+        this.avgDepth = 0;
+        this.num_communities = 0;
+        this.avg_community_size = 0;
+        this.max_community_size = 0;
+        this.min_community_size = 0;
+        this.skewness = 0;
+
+        /* Ideal Network properties */
+        //this.numNodes = 0; //Not a property of the ideal graph
+        this.idealNumEdges = 0;
+        this.idealDensity = 0;
+        this.idealAvgConnectivity = 0;
+        this.idealAvgClusteringCoefficient = 0;
+        this.idealAvgClusteringCoefficient_ifHasFriends = 0;
+        this.idealAvgPathLength = 0;
+        this.idealMedianPathLength = 0;
+        this.idealPercent_nodes_that_can_reach_all_nodes = 0;
+        this.idealMaxDepth = 0;
+        this.idealAvgDepth = 0;
+        this.idealNum_communities = 0;
+        this.idealAvg_community_size = 0;
+        this.idealMax_community_size = 0;
+        this.idealMin_community_size = 0;
+        this.idealSkewness = 0;
     }
 }

@@ -3154,6 +3154,7 @@ MonoBehaviour:
   avgClusteringCoefficient: 0
   avgClusteringCoefficient_ifHasFriends: 0
   avgPathLength: 0
+  medianPathLength: 0
   percent_nodes_that_can_reach_all_nodes: 0
   maxDepth: 0
   avgDepth: 0
@@ -3161,12 +3162,14 @@ MonoBehaviour:
   avg_community_size: 0
   max_community_size: 0
   min_community_size: 0
+  skewness: 0
   idealNumEdges: 0
   idealDensity: 0
   idealAvgConnectivity: 0
   idealAvgClusteringCoefficient: 0
   idealAvgClusteringCoefficient_ifHasFriends: 0
   idealAvgPathLength: 0
+  idealMedianPathLength: 0
   idealPercent_nodes_that_can_reach_all_nodes: 0
   idealMaxDepth: 0
   idealAvgDepth: 0
@@ -3174,6 +3177,7 @@ MonoBehaviour:
   idealAvg_community_size: 0
   idealMax_community_size: 0
   idealMin_community_size: 0
+  idealSkewness: 0
 --- !u!1 &778579654
 GameObject:
   m_ObjectHideFlags: 0
@@ -4693,10 +4697,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b104e9eb257260041a6761fd990449f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NUM_YEARS_TO_RUN: 9999999
+  NUM_YEARS_TO_RUN: 100
   DISABLE_PATHFINDING: 1
   TEST_NAME: SANDBOX
-  IS_SEEDED: 0
+  IS_SEEDED: 1
   SEED: 123456789
   TURN_TIME: 0
   DAYS_PER_YEAR: 1
@@ -4713,7 +4717,7 @@ MonoBehaviour:
   PERSONALITY_LENGTH: 20
   PERSONALITY_THRESHOLD: 0.5
   MAX_NUMBER_OF_SOCIAL_MEETUPS_PER_WEEK: 2
-  DAILY_CHANCE_OF_SOCIAL_MEETUP: 1
+  DAILY_CHANCE_OF_SOCIAL_MEETUP: 0.25
   TIME_AT_WORK_SCHOOL: 0
   TIME_AT_HOME: 0
   TIME_AT_SOCIAL: 0
@@ -8678,7 +8682,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SANDBOX_MODE: 1
-  SANDBOX_MAP: {fileID: 2800000, guid: 1b3329181ca9d254eb95df70543bb9c5, type: 3}
+  SANDBOX_MAP: {fileID: 2800000, guid: fc35b027ce1f27b43aafd391f9b530ed, type: 3}
   maps:
   - {fileID: 2800000, guid: fc35b027ce1f27b43aafd391f9b530ed, type: 3}
   - {fileID: 2800000, guid: 1b3329181ca9d254eb95df70543bb9c5, type: 3}

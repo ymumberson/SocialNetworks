@@ -558,9 +558,8 @@ public class Agent : MonoBehaviour
     {
         if (Random.value <= Parameters.Instance.DAILY_CHANCE_OF_SOCIAL_MEETUP)
         {
-            //socialMeetupRule1();
-            //socialMeetupRule2();
-            socialMeetupRule3();
+            socialMeetupRuleInviteYourFriends();
+            //socialMeetupRule();
         }
     }
 
@@ -569,76 +568,7 @@ public class Agent : MonoBehaviour
         return this.total_num_social_meetups_attended;
     }
 
-    private void socialMeetupRule1()
-    {
-        if (this.canAttendSocialMeetup())
-        {
-            /* TODO Pick to meet friends or family -> For now just friends */
-            Agent[] agents = this.getFriends();
-            List<Agent> available_agents = new List<Agent>();
-            Social s;
-            if (this.isAdult())
-            {
-                s = Landscape.Instance.getRandomAdultSocial();
-            } 
-            else
-            {
-                s = Landscape.Instance.getRandomChildSocial();
-            }
-            foreach (Agent a in agents)
-            {
-                if (a.canAttendSocialMeetup(s))
-                {
-                    available_agents.Add(a);
-                }
-            }
-            if (available_agents.Count > 0) /* No need for a second loop here really */
-            {
-                this.setSocialMeetupBuilding(s);
-                foreach (Agent a in available_agents)
-                {
-                    a.setSocialMeetupBuilding(s);
-                }
-            }
-        }
-    }
-
-    private void socialMeetupRule2()
-    {
-        if (this.canAttendSocialMeetup())
-        {
-            /* TODO Pick to meet friends or family -> For now just friends */
-            Agent[] agents = this.getFriends();
-            List<Agent> available_agents = new List<Agent>();
-            Social s;
-            if (this.isAdult())
-            {
-                s = Landscape.Instance.getRandomAdultSocial();
-            }
-            else
-            {
-                s = Landscape.Instance.getRandomChildSocial();
-            }
-            foreach (Agent a in agents)
-            {
-                if (a.canAttendSocialMeetup(s))
-                {
-                    available_agents.Add(a);
-                }
-            }
-            if (available_agents.Count > 0) /* No need for a second loop here really */
-            {
-                this.setSocialMeetupBuilding(s);
-                foreach (Agent a in available_agents)
-                {
-                    a.setSocialMeetupBuilding(s);
-                    a.inviteYourFriends(s);
-                }
-            }
-        }
-    }
-
-    private void socialMeetupRule3()
+    private void socialMeetupRuleInviteYourFriends()
     {
         if (this.canAttendSocialMeetup())
         {
@@ -674,7 +604,45 @@ public class Agent : MonoBehaviour
                     s.addAgentToSocialGroup(group_index, a);
                     a.inviteYourFriends(s, group_index);
                 }
-                //Debug.Log("(1) Invited " + available_agents.Count + "/" + agents.Length + " of my friends.");
+            }
+        }
+    }
+
+    private void socialMeetupRule()
+    {
+        if (this.canAttendSocialMeetup())
+        {
+            /* TODO Pick to meet friends or family -> For now just friends */
+            Agent[] agents = this.getFriends();
+            List<Agent> available_agents = new List<Agent>();
+            Social s;
+            if (this.isAdult())
+            {
+                s = Landscape.Instance.getRandomAdultSocial();
+            }
+            else
+            {
+                s = Landscape.Instance.getRandomChildSocial();
+            }
+            foreach (Agent a in agents)
+            {
+                if (a.canAttendSocialMeetup(s))
+                {
+                    available_agents.Add(a);
+                }
+            }
+            if (available_agents.Count > 0) /* No need for a second loop here really */
+            {
+                int group_index = s.createNewSocialGroup();
+                s.addAgentToSocialGroup(group_index, this);
+                this.setSocialMeetupBuilding(s);
+                this.setSocialGroupIndex(group_index);
+                foreach (Agent a in available_agents)
+                {
+                    a.setSocialMeetupBuilding(s);
+                    a.setSocialGroupIndex(group_index);
+                    s.addAgentToSocialGroup(group_index, a);
+                }
             }
         }
     }

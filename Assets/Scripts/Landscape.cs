@@ -330,7 +330,7 @@ public class Landscape : MonoBehaviour
             day = 0;
             ++year;
             ageAllAgents();
-            if (year >= Parameters.Instance.NUM_YEARS_TO_RUN)
+            if (year >= Parameters.Instance.NUM_YEARS_TO_RUN && !this.HAS_TERMINATED)
             {
                 this.terminate();
             }
@@ -1116,11 +1116,15 @@ public class Landscape : MonoBehaviour
         json += TAB + "\"Num_adults\":" + this.getNumAdults() + ",\n";
         json += TAB + "\"Num_children\":" + this.getNumChildren() + ",\n";
         json += TAB + "\"Agents\":{\n";
-        for (int i=0; i<agents.Count; ++i)
-        {   
-            json += TAB + TAB + agents[i].toTxt() + ",\n";
+        if (agents.Count > 0)
+        {
+            for (int i = 0; i < agents.Count; ++i)
+            {
+                json += TAB + TAB + agents[i].toTxt() + ",\n";
+            }
+            json += TAB + TAB + agents[agents.Count - 1].toTxt() + "\n";
         }
-        json += TAB + TAB + agents[agents.Count - 1].toTxt() + "\n" + TAB + "},\n";
+        json += TAB + "},\n";
         return json + "}";
     }
 
