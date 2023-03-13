@@ -3155,6 +3155,7 @@ MonoBehaviour:
   avgClusteringCoefficient_ifHasFriends: 0
   avgPathLength: 0
   medianPathLength: 0
+  avgPercentCanReach: 0
   percent_nodes_that_can_reach_all_nodes: 0
   maxDepth: 0
   avgDepth: 0
@@ -3170,6 +3171,7 @@ MonoBehaviour:
   idealAvgClusteringCoefficient_ifHasFriends: 0
   idealAvgPathLength: 0
   idealMedianPathLength: 0
+  idealAvgPercentCanReach: 0
   idealPercent_nodes_that_can_reach_all_nodes: 0
   idealMaxDepth: 0
   idealAvgDepth: 0
@@ -8681,7 +8683,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 416d376b67d451d4bb7418d9e762dd4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SANDBOX_MODE: 1
+  SANDBOX_MODE: 0
   SANDBOX_MAP: {fileID: 2800000, guid: fc35b027ce1f27b43aafd391f9b530ed, type: 3}
   maps:
   - {fileID: 2800000, guid: fc35b027ce1f27b43aafd391f9b530ed, type: 3}

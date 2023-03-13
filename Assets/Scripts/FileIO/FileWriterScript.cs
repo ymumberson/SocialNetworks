@@ -5,7 +5,7 @@ using UnityEngine;
 public class FileWriterScript
 {
     private string foldername = "DebugLogs\\";
-    private string CSV_NAME = "output.csv";
+    private string CSV_NAME = "1_Output.csv";
 
     public string writeDebugTxt(Landscape l, GraphRendererScript g)
     {
@@ -47,13 +47,9 @@ public class FileWriterScript
         System.IO.StreamWriter writer = new System.IO.StreamWriter(filename, true);
         if (writeAttributeNames)
         {
-            writer.Write("A,B,C,D,\n");
+            writer.Write(Parameters.Instance.titlesCSV() + g.titlesCSV() + g.titlesCSVIdeal() + "\n");
         }
-        float A = Random.value;
-        float B = Random.value;
-        float C = Random.value;
-        float D = Random.value;
-        writer.Write(A + "," + B + "," + C + "," + D + ",\n");
+        writer.Write(Parameters.Instance.toCSV() + g.toCSV() + g.toCSVIdeal() + "\n");
         writer.Close();
     }
 }

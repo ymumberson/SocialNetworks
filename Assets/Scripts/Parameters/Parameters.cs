@@ -70,4 +70,78 @@ public class Parameters : MonoBehaviour
             Instance = this;
         }
     }
+
+    public string titlesCSV()
+    {
+        return
+        "NUM_YEARS_TO_RUN" + "," +
+        "DISABLE_PATHFINDING" + "," +
+        "TEST_NAME" + "," +
+        "IS_SEEDED" + "," +
+        "SEED" + "," +
+        "TURN_TIME" + "," +
+        "DAYS_PER_YEAR" + "," +
+        "ENABLE_PERSONALITY_TRANSMISSION" + "," +
+        "AGE_TURN_ADULT" + "," +
+        "MIN_DEATH_AGE" + "," +
+        "MAX_DEATH_AGE" + "," +
+        "MIN_OFFSPRING_AMOUNT" + "," +
+        "MAX_OFFSPRING_AMOUNT" + "," +
+        "MIN_FERTILITY_AGE" + "," +
+        "MAX_FERTILITY_AGE" + "," +
+        "MIN_FRIENDS" + "," +
+        "MAX_FRIENDS" + "," +
+        "PERSONALITY_LENGTH" + "," +
+        "PERSONALITY_THRESHOLD" + "," +
+        "MAX_NUMBER_OF_SOCIAL_MEETUPS_PER_WEEK" + "," +
+        "DAILY_CHANCE_OF_SOCIAL_MEETUP" + "," +
+        "TIME_AT_WORK_SCHOOL" + "," +
+        "TIME_AT_HOME" + "," +
+        "TIME_AT_SOCIAL" + "," +
+        "MIN_INITIAL_CHILDREN" + "," +
+        "MAX_INITIAL_CHILDREN" + "," +
+        "MIN_INITIAL_PARENT_AGE" + "," +
+        "MAX_INITIAL_PARENT_AGE" + "," +
+        "MIN_INITIAL_CHILD_AGE" + "," +
+        "MAX_INITIAL_CHILD_AGE" + "," +
+        "SELECTED_MAP_INDEX" + "," +
+        "PERCENT_CHILD_SOCIAL_BUILDINGS" + ",";
+    }
+
+    public string toCSV()
+    {
+        return
+        NUM_YEARS_TO_RUN + "," +
+        DISABLE_PATHFINDING + "," +
+        TEST_NAME + "," +
+        IS_SEEDED + "," +
+        SEED + "," +
+        TURN_TIME + "," +
+        DAYS_PER_YEAR + "," +
+        ENABLE_PERSONALITY_TRANSMISSION + "," +
+        AGE_TURN_ADULT + "," +
+        MIN_DEATH_AGE + "," +
+        MAX_DEATH_AGE + "," +
+        MIN_OFFSPRING_AMOUNT + "," +
+        MAX_OFFSPRING_AMOUNT + "," +
+        MIN_FERTILITY_AGE + "," +
+        MAX_FERTILITY_AGE + "," +
+        MIN_FRIENDS + "," +
+        MAX_FRIENDS + "," +
+        PERSONALITY_LENGTH + "," +
+        PERSONALITY_THRESHOLD + "," +
+        MAX_NUMBER_OF_SOCIAL_MEETUPS_PER_WEEK + "," +
+        DAILY_CHANCE_OF_SOCIAL_MEETUP + "," +
+        TIME_AT_WORK_SCHOOL + "," +
+        TIME_AT_HOME + "," +
+        TIME_AT_SOCIAL + "," +
+        MIN_INITIAL_CHILDREN + "," +
+        MAX_INITIAL_CHILDREN + "," +
+        MIN_INITIAL_PARENT_AGE + "," +
+        MAX_INITIAL_PARENT_AGE + "," +
+        MIN_INITIAL_CHILD_AGE + "," +
+        MAX_INITIAL_CHILD_AGE + "," +
+        SELECTED_MAP_INDEX + "," +
+        PERCENT_CHILD_SOCIAL_BUILDINGS + ",";
+    }
 }

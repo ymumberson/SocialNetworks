@@ -1,7 +1,7 @@
 {
-    "NUM_YEARS_TO_RUN": 1,
+    "NUM_YEARS_TO_RUN": 1000,
     "DISABLE_PATHFINDING": true,
-    "TEST_NAME": "Allow less friends",
+    "TEST_NAME": "Baseline 1000 Years",
     "IS_SEEDED": true,
     "SEED": 123456789,
     "TURN_TIME": 0.0,
@@ -14,7 +14,7 @@
     "MAX_OFFSPRING_AMOUNT": 3,
     "MIN_FERTILITY_AGE": 20,
     "MAX_FERTILITY_AGE": 50,
-    "MIN_FRIENDS": 1,
+    "MIN_FRIENDS": 3,
     "MAX_FRIENDS": 5,
     "PERSONALITY_LENGTH": 20,
     "PERSONALITY_THRESHOLD": 0.5,

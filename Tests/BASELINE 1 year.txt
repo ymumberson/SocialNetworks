@@ -1,7 +1,7 @@
 {
     "NUM_YEARS_TO_RUN": 1,
     "DISABLE_PATHFINDING": true,
-    "TEST_NAME": "Smaller personality string",
+    "TEST_NAME": "Baseline 1 Year",
     "IS_SEEDED": true,
     "SEED": 123456789,
     "TURN_TIME": 0.0,
@@ -16,7 +16,7 @@
     "MAX_FERTILITY_AGE": 50,
     "MIN_FRIENDS": 3,
     "MAX_FRIENDS": 5,
-    "PERSONALITY_LENGTH": 10,
+    "PERSONALITY_LENGTH": 20,
     "PERSONALITY_THRESHOLD": 0.5,
     "MAX_NUMBER_OF_SOCIAL_MEETUPS_PER_WEEK": 2,
     "DAILY_CHANCE_OF_SOCIAL_MEETUP": 0.25,

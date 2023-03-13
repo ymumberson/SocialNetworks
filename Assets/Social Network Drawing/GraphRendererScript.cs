@@ -757,6 +757,44 @@ public class GraphRendererScript : MonoBehaviour
         return json;
     }
 
+    public string titlesCSV()
+    {
+        return
+            "density" + "," +
+            "avgConnectivity" + "," +
+            "avgClusteringCoefficient" + "," +
+            "skewness" + "," +
+            "avgPathLength" + "," +
+            "medianPathLength" + "," +
+            "avgPercentCanReach" + "," +
+            "maxDepth" + "," +
+            "avgDepth" + "," +
+            "num_communities" + "," +
+            "avg_community_size" + "," +
+            "max_community_size" + "," +
+            "min_community_size" + "," +
+            "percent_nodes_that_can_reach_all_nodes" + ",";
+    }
+
+    public string toCSV()
+    {
+        return
+            density + "," +
+            avgConnectivity + "," +
+            avgClusteringCoefficient + "," +
+            skewness + "," +
+            avgPathLength + "," +
+            medianPathLength + "," +
+            avgPercentCanReach + "," +
+            maxDepth + "," +
+            avgDepth + "," +
+            num_communities + "," +
+            avg_community_size + "," +
+            max_community_size + "," +
+            min_community_size + "," +
+            percent_nodes_that_can_reach_all_nodes + ",";
+    }
+
     public void toggleIdeal()
     {
         this.SHOW_IDEAL_GRAPH = !this.SHOW_IDEAL_GRAPH;
@@ -1196,6 +1234,43 @@ public class GraphRendererScript : MonoBehaviour
         return json;
     }
 
+    public string titlesCSVIdeal()
+    {
+        return
+            "idealDensity" + "," +
+            "idealAvgConnectivity" + "," +
+            "idealAvgClusteringCoefficient" + "," +
+            "idealSkewness" + "," +
+            "idealAvgPathLength" + "," +
+            "idealMedianPathLength" + "," +
+            "idealAvgPercentCanReach" + "," +
+            "idealMaxDepth" + "," +
+            "idealAvgDepth" + "," +
+            "idealNum_communities" + "," +
+            "idealAvg_community_size" + "," +
+            "idealMax_community_size" + "," +
+            "idealMin_community_size" + "," +
+            "idealPercent_nodes_that_can_reach_all_nodes" + ",";
+    }
+
+    public string toCSVIdeal()
+    {
+        return
+            idealDensity + "," +
+            idealAvgConnectivity + "," +
+            idealAvgClusteringCoefficient + "," +
+            idealSkewness + "," +
+            idealAvgPathLength + "," +
+            idealMedianPathLength + "," +
+            idealAvgPercentCanReach + "," +
+            idealMaxDepth + "," +
+            idealAvgDepth + "," +
+            idealNum_communities + "," +
+            idealAvg_community_size + "," +
+            idealMax_community_size + "," +
+            idealMin_community_size + "," +
+            idealPercent_nodes_that_can_reach_all_nodes + ",";
+    }
     public void setAllPropertiesToZero()
     {
         /* Network properties */
