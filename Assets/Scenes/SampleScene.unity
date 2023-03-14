@@ -8691,6 +8691,7 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 6f9a0ff126e59fb4ebfb7fff0323a072, type: 3}
   - {fileID: 2800000, guid: 1fdccdcf1c73e27469517546ef4a2d01, type: 3}
   filenames: []
+  CREATE_TEST_SCRIPTS: 1
 --- !u!4 &1743455883
 Transform:
   m_ObjectHideFlags: 0

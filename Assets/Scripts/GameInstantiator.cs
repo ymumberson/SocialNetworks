@@ -12,13 +12,15 @@ public class GameInstantiator : MonoBehaviour
     private string BASELINE_TXT = "BASELINE.txt";
     [SerializeField] private bool CREATE_TEST_SCRIPTS;
     private bool launched_last_test;
+    private int TOTAL_NUM_TESTS;
 
     private void Start()
     {
         launched_last_test = false;
         if (CREATE_TEST_SCRIPTS)
         {
-            createTestScripts();
+            //createTestScripts();
+            createTestScriptsRange();
             return;
         }
 
@@ -33,6 +35,7 @@ public class GameInstantiator : MonoBehaviour
         {
             filenames.Add(filename);
         }
+        TOTAL_NUM_TESTS = filenames.Count;
     }
 
     private void FixedUpdate()
@@ -54,6 +57,9 @@ public class GameInstantiator : MonoBehaviour
     private void loadNextTest()
     {
         if (filenames.Count == 0) return;
+
+        Debug.Log("Loading test " + (TOTAL_NUM_TESTS - filenames.Count + 1) + " of " + TOTAL_NUM_TESTS + ".");
+
         int index = filenames.Count - 1;
         System.IO.StreamReader r = new System.IO.StreamReader(filenames[index]);
         string s = r.ReadToEnd();
@@ -69,17 +75,17 @@ public class GameInstantiator : MonoBehaviour
 
     private void createTestScripts()
     {
-        /* This is the part to change */
+        /* This is the part to chaenge */
         /* ============================================ */
-        float min_val = 1;
-        float max_val = 100;
-        float step = 1;
-        string test_name = "Personality length";
+        int min_val = 0;
+        int max_val = 3;
+        int step = 1;
+        string test_name = "Selected Map";
         int num_seeds = 10;
         /* ============================================ */
 
         print("Generating test scripts into directory: " + "\"Generated_Tests\\\"");
-        for (float i=min_val; i<=max_val; i+=step)
+        for (int i = min_val; i <= max_val; i += step)
         {
             for (int seed = 1; seed <= num_seeds; seed++)
             {
@@ -92,7 +98,7 @@ public class GameInstantiator : MonoBehaviour
 
                 /* This is the part to change */
                 /* ============================================ */
-                Parameters.Instance.PERSONALITY_LENGTH = (int)i;
+                Parameters.Instance.SELECTED_MAP_INDEX = i;
                 /* ============================================ */
 
                 string filename = "Generated_Tests\\" + Parameters.Instance.TEST_NAME.Replace(" ", "-") + " - " + seed + ".txt";
@@ -100,6 +106,48 @@ public class GameInstantiator : MonoBehaviour
                 writer.Write(JsonUtility.ToJson(Parameters.Instance, true));
                 writer.Close();
                 print("Created test script: " + filename);
+            }
+        }
+        print("Finished creating test scripts.");
+    }
+
+    private void createTestScriptsRange()
+    {
+        /* This is the part to change */
+        /* ============================================ */
+        int min_val = 0;
+        int max_val = 100;
+        int step = 1;
+        string test_name = "Number of friends";
+        int num_seeds = 10;
+        /* ============================================ */
+
+        print("Generating test scripts into directory: " + "\"Generated_Tests\\\"");
+        for (int i = min_val; i <= max_val; i += step)
+        {
+            for (int j = i + step; j <= max_val; j += step)
+            {
+                for (int seed = 1; seed <= num_seeds; seed++)
+                {
+                    System.IO.StreamReader r = new System.IO.StreamReader(BASELINE_TXT);
+                    string s = r.ReadToEnd();
+                    r.Close();
+                    JsonUtility.FromJsonOverwrite(s, Parameters.Instance);
+                    Parameters.Instance.TEST_NAME = test_name + " (" + i + "," + j + ")";
+                    Parameters.Instance.SEED = seed;
+
+                    /* This is the part to change */
+                    /* ============================================ */
+                    Parameters.Instance.MIN_FRIENDS = i;
+                    Parameters.Instance.MAX_FRIENDS = j;
+                    /* ============================================ */
+
+                    string filename = "Generated_Tests\\" + Parameters.Instance.TEST_NAME.Replace(" ", "-") + " - " + seed + ".txt";
+                    System.IO.StreamWriter writer = new System.IO.StreamWriter(filename, true);
+                    writer.Write(JsonUtility.ToJson(Parameters.Instance, true));
+                    writer.Close();
+                    print("Created test script: " + filename);
+                }
             }
         }
         print("Finished creating test scripts.");
