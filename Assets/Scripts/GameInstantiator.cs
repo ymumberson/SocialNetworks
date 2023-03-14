@@ -116,7 +116,7 @@ public class GameInstantiator : MonoBehaviour
         /* This is the part to change */
         /* ============================================ */
         int min_val = 0;
-        int max_val = 100;
+        int max_val = 15;
         int step = 1;
         string test_name = "Number of friends";
         int num_seeds = 10;
