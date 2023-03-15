@@ -19,8 +19,8 @@ public class GameInstantiator : MonoBehaviour
         launched_last_test = false;
         if (CREATE_TEST_SCRIPTS)
         {
-            //createTestScripts();
-            createTestScriptsRange();
+            createTestScripts();
+            //createTestScriptsRange();
             return;
         }
 
@@ -77,10 +77,10 @@ public class GameInstantiator : MonoBehaviour
     {
         /* This is the part to chaenge */
         /* ============================================ */
-        int min_val = 0;
-        int max_val = 3;
+        int min_val = 100;
+        int max_val = 100;
         int step = 1;
-        string test_name = "Selected Map";
+        string test_name = "Number of years to run";
         int num_seeds = 10;
         /* ============================================ */
 
@@ -98,7 +98,7 @@ public class GameInstantiator : MonoBehaviour
 
                 /* This is the part to change */
                 /* ============================================ */
-                Parameters.Instance.SELECTED_MAP_INDEX = i;
+                Parameters.Instance.NUM_YEARS_TO_RUN = i;
                 /* ============================================ */
 
                 string filename = "Generated_Tests\\" + Parameters.Instance.TEST_NAME.Replace(" ", "-") + " - " + seed + ".txt";

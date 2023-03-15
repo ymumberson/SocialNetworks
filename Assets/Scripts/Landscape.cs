@@ -33,6 +33,12 @@ public class Landscape : MonoBehaviour
     private bool HAS_BEEN_INITIALISED;
     private bool HAS_TERMINATED;
 
+
+    /** VERY TEMP **/
+    int NUM_YEARS_TO_RUN_MAX = 10000;
+    int NUM_YEARS_TO_RUN_CURRENT = 0;
+    int STEP = 1;
+
     private void Awake()
     {
         if (Instance)
@@ -67,6 +73,9 @@ public class Landscape : MonoBehaviour
         {
             Random.InitState(Random.Range(int.MinValue, int.MaxValue));
         }
+
+        /** VERY TEMPORARY **/
+        Parameters.Instance.NUM_YEARS_TO_RUN = NUM_YEARS_TO_RUN_CURRENT;
 
         ENABLE_DAY_LOOP = true;
         HAS_TERMINATED = false;
@@ -1138,7 +1147,15 @@ public class Landscape : MonoBehaviour
     private void terminate()
     {
         this.saveDebugTxt();
-        this.HAS_TERMINATED = true;
+        //this.HAS_TERMINATED = true;
+        if (Parameters.Instance.NUM_YEARS_TO_RUN >= NUM_YEARS_TO_RUN_MAX)
+        {
+            this.HAS_TERMINATED = true;
+        }
+        else
+        {
+            Parameters.Instance.NUM_YEARS_TO_RUN += STEP;
+        }
     }
 
     public bool hasTerminated()
