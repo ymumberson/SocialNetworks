@@ -138,6 +138,7 @@ public class MinHeap
 
     public bool insert(Agent a)
     {
+        if (max_size == 0) return false;
         this.agents_attempted_inserted.Add(a.getAgentID());
         if (a == this.owner) return false; /* Can't insert self */
         float a_cost = a.comparePersonality(this.owner.getPersonality());
