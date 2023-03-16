@@ -11,6 +11,7 @@ public class GameInstantiator : MonoBehaviour
     private string foldername = "Tests\\";
     private string BASELINE_TXT = "BASELINE.txt";
     [SerializeField] private bool CREATE_TEST_SCRIPTS;
+    private int NUM_ITERATIONS_PER_TEST = 25;
     private bool launched_last_test;
     private int TOTAL_NUM_TESTS;
 
@@ -19,8 +20,10 @@ public class GameInstantiator : MonoBehaviour
         launched_last_test = false;
         if (CREATE_TEST_SCRIPTS)
         {
-            createTestScripts();
+            //createTestScripts();
             //createTestScriptsRange();
+            generateMarginalisationTests();
+            //generateMarginalisationTestsRange();
             return;
         }
 
@@ -143,6 +146,90 @@ public class GameInstantiator : MonoBehaviour
                     /* ============================================ */
 
                     string filename = "Generated_Tests\\" + Parameters.Instance.TEST_NAME.Replace(" ", "-") + " - " + seed + ".txt";
+                    System.IO.StreamWriter writer = new System.IO.StreamWriter(filename, true);
+                    writer.Write(JsonUtility.ToJson(Parameters.Instance, true));
+                    writer.Close();
+                    print("Created test script: " + filename);
+                }
+            }
+        }
+        print("Finished creating test scripts.");
+    }
+
+    private void generateMarginalisationTests()
+    {
+        int step = ParametersBounds.Instance.STEP_NUM_YEARS_TO_RUN;
+        int min_val = ParametersBounds.Instance.MIN_NUM_YEARS_TO_RUN;
+        int max_val = ParametersBounds.Instance.MAX_NUM_YEARS_TO_RUN;
+        string test_name = "Years to run";
+
+        print("Generating test scripts into directory: " + "\"Generated_Tests\\\"");
+        for (int val = min_val; val <= max_val; val += step)
+        {
+            for (int it = 1; it <= this.NUM_ITERATIONS_PER_TEST; ++it)
+            {
+                System.IO.StreamReader r = new System.IO.StreamReader(BASELINE_TXT);
+                string s = r.ReadToEnd();
+                r.Close();
+                JsonUtility.FromJsonOverwrite(s, Parameters.Instance);
+                Parameters.Instance.TEST_NAME = test_name + " (" + val + ") " + "(" + it + ")";
+
+                /* Set the seed for randomizsation */
+                Parameters.Instance.SEED = it;
+                Random.InitState(it);
+
+                /* Randomize all values (Reset the one that we want to keep constant afterwards) */
+                Parameters.Instance.randomize();
+
+                /* This is the part to change */
+                /* ============================================ */
+                Parameters.Instance.NUM_YEARS_TO_RUN = val;
+                /* ============================================ */
+
+                string filename = "Generated_Tests\\" + Parameters.Instance.TEST_NAME.Replace(" ", "-") + ".txt";
+                System.IO.StreamWriter writer = new System.IO.StreamWriter(filename, true);
+                writer.Write(JsonUtility.ToJson(Parameters.Instance, true));
+                writer.Close();
+                print("Created test script: " + filename);
+            }
+        }
+        print("Finished creating test scripts.");
+    }
+
+    private void generateMarginalisationTestsRange()
+    {
+        int step = ParametersBounds.Instance.STEP_NUM_FRIENDS;
+        int min_val = ParametersBounds.Instance.MIN_NUM_FRIENDS;
+        int max_val = ParametersBounds.Instance.MAX_NUM_FRIENDS;
+        string test_name = "Number of friends";
+
+        print("Generating test scripts into directory: " + "\"Generated_Tests\\\"");
+        for (int val_min = min_val; val_min <= max_val; val_min += step)
+        {
+            for (int val_max = val_min; val_max <= max_val; val_max += step)
+            {
+                for (int it = 1; it <= this.NUM_ITERATIONS_PER_TEST; ++it)
+                {
+                    System.IO.StreamReader r = new System.IO.StreamReader(BASELINE_TXT);
+                    string s = r.ReadToEnd();
+                    r.Close();
+                    JsonUtility.FromJsonOverwrite(s, Parameters.Instance);
+                    Parameters.Instance.TEST_NAME = test_name + " (" + val_min + "-" + val_max + ") " + "(" + it + ")";
+
+                    /* Set the seed for randomizsation */
+                    Parameters.Instance.SEED = it;
+                    Random.InitState(it);
+
+                    /* Randomize all values (Reset the one that we want to keep constant afterwards) */
+                    Parameters.Instance.randomize();
+
+                    /* This is the part to change */
+                    /* ============================================ */
+                    Parameters.Instance.MIN_FRIENDS = val_min;
+                    Parameters.Instance.MAX_FRIENDS = max_val;
+                    /* ============================================ */
+
+                    string filename = "Generated_Tests\\" + Parameters.Instance.TEST_NAME.Replace(" ", "-") + ".txt";
                     System.IO.StreamWriter writer = new System.IO.StreamWriter(filename, true);
                     writer.Write(JsonUtility.ToJson(Parameters.Instance, true));
                     writer.Close();

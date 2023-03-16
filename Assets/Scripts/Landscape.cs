@@ -35,9 +35,9 @@ public class Landscape : MonoBehaviour
 
 
     /** VERY TEMP **/
-    int NUM_YEARS_TO_RUN_MAX = 10000;
-    int NUM_YEARS_TO_RUN_CURRENT = 0;
-    int STEP = 1;
+    //int NUM_YEARS_TO_RUN_MAX = 10000;
+    //int NUM_YEARS_TO_RUN_CURRENT = 0;
+    //int STEP = 1;
 
     private void Awake()
     {
@@ -75,8 +75,8 @@ public class Landscape : MonoBehaviour
         }
 
         /** VERY TEMPORARY **/
-        Parameters.Instance.NUM_YEARS_TO_RUN = NUM_YEARS_TO_RUN_CURRENT;
-        Parameters.Instance.TEST_NAME = "Num years to run (" + Parameters.Instance.NUM_YEARS_TO_RUN + ")";
+        //Parameters.Instance.NUM_YEARS_TO_RUN = NUM_YEARS_TO_RUN_CURRENT;
+        //Parameters.Instance.TEST_NAME = "Num years to run (" + Parameters.Instance.NUM_YEARS_TO_RUN + ")";
 
         ENABLE_DAY_LOOP = true;
         HAS_TERMINATED = false;
@@ -1148,16 +1148,18 @@ public class Landscape : MonoBehaviour
     private void terminate()
     {
         this.saveDebugTxt();
-        //this.HAS_TERMINATED = true;
-        if (Parameters.Instance.NUM_YEARS_TO_RUN >= NUM_YEARS_TO_RUN_MAX)
-        {
-            this.HAS_TERMINATED = true;
-        }
-        else
-        {
-            Parameters.Instance.NUM_YEARS_TO_RUN += STEP;
-            Parameters.Instance.TEST_NAME = "Num years to run (" + Parameters.Instance.NUM_YEARS_TO_RUN + ")";
-        }
+        this.HAS_TERMINATED = true;
+
+
+        //if (Parameters.Instance.NUM_YEARS_TO_RUN >= NUM_YEARS_TO_RUN_MAX)
+        //{
+        //    this.HAS_TERMINATED = true;
+        //}
+        //else
+        //{
+        //    Parameters.Instance.NUM_YEARS_TO_RUN += STEP;
+        //    Parameters.Instance.TEST_NAME = "Num years to run (" + Parameters.Instance.NUM_YEARS_TO_RUN + ")";
+        //}
     }
 
     public bool hasTerminated()

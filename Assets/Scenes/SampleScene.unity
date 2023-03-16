@@ -4666,6 +4666,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1018197019}
   - component: {fileID: 1018197020}
+  - component: {fileID: 1018197018}
   m_Layer: 0
   m_Name: Simulation Parameters
   m_TagString: Untagged
@@ -4673,6 +4674,41 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1018197018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1018197017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3906c2486c320ad45bdd889e087b9523, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MIN_NUM_YEARS_TO_RUN: 1
+  MAX_NUM_YEARS_TO_RUN: 501
+  STEP_NUM_YEARS_TO_RUN: 10
+  MIN_DAYS_PER_YEAR: 1
+  MAX_DAYS_PER_YEAR: 365
+  STEP_DAYS_PER_YEAR: 1
+  MIN_ENABLE_PERSONALITY_TRANSMISSION: 0
+  MAX_ENABLE_PERSONALITY_TRANSMISSION: 1
+  MIN_NUM_FRIENDS: 0
+  MAX_NUM_FRIENDS: 20
+  STEP_NUM_FRIENDS: 1
+  MIN_PERSONALITY_LENGTH: 1
+  MAX_PERSONALITY_LENGTH: 101
+  STEP_PERSONALITY_LENGTH: 5
+  MIN_PERSONALITY_THRESHOLD: 0
+  MAX_PERSONALITY_THRESHOLD: 1
+  STEP_PERSONALITY_THRESHOLD: 0.05
+  MIN_DAILY_CHANCE_OF_SOCIAL_MEETUP: 0
+  MAX_DAILY_CHANCE_OF_SOCIAL_MEETUP: 1
+  STEP_DAILY_CHANCE_OF_SOCIAL_MEETUP: 0.05
+  MIN_SELECTED_MAP_INDEX: 0
+  MAX_SELECTED_MAP_INDEX: 3
+  STEP_SELECTED_MAP_INDEX: 1
 --- !u!4 &1018197019
 Transform:
   m_ObjectHideFlags: 0
