@@ -22,8 +22,8 @@ public class GameInstantiator : MonoBehaviour
         {
             //createTestScripts();
             //createTestScriptsRange();
-            generateMarginalisationTests();
-            //generateMarginalisationTestsRange();
+            //generateMarginalisationTests();
+            generateMarginalisationTestsRange();
             return;
         }
 
@@ -226,7 +226,7 @@ public class GameInstantiator : MonoBehaviour
                     /* This is the part to change */
                     /* ============================================ */
                     Parameters.Instance.MIN_FRIENDS = val_min;
-                    Parameters.Instance.MAX_FRIENDS = max_val;
+                    Parameters.Instance.MAX_FRIENDS = val_max;
                     /* ============================================ */
 
                     string filename = "Generated_Tests\\" + Parameters.Instance.TEST_NAME.Replace(" ", "-") + ".txt";
