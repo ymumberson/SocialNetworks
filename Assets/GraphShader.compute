@@ -1,0 +1,43 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+struct Node
+{
+    uint id;
+    float3 position;
+    uint neighbours[20];
+    uint numFriends;
+    uint numAttracts;
+    uint numRepulses;
+};
+
+RWStructuredBuffer<Node> nodes;
+
+[numthreads(10,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    Node node = nodes[id.x];
+    uint numNodes, stride;
+    nodes.GetDimensions(numNodes, stride);
+
+    for (uint i=0; i<numNodes; ++i) {
+        // Find if the current node is a neighbour //
+        Node n = nodes[i];
+        bool isFriend = false;
+        for (uint j=0; j<node.numFriends; ++j) {
+            if (n.id == node.neighbours[j]) {isFriend = true; break;}
+        }
+
+        if (isFriend) {
+            // Attract
+            node.numAttracts++;
+        } else {
+            // Repulse
+            node.numRepulses++;
+        }
+    }
+
+    nodes[id.x] = node;
+}

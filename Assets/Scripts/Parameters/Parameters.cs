@@ -150,10 +150,10 @@ public class Parameters : MonoBehaviour
         this.NUM_YEARS_TO_RUN = Random.Range(ParametersBounds.Instance.MIN_NUM_YEARS_TO_RUN, ParametersBounds.Instance.MAX_NUM_YEARS_TO_RUN);
         this.ENABLE_PERSONALITY_TRANSMISSION = Random.value >= 0.5;
         this.MIN_FRIENDS = Random.Range(ParametersBounds.Instance.MIN_NUM_FRIENDS, ParametersBounds.Instance.MAX_NUM_FRIENDS);
-        this.MAX_FRIENDS = Random.Range(this.MAX_FRIENDS, ParametersBounds.Instance.MAX_NUM_FRIENDS);
+        this.MAX_FRIENDS = Random.Range(this.MIN_FRIENDS, ParametersBounds.Instance.MAX_NUM_FRIENDS);
         this.PERSONALITY_LENGTH = Random.Range(ParametersBounds.Instance.MIN_PERSONALITY_LENGTH, ParametersBounds.Instance.MAX_PERSONALITY_LENGTH);
         this.PERSONALITY_THRESHOLD = Random.Range(ParametersBounds.Instance.MIN_PERSONALITY_THRESHOLD, ParametersBounds.Instance.MAX_PERSONALITY_THRESHOLD);
         this.DAILY_CHANCE_OF_SOCIAL_MEETUP = Random.Range(ParametersBounds.Instance.MIN_DAILY_CHANCE_OF_SOCIAL_MEETUP, ParametersBounds.Instance.MAX_DAILY_CHANCE_OF_SOCIAL_MEETUP);
-        this.SELECTED_MAP_INDEX = Random.Range(ParametersBounds.Instance.MIN_SELECTED_MAP_INDEX, ParametersBounds.Instance.MAX_SELECTED_MAP_INDEX);
+        this.SELECTED_MAP_INDEX = Random.Range(ParametersBounds.Instance.MIN_SELECTED_MAP_INDEX, ParametersBounds.Instance.MAX_SELECTED_MAP_INDEX+1);
     }
 }

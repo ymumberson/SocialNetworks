@@ -25,6 +25,8 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private int MIN_COMMUNITY_SIZE = 3;
     private List<IdealNode> idealNodeList;
 
+    //public ComputeShader computeShader;
+
     /* Network properties */
     [SerializeField] private int numNodes;
     [SerializeField] private int numEdges;
@@ -106,6 +108,7 @@ public class GraphRendererScript : MonoBehaviour
             }
             else
             {
+                //RepositionNodesGPU();
                 repositionNodes();
                 redrawEdges();
             }
@@ -403,7 +406,14 @@ public class GraphRendererScript : MonoBehaviour
                         LineRenderer lr = Instantiate(EDGE_TEMPLATE).GetComponent<LineRenderer>();
                         lr.startColor = sr.color;
                         lr.endColor = sr.color;
-                        lr.sortingOrder = sr.sortingOrder;
+                        if (sr.color == Parameters.Instance.UNHIGHLIGHTED_AGENT_COLOR)
+                        {
+                            lr.sortingOrder = -1;
+                        }
+                        else
+                        {
+                            lr.sortingOrder = sr.sortingOrder;
+                        }
                         lr.SetPosition(0, pos);
                         lr.SetPosition(1, neighbour_pos);
                         ns.addLineRenderer(lr);
@@ -1309,4 +1319,55 @@ public class GraphRendererScript : MonoBehaviour
         this.idealMin_community_size = 0;
         this.idealSkewness = 0;
     }
+
+
+    //private void RepositionNodesGPU()
+    //{
+    //    NodeStruct[] node_structs = new NodeStruct[numNodes];
+    //    for (int i = 0; i < numNodes; ++i)
+    //    {
+    //        node_structs[i] = new NodeStruct();
+    //        node_structs[i].id = (uint)nodeList[i].getAgent().getAgentID();
+    //        node_structs[i].position = nodeList[i].getPosition();
+
+    //        Agent[] agents = nodeList[i].getNeighbours();
+
+    //        node_structs[i].numFriends = (uint)agents.Length;
+    //        node_structs[i].neighbours = new uint[20];
+
+    //        for (int j = 0; j < agents.Length; j++)
+    //        {
+    //            node_structs[i].neighbours[j] = (uint)agents[j].getAgentID();
+    //        }
+
+    //        node_structs[i].numAttracts = 0;
+    //        node_structs[i].numRepulses = 0;
+    //    }
+
+    //    int totalSize = sizeof(uint) * 24 + sizeof(float) * 3;
+    //    ComputeBuffer nodesBuffer = new ComputeBuffer(node_structs.Length, totalSize);
+    //    nodesBuffer.SetData(node_structs);
+
+
+    //    computeShader.SetBuffer(0, "nodes", nodesBuffer);
+    //    computeShader.Dispatch(0, node_structs.Length / 10, 1, 1);
+
+    //    nodesBuffer.GetData(node_structs);
+
+
+    //    nodesBuffer.Dispose();
+    //}
 }
+
+//public struct NodeStruct
+//{
+//    public uint id;
+//    public Vector3 position;
+
+//    [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 20)]
+//    public uint[] neighbours;
+
+//    public uint numFriends;
+//    public uint numAttracts;
+//    public uint numRepulses;
+//};

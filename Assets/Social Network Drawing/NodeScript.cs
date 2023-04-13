@@ -399,7 +399,7 @@ public class NodeScript : MonoBehaviour
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         sr.color = Parameters.Instance.UNHIGHLIGHTED_AGENT_COLOR;
-        sr.sortingOrder = 0;
+        sr.sortingOrder = 1;
     }
 
     public void highlightCommunity()

@@ -896,6 +896,7 @@ public class Landscape : MonoBehaviour
                                 }
                             }
                         }
+
                         /* If adjacent tile wasn't in open list then add it to the open list */
                         if (!in_open_list)
                         {
