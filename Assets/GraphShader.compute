@@ -1,17 +1,94 @@
 // Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel CSMain
 
+float3 centre;
+
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
 struct Node
 {
     uint id;
     float3 position;
-    uint neighbours[20];
+    uint friend1;
+    uint friend2;
+    uint friend3;
+    uint friend4;
+    uint friend5;
+    uint friend6;
+    uint friend7;
+    uint friend8;
+    uint friend9;
+    uint friend10;
+    uint friend11;
+    uint friend12;
+    uint friend13;
+    uint friend14;
+    uint friend15;
+    uint friend16;
+    uint friend17;
+    uint friend18;
+    uint friend19;
+    uint friend20;
     uint numFriends;
-    uint numAttracts;
-    uint numRepulses;
+    float3 force;
 };
+
+float3 TowardsCentre(float3 pos) {
+    return normalize(centre - pos) * distance(centre,pos) * 0.025f;
+}
+
+
+float3 ForceAttraction(float3 pU, float3 pV) {
+    float C = 0.000001f;
+    float K = 500;
+
+    float dist = distance(pU,pV);
+    float attract_force = (dist*dist) / K;
+    if (isinf(attract_force)) return float3(0.0f,0.0f,0.0f);
+    float3 direction = normalize(pV - pU);
+    return direction * attract_force;
+}
+
+float3 ForceRepulse(float3 pU, float3 pV) {
+    float C = 0.000001f;
+    float K = 500;
+
+    float dist = distance(pU,pV);
+    float attract_force = (-C*K*K) / dist;
+    if (isinf(attract_force)) return float3(0.0f,0.0f,0.0f);
+    float3 direction = normalize(pV - pU);
+    return direction * attract_force;
+}
+
+bool isFriend(Node node, uint id) {
+    //if (node.numFriends > 0 && (node.friend1 == id)) {
+    //    if (node.friend1 == id) return true;
+    //} else {
+    //    return false;
+    //}
+
+    if (node.numFriends > 0 && (node.friend1 == id)) return true;
+    if (node.numFriends > 1 && (node.friend2 == id)) return true;
+    if (node.numFriends > 2 && (node.friend3 == id)) return true;
+    if (node.numFriends > 3 && (node.friend4 == id)) return true;
+    if (node.numFriends > 4 && (node.friend5 == id)) return true;
+    if (node.numFriends > 5 && (node.friend6 == id)) return true;
+    if (node.numFriends > 6 && (node.friend7 == id)) return true;
+    if (node.numFriends > 7 && (node.friend8 == id)) return true;
+    if (node.numFriends > 8 && (node.friend9 == id)) return true;
+    if (node.numFriends > 9 && (node.friend10 == id)) return true;
+    if (node.numFriends > 10 && (node.friend11 == id)) return true;
+    if (node.numFriends > 11 && (node.friend12 == id)) return true;
+    if (node.numFriends > 12 && (node.friend13 == id)) return true;
+    if (node.numFriends > 13 && (node.friend14 == id)) return true;
+    if (node.numFriends > 14 && (node.friend15 == id)) return true;
+    if (node.numFriends > 15 && (node.friend16 == id)) return true;
+    if (node.numFriends > 16 && (node.friend17 == id)) return true;
+    if (node.numFriends > 17 && (node.friend18 == id)) return true;
+    if (node.numFriends > 18 && (node.friend19 == id)) return true;
+    if (node.numFriends > 19 && (node.friend20 == id)) return true;
+    return false;
+}
 
 RWStructuredBuffer<Node> nodes;
 
@@ -25,19 +102,19 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     for (uint i=0; i<numNodes; ++i) {
         // Find if the current node is a neighbour //
         Node n = nodes[i];
-        bool isFriend = false;
-        for (uint j=0; j<node.numFriends; ++j) {
-            if (n.id == node.neighbours[j]) {isFriend = true; break;}
-        }
+        if (node.id == n.id) continue;
 
-        if (isFriend) {
+        bool is_neighbour = isFriend(node, n.id);
+
+        if (is_neighbour) {
             // Attract
-            node.numAttracts++;
+            node.force += ForceAttraction(node.position, n.position);
         } else {
             // Repulse
-            node.numRepulses++;
+            node.force += ForceRepulse(node.position, n.position);
         }
     }
+    node.force += TowardsCentre(node.position);
 
     nodes[id.x] = node;
 }

@@ -25,7 +25,7 @@ public class GraphRendererScript : MonoBehaviour
     [SerializeField] private int MIN_COMMUNITY_SIZE = 3;
     private List<IdealNode> idealNodeList;
 
-    //public ComputeShader computeShader;
+    public ComputeShader computeShader;
 
     /* Network properties */
     [SerializeField] private int numNodes;
@@ -108,8 +108,20 @@ public class GraphRendererScript : MonoBehaviour
             }
             else
             {
+                //System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+                //stopwatch.Start();
                 //RepositionNodesGPU();
-                repositionNodes();
+                //stopwatch.Stop();
+                //double gpu_time = stopwatch.ElapsedMilliseconds;
+                //stopwatch.Reset();
+                //stopwatch.Start();
+                //repositionNodes();
+                //stopwatch.Stop();
+                //print("CPU calulations took " + stopwatch.ElapsedMilliseconds + "ms. GPU calulations took " + gpu_time + "ms.");
+                //redrawEdges();
+
+                RepositionNodesGPU();
+                //repositionNodes();
                 redrawEdges();
             }
         }
@@ -1321,53 +1333,99 @@ public class GraphRendererScript : MonoBehaviour
     }
 
 
-    //private void RepositionNodesGPU()
-    //{
-    //    NodeStruct[] node_structs = new NodeStruct[numNodes];
-    //    for (int i = 0; i < numNodes; ++i)
-    //    {
-    //        node_structs[i] = new NodeStruct();
-    //        node_structs[i].id = (uint)nodeList[i].getAgent().getAgentID();
-    //        node_structs[i].position = nodeList[i].getPosition();
 
-    //        Agent[] agents = nodeList[i].getNeighbours();
+    private void RepositionNodesGPU()
+    {
+        NodeStruct[] node_structs = new NodeStruct[numNodes];
+        for (int i = 0; i < numNodes; ++i)
+        {
+            node_structs[i] = new NodeStruct();
+            node_structs[i].id = (uint)nodeList[i].getAgent().getAgentID();
+            node_structs[i].position = nodeList[i].getPosition();
 
-    //        node_structs[i].numFriends = (uint)agents.Length;
-    //        node_structs[i].neighbours = new uint[20];
+            Agent[] agents = nodeList[i].getNeighbours();
 
-    //        for (int j = 0; j < agents.Length; j++)
-    //        {
-    //            node_structs[i].neighbours[j] = (uint)agents[j].getAgentID();
-    //        }
+            node_structs[i].numFriends = (uint)agents.Length;
+            //node_structs[i].neighbours = new uint[20];
+            //for (int j = 0; j < agents.Length; j++)
+            //{
+            //    node_structs[i].neighbours[j] = (uint)agents[j].getAgentID();
+            //}
 
-    //        node_structs[i].numAttracts = 0;
-    //        node_structs[i].numRepulses = 0;
-    //    }
+            if (node_structs[i].numFriends > 0) node_structs[i].friend1 = (uint) agents[0].getAgentID();
+            if (node_structs[i].numFriends > 1) node_structs[i].friend2 = (uint)agents[1].getAgentID();
+            if (node_structs[i].numFriends > 2) node_structs[i].friend3 = (uint)agents[2].getAgentID();
+            if (node_structs[i].numFriends > 3) node_structs[i].friend4 = (uint)agents[3].getAgentID();
+            if (node_structs[i].numFriends > 4) node_structs[i].friend5 = (uint)agents[4].getAgentID();
+            if (node_structs[i].numFriends > 5) node_structs[i].friend6 = (uint)agents[5].getAgentID();
+            if (node_structs[i].numFriends > 6) node_structs[i].friend7 = (uint)agents[6].getAgentID();
+            if (node_structs[i].numFriends > 7) node_structs[i].friend8 = (uint)agents[7].getAgentID();
+            if (node_structs[i].numFriends > 8) node_structs[i].friend9 = (uint)agents[8].getAgentID();
+            if (node_structs[i].numFriends > 9) node_structs[i].friend10 = (uint)agents[9].getAgentID();
+            if (node_structs[i].numFriends > 10) node_structs[i].friend11 = (uint)agents[10].getAgentID();
+            if (node_structs[i].numFriends > 11) node_structs[i].friend12 = (uint)agents[11].getAgentID();
+            if (node_structs[i].numFriends > 12) node_structs[i].friend13 = (uint)agents[12].getAgentID();
+            if (node_structs[i].numFriends > 13) node_structs[i].friend14 = (uint)agents[13].getAgentID();
+            if (node_structs[i].numFriends > 14) node_structs[i].friend15 = (uint)agents[14].getAgentID();
+            if (node_structs[i].numFriends > 15) node_structs[i].friend16 = (uint)agents[15].getAgentID();
+            if (node_structs[i].numFriends > 16) node_structs[i].friend17 = (uint)agents[16].getAgentID();
+            if (node_structs[i].numFriends > 17) node_structs[i].friend18 = (uint)agents[17].getAgentID();
+            if (node_structs[i].numFriends > 18) node_structs[i].friend19 = (uint)agents[18].getAgentID();
+            if (node_structs[i].numFriends > 19) node_structs[i].friend20 = (uint)agents[19].getAgentID();
 
-    //    int totalSize = sizeof(uint) * 24 + sizeof(float) * 3;
-    //    ComputeBuffer nodesBuffer = new ComputeBuffer(node_structs.Length, totalSize);
-    //    nodesBuffer.SetData(node_structs);
+            node_structs[i].force = Vector3.zero;
+        }
 
+        int totalSize = sizeof(uint) * 2 + sizeof(float) * 3 + sizeof(uint) * 20 + sizeof(float)*3;
+        ComputeBuffer nodesBuffer = new ComputeBuffer(numNodes, totalSize);
+        nodesBuffer.SetData(node_structs);
 
-    //    computeShader.SetBuffer(0, "nodes", nodesBuffer);
-    //    computeShader.Dispatch(0, node_structs.Length / 10, 1, 1);
+        computeShader.SetVector("centre", centre);
+        computeShader.SetBuffer(0, "nodes", nodesBuffer);
+        computeShader.Dispatch(0, node_structs.Length / 10, 1, 1);
 
-    //    nodesBuffer.GetData(node_structs);
+        nodesBuffer.GetData(node_structs);
 
+        for (int i=0; i<numNodes; i++)
+        {
+            //print(nodeList[i].gameObject.name + " -> " + node_structs[i].force);
+            nodeList[i].moveRigidBodyPosition(nodeList[i].transform.position + node_structs[i].force);
+        }
 
-    //    nodesBuffer.Dispose();
-    //}
+        nodesBuffer.Dispose();
+    }
 }
 
-//public struct NodeStruct
-//{
-//    public uint id;
-//    public Vector3 position;
+//[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+public struct NodeStruct
+{
+    public uint id;
+    public Vector3 position;
 
-//    [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 20)]
-//    public uint[] neighbours;
+    //[System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 20)]
+    //public uint[] neighbours;
 
-//    public uint numFriends;
-//    public uint numAttracts;
-//    public uint numRepulses;
-//};
+    public uint friend1;
+    public uint friend2;
+    public uint friend3;
+    public uint friend4;
+    public uint friend5;
+    public uint friend6;
+    public uint friend7;
+    public uint friend8;
+    public uint friend9;
+    public uint friend10;
+    public uint friend11;
+    public uint friend12;
+    public uint friend13;
+    public uint friend14;
+    public uint friend15;
+    public uint friend16;
+    public uint friend17;
+    public uint friend18;
+    public uint friend19;
+    public uint friend20;
+
+    public uint numFriends;
+    public Vector3 force;
+};
