@@ -26,6 +26,7 @@ public class GraphRendererScript : MonoBehaviour
     private List<IdealNode> idealNodeList;
 
     public ComputeShader computeShader;
+    private NodeStruct[] node_structs;
 
     /* Network properties */
     [SerializeField] private int numNodes;
@@ -146,6 +147,7 @@ public class GraphRendererScript : MonoBehaviour
         this.ENABLE_VISUALS = b;
         calculateIdealNeighbours();
         calculateIdealGraphProperties();
+        ConstructNodeStructs();
     }
 
     public void toggleShowCommunities()
@@ -1332,11 +1334,10 @@ public class GraphRendererScript : MonoBehaviour
         this.idealSkewness = 0;
     }
 
-
-
-    private void RepositionNodesGPU()
+    private void ConstructNodeStructs()
     {
-        NodeStruct[] node_structs = new NodeStruct[numNodes];
+        //NodeStruct[] node_structs = new NodeStruct[numNodes];
+        node_structs = new NodeStruct[numNodes];
         for (int i = 0; i < numNodes; ++i)
         {
             node_structs[i] = new NodeStruct();
@@ -1352,7 +1353,7 @@ public class GraphRendererScript : MonoBehaviour
             //    node_structs[i].neighbours[j] = (uint)agents[j].getAgentID();
             //}
 
-            if (node_structs[i].numFriends > 0) node_structs[i].friend1 = (uint) agents[0].getAgentID();
+            if (node_structs[i].numFriends > 0) node_structs[i].friend1 = (uint)agents[0].getAgentID();
             if (node_structs[i].numFriends > 1) node_structs[i].friend2 = (uint)agents[1].getAgentID();
             if (node_structs[i].numFriends > 2) node_structs[i].friend3 = (uint)agents[2].getAgentID();
             if (node_structs[i].numFriends > 3) node_structs[i].friend4 = (uint)agents[3].getAgentID();
@@ -1374,22 +1375,43 @@ public class GraphRendererScript : MonoBehaviour
             if (node_structs[i].numFriends > 19) node_structs[i].friend20 = (uint)agents[19].getAgentID();
 
             node_structs[i].force = Vector3.zero;
+            node_structs[i].didRun = -1;
         }
+    }
 
-        int totalSize = sizeof(uint) * 2 + sizeof(float) * 3 + sizeof(uint) * 20 + sizeof(float)*3;
+    public void UpdateNodeStructsPositions()
+    {
+        for (int i=0; i<numNodes; ++i)
+        {
+            node_structs[i].force = Vector3.zero;
+            node_structs[i].position = nodeList[i].transform.position;
+            node_structs[i].didRun = -1;
+        }
+    }
+
+    private void RepositionNodesGPU()
+    {
+        UpdateNodeStructsPositions();
+
+        int totalSize = sizeof(uint) * 2 + sizeof(float) * 3 + sizeof(uint) * 20 + sizeof(float)*3 + sizeof(int);
         ComputeBuffer nodesBuffer = new ComputeBuffer(numNodes, totalSize);
         nodesBuffer.SetData(node_structs);
 
         computeShader.SetVector("centre", centre);
         computeShader.SetBuffer(0, "nodes", nodesBuffer);
-        computeShader.Dispatch(0, node_structs.Length / 10, 1, 1);
+        computeShader.Dispatch(0, node_structs.Length / 1, 1, 1);
 
         nodesBuffer.GetData(node_structs);
 
         for (int i=0; i<numNodes; i++)
         {
             //print(nodeList[i].gameObject.name + " -> " + node_structs[i].force);
-            nodeList[i].moveRigidBodyPosition(nodeList[i].transform.position + node_structs[i].force);
+            //nodeList[i].moveRigidBodyPosition(nodeList[i].transform.position + node_structs[i].force);
+            nodeList[i].moveRigidBodyPosition(node_structs[i].position + node_structs[i].force);
+            if (node_structs[i].force.magnitude == 0)
+            {
+                print("Did the node run? " + node_structs[i].didRun);
+            }
         }
 
         nodesBuffer.Dispose();
@@ -1428,4 +1450,6 @@ public struct NodeStruct
 
     public uint numFriends;
     public Vector3 force;
+
+    public int didRun;
 };
