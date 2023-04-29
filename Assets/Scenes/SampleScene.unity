@@ -3148,8 +3148,6 @@ MonoBehaviour:
   COMMUNITY_PATH_LENGTH_CUTOFF: 2
   MIN_COMMUNITY_SIZE: 3
   computeShader: {fileID: 7200000, guid: da73490944631f64494734f22e168c00, type: 3}
-  C: 0.000001
-  K: 500
   CALCULATE_GPU: 1
   numNodes: 0
   numEdges: 0

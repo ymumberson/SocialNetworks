@@ -5,8 +5,6 @@ float3 centre;
 float C;
 float K;
 
-// Create a RenderTexture with enableRandomWrite flag and set it
-// with cs.SetTexture
 struct Node
 {
     uint id;
@@ -57,75 +55,75 @@ float3 ForceRepulse(float3 pU, float3 pV) {
     return direction * attract_force;
 }
 
-bool isFriend(Node node, uint id) {
+//bool isFriend(Node node, uint id) {
 
-    //if (node.numFriends > 0 && (node.friend1 == id)) return true;
-    //if (node.numFriends > 1 && (node.friend2 == id)) return true;
-    //if (node.numFriends > 2 && (node.friend3 == id)) return true;
-    //if (node.numFriends > 3 && (node.friend4 == id)) return true;
-    //if (node.numFriends > 4 && (node.friend5 == id)) return true;
-    //if (node.numFriends > 5 && (node.friend6 == id)) return true;
-    //if (node.numFriends > 6 && (node.friend7 == id)) return true;
-    //if (node.numFriends > 7 && (node.friend8 == id)) return true;
-    //if (node.numFriends > 8 && (node.friend9 == id)) return true;
-    //if (node.numFriends > 9 && (node.friend10 == id)) return true;
-    //if (node.numFriends > 10 && (node.friend11 == id)) return true;
-    //if (node.numFriends > 11 && (node.friend12 == id)) return true;
-    //if (node.numFriends > 12 && (node.friend13 == id)) return true;
-    //if (node.numFriends > 13 && (node.friend14 == id)) return true;
-    //if (node.numFriends > 14 && (node.friend15 == id)) return true;
-    //if (node.numFriends > 15 && (node.friend16 == id)) return true;
-    //if (node.numFriends > 16 && (node.friend17 == id)) return true;
-    //if (node.numFriends > 17 && (node.friend18 == id)) return true;
-    //if (node.numFriends > 18 && (node.friend19 == id)) return true;
-    //if (node.numFriends > 19 && (node.friend20 == id)) return true;
-    //return false;
+//    //if (node.numFriends > 0 && (node.friend1 == id)) return true;
+//    //if (node.numFriends > 1 && (node.friend2 == id)) return true;
+//    //if (node.numFriends > 2 && (node.friend3 == id)) return true;
+//    //if (node.numFriends > 3 && (node.friend4 == id)) return true;
+//    //if (node.numFriends > 4 && (node.friend5 == id)) return true;
+//    //if (node.numFriends > 5 && (node.friend6 == id)) return true;
+//    //if (node.numFriends > 6 && (node.friend7 == id)) return true;
+//    //if (node.numFriends > 7 && (node.friend8 == id)) return true;
+//    //if (node.numFriends > 8 && (node.friend9 == id)) return true;
+//    //if (node.numFriends > 9 && (node.friend10 == id)) return true;
+//    //if (node.numFriends > 10 && (node.friend11 == id)) return true;
+//    //if (node.numFriends > 11 && (node.friend12 == id)) return true;
+//    //if (node.numFriends > 12 && (node.friend13 == id)) return true;
+//    //if (node.numFriends > 13 && (node.friend14 == id)) return true;
+//    //if (node.numFriends > 14 && (node.friend15 == id)) return true;
+//    //if (node.numFriends > 15 && (node.friend16 == id)) return true;
+//    //if (node.numFriends > 16 && (node.friend17 == id)) return true;
+//    //if (node.numFriends > 17 && (node.friend18 == id)) return true;
+//    //if (node.numFriends > 18 && (node.friend19 == id)) return true;
+//    //if (node.numFriends > 19 && (node.friend20 == id)) return true;
+//    //return false;
 
 
-    if (node.numFriends > 0) {if (node.friend1 == id) return true;} else {return false;}
-    if (node.numFriends > 1) {if (node.friend2 == id) return true;} else {return false;}
-    if (node.numFriends > 2) {if (node.friend3 == id) return true;} else {return false;}
-    if (node.numFriends > 3) {if (node.friend4 == id) return true;} else {return false;}
-    if (node.numFriends > 4) {if (node.friend5 == id) return true;} else {return false;}
-    if (node.numFriends > 5) {if (node.friend6 == id) return true;} else {return false;}
-    if (node.numFriends > 6) {if (node.friend7 == id) return true;} else {return false;}
-    if (node.numFriends > 7) {if (node.friend8 == id) return true;} else {return false;}
-    if (node.numFriends > 8) {if (node.friend9 == id) return true;} else {return false;}
-    if (node.numFriends > 9) {if (node.friend10 == id) return true;} else {return false;}
-    if (node.numFriends > 10) {if (node.friend11 == id) return true;} else {return false;}
-    if (node.numFriends > 11) {if (node.friend12 == id) return true;} else {return false;}
-    if (node.numFriends > 12) {if (node.friend13 == id) return true;} else {return false;}
-    if (node.numFriends > 13) {if (node.friend14 == id) return true;} else {return false;}
-    if (node.numFriends > 14) {if (node.friend15 == id) return true;} else {return false;}
-    if (node.numFriends > 15) {if (node.friend16 == id) return true;} else {return false;}
-    if (node.numFriends > 16) {if (node.friend17 == id) return true;} else {return false;}
-    if (node.numFriends > 17) {if (node.friend18 == id) return true;} else {return false;}
-    if (node.numFriends > 18) {if (node.friend19 == id) return true;} else {return false;}
-    if (node.numFriends > 19) {if (node.friend20 == id) return true;} else {return false;}
-    return false;
+//    if (node.numFriends > 0) {if (node.friend1 == id) return true;} else {return false;}
+//    if (node.numFriends > 1) {if (node.friend2 == id) return true;} else {return false;}
+//    if (node.numFriends > 2) {if (node.friend3 == id) return true;} else {return false;}
+//    if (node.numFriends > 3) {if (node.friend4 == id) return true;} else {return false;}
+//    if (node.numFriends > 4) {if (node.friend5 == id) return true;} else {return false;}
+//    if (node.numFriends > 5) {if (node.friend6 == id) return true;} else {return false;}
+//    if (node.numFriends > 6) {if (node.friend7 == id) return true;} else {return false;}
+//    if (node.numFriends > 7) {if (node.friend8 == id) return true;} else {return false;}
+//    if (node.numFriends > 8) {if (node.friend9 == id) return true;} else {return false;}
+//    if (node.numFriends > 9) {if (node.friend10 == id) return true;} else {return false;}
+//    if (node.numFriends > 10) {if (node.friend11 == id) return true;} else {return false;}
+//    if (node.numFriends > 11) {if (node.friend12 == id) return true;} else {return false;}
+//    if (node.numFriends > 12) {if (node.friend13 == id) return true;} else {return false;}
+//    if (node.numFriends > 13) {if (node.friend14 == id) return true;} else {return false;}
+//    if (node.numFriends > 14) {if (node.friend15 == id) return true;} else {return false;}
+//    if (node.numFriends > 15) {if (node.friend16 == id) return true;} else {return false;}
+//    if (node.numFriends > 16) {if (node.friend17 == id) return true;} else {return false;}
+//    if (node.numFriends > 17) {if (node.friend18 == id) return true;} else {return false;}
+//    if (node.numFriends > 18) {if (node.friend19 == id) return true;} else {return false;}
+//    if (node.numFriends > 19) {if (node.friend20 == id) return true;} else {return false;}
+//    return false;
 
-    //if (node.numFriends > 0) {if (node.friend1 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 2) {if (node.friend2 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 3) {if (node.friend3 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 4) {if (node.friend4 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 5) {if (node.friend5 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 6) {if (node.friend6 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 7) {if (node.friend7 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 8) {if (node.friend8 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 9) {if (node.friend9 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 10) {if (node.friend10 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 11) {if (node.friend11 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 12) {if (node.friend12 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 13) {if (node.friend13 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 14) {if (node.friend14 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 15) {if (node.friend15 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 16) {if (node.friend16 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 17) {if (node.friend17 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 18) {if (node.friend18 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 19) {if (node.friend19 == id) {return true;} else {return false;}}
-    //if (node.numFriends > 20) {if (node.friend20 == id) {return true;} else {return false;}}
-    //return false;
-}
+//    //if (node.numFriends > 0) {if (node.friend1 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 2) {if (node.friend2 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 3) {if (node.friend3 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 4) {if (node.friend4 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 5) {if (node.friend5 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 6) {if (node.friend6 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 7) {if (node.friend7 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 8) {if (node.friend8 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 9) {if (node.friend9 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 10) {if (node.friend10 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 11) {if (node.friend11 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 12) {if (node.friend12 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 13) {if (node.friend13 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 14) {if (node.friend14 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 15) {if (node.friend15 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 16) {if (node.friend16 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 17) {if (node.friend17 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 18) {if (node.friend18 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 19) {if (node.friend19 == id) {return true;} else {return false;}}
+//    //if (node.numFriends > 20) {if (node.friend20 == id) {return true;} else {return false;}}
+//    //return false;
+//}
 
 RWStructuredBuffer<Node> nodes;
 
@@ -136,12 +134,41 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     uint numNodes, stride;
     nodes.GetDimensions(numNodes, stride);
 
+    uint friend_arr[20];
+    if (node.numFriends > 0) {friend_arr[0] = node.friend1;}
+    if (node.numFriends > 1) {friend_arr[1] = node.friend2;}
+    if (node.numFriends > 2) {friend_arr[2] = node.friend3;}
+    if (node.numFriends > 3) {friend_arr[3] = node.friend4;}
+    if (node.numFriends > 4) {friend_arr[4] = node.friend5;}
+    if (node.numFriends > 5) {friend_arr[5] = node.friend6;}
+    if (node.numFriends > 6) {friend_arr[6] = node.friend7;}
+    if (node.numFriends > 7) {friend_arr[7] = node.friend8;}
+    if (node.numFriends > 8) {friend_arr[8] = node.friend9;}
+    if (node.numFriends > 9) {friend_arr[9] = node.friend10;}
+    if (node.numFriends > 10) {friend_arr[10] = node.friend11;}
+    if (node.numFriends > 11) {friend_arr[11] = node.friend12;}
+    if (node.numFriends > 12) {friend_arr[12] = node.friend13;}
+    if (node.numFriends > 13) {friend_arr[13] = node.friend14;}
+    if (node.numFriends > 14) {friend_arr[14] = node.friend15;}
+    if (node.numFriends > 15) {friend_arr[15] = node.friend16;}
+    if (node.numFriends > 16) {friend_arr[16] = node.friend17;}
+    if (node.numFriends > 17) {friend_arr[17] = node.friend18;}
+    if (node.numFriends > 18) {friend_arr[18] = node.friend19;}
+    if (node.numFriends > 19) {friend_arr[19] = node.friend20;}
+
     for (uint i=0; i<numNodes; ++i) {
         // Find if the current node is a neighbour //
         Node n = nodes[i];
         if (node.id == n.id) continue;
 
-        bool is_neighbour = isFriend(node, n.id);
+        //bool is_neighbour = isFriend(node, n.id);
+        bool is_neighbour = false;
+        for (uint j=0; j<node.numFriends; ++j) {
+            if (n.id == friend_arr[j]) {
+                is_neighbour = true;
+                break;
+            }
+        }
 
         if (is_neighbour) {
             // Attract

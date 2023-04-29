@@ -186,6 +186,11 @@ public class NodeScript : MonoBehaviour
         edges.Clear();
     }
 
+    public List<LineRenderer> getEdges()
+    {
+        return this.edges;
+    }
+
     public void resetDegreeOfConnectivity()
     {
         degreeOfConnectivity = 0;

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.InteropServices;
 
 public class GraphRendererScript : MonoBehaviour
 {
@@ -27,8 +28,6 @@ public class GraphRendererScript : MonoBehaviour
 
     public ComputeShader computeShader;
     private NodeStruct[] node_structs;
-    public float C = 0.000001f;
-    public float K = 500;
     public bool CALCULATE_GPU = true;
 
 
@@ -128,12 +127,11 @@ public class GraphRendererScript : MonoBehaviour
                 if (CALCULATE_GPU)
                 {
                     RepositionNodesGPU();
-                } 
+                }
                 else
                 {
                     repositionNodes();
                 }
-                
                 redrawEdges();
             }
         }
@@ -159,6 +157,7 @@ public class GraphRendererScript : MonoBehaviour
         calculateIdealNeighbours();
         calculateIdealGraphProperties();
         ConstructNodeStructs();
+        InitialiseEdges();
     }
 
     public void toggleShowCommunities()
@@ -400,6 +399,19 @@ public class GraphRendererScript : MonoBehaviour
         return true;
     }
 
+    private void InitialiseEdges()
+    {
+        foreach (NodeScript ns in nodeList)
+        {
+            ns.destroyAllEdges();
+            int num_neighbours = ns.getNeighbours().Length;
+            for (int i=0; i<num_neighbours; ++i)
+            {
+                ns.addLineRenderer(Instantiate(EDGE_TEMPLATE).GetComponent<LineRenderer>());
+            }
+        }
+    }
+
     private void redrawEdges()
     {
         if (previously_drew_ideal)
@@ -410,12 +422,12 @@ public class GraphRendererScript : MonoBehaviour
             }
         }
         previously_drew_ideal = false;
-        
+
         numEdges = 0;
         foreach (NodeScript ns in nodeList)
         {
-            ns.destroyAllEdges();
             Agent[] neighbours = ns.getNeighbours();
+            List<LineRenderer> lines = ns.getEdges();
             SpriteRenderer sr = ns.GetComponent<SpriteRenderer>();
             if (neighbours.Length > 0) /* ie only if there are neighbours */
             {
@@ -424,11 +436,12 @@ public class GraphRendererScript : MonoBehaviour
                 {
                     //Vector2 neighbour_pos = getPosition(neighbours[i]);
                     Vector2 neighbour_pos = neighbours[i].getNodePosition();
-                    if (neighbour_pos.Equals(Vector2.positiveInfinity)) continue;
+                    //if (neighbour_pos.Equals(Vector2.positiveInfinity)) continue;
                     if (!neighbour_pos.Equals(Vector2.positiveInfinity)) /* ie neighbour is valid */
                     {
                         /* Creates a new edge */
-                        LineRenderer lr = Instantiate(EDGE_TEMPLATE).GetComponent<LineRenderer>();
+                        //LineRenderer lr = Instantiate(EDGE_TEMPLATE).GetComponent<LineRenderer>();
+                        LineRenderer lr = lines[i];
                         lr.startColor = sr.color;
                         lr.endColor = sr.color;
                         if (sr.color == Parameters.Instance.UNHIGHLIGHTED_AGENT_COLOR)
@@ -1412,8 +1425,6 @@ public class GraphRendererScript : MonoBehaviour
         computeShader.SetVector("centre", centre);
         computeShader.SetFloat("C", 0.000001f);
         computeShader.SetFloat("K", 500);
-        //computeShader.SetFloat("C", this.C);
-        //computeShader.SetFloat("K", this.K);
         computeShader.SetBuffer(0, "nodes", nodesBuffer);
         computeShader.Dispatch(0, node_structs.Length / 1, 1, 1);
 
