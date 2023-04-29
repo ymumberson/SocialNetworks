@@ -27,6 +27,10 @@ public class GraphRendererScript : MonoBehaviour
 
     public ComputeShader computeShader;
     private NodeStruct[] node_structs;
+    public float C = 0.000001f;
+    public float K = 500;
+    public bool CALCULATE_GPU = true;
+
 
     /* Network properties */
     [SerializeField] private int numNodes;
@@ -121,8 +125,15 @@ public class GraphRendererScript : MonoBehaviour
                 //print("CPU calulations took " + stopwatch.ElapsedMilliseconds + "ms. GPU calulations took " + gpu_time + "ms.");
                 //redrawEdges();
 
-                RepositionNodesGPU();
-                //repositionNodes();
+                if (CALCULATE_GPU)
+                {
+                    RepositionNodesGPU();
+                } 
+                else
+                {
+                    repositionNodes();
+                }
+                
                 redrawEdges();
             }
         }
@@ -1385,6 +1396,7 @@ public class GraphRendererScript : MonoBehaviour
         {
             node_structs[i].force = Vector3.zero;
             node_structs[i].position = nodeList[i].transform.position;
+            //node_structs[i].position = new Vector3(nodeList[i].getPosition().x, nodeList[i].getPosition().y, 0);
             node_structs[i].didRun = -1;
         }
     }
@@ -1398,6 +1410,10 @@ public class GraphRendererScript : MonoBehaviour
         nodesBuffer.SetData(node_structs);
 
         computeShader.SetVector("centre", centre);
+        computeShader.SetFloat("C", 0.000001f);
+        computeShader.SetFloat("K", 500);
+        //computeShader.SetFloat("C", this.C);
+        //computeShader.SetFloat("K", this.K);
         computeShader.SetBuffer(0, "nodes", nodesBuffer);
         computeShader.Dispatch(0, node_structs.Length / 1, 1, 1);
 
@@ -1406,11 +1422,11 @@ public class GraphRendererScript : MonoBehaviour
         for (int i=0; i<numNodes; i++)
         {
             //print(nodeList[i].gameObject.name + " -> " + node_structs[i].force);
-            //nodeList[i].moveRigidBodyPosition(nodeList[i].transform.position + node_structs[i].force);
+            //nodeList[i].moveRigidBodyPosition(new Vector3(nodeList[i].getPosition().x,nodeList[i].getPosition().y,0) + node_structs[i].force);
             nodeList[i].moveRigidBodyPosition(node_structs[i].position + node_structs[i].force);
-            if (node_structs[i].force.magnitude == 0)
+            if (node_structs[i].force.z != 0)
             {
-                print("Did the node run? " + node_structs[i].didRun);
+                print(node_structs[i].force.z);
             }
         }
 

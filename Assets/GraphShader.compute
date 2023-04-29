@@ -2,6 +2,8 @@
 #pragma kernel CSMain
 
 float3 centre;
+float C;
+float K;
 
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
@@ -40,9 +42,6 @@ float3 TowardsCentre(float3 pos) {
 
 
 float3 ForceAttraction(float3 pU, float3 pV) {
-    float C = 0.000001f;
-    float K = 500;
-
     float dist = distance(pU,pV);
     float attract_force = (dist*dist) / K;
     if (isinf(attract_force)) return float3(0.0f,0.0f,0.0f);
@@ -51,9 +50,6 @@ float3 ForceAttraction(float3 pU, float3 pV) {
 }
 
 float3 ForceRepulse(float3 pU, float3 pV) {
-    float C = 0.000001f;
-    float K = 500;
-
     float dist = distance(pU,pV);
     float attract_force = (-C*K*K) / dist;
     if (isinf(attract_force)) return float3(0.0f,0.0f,0.0f);
@@ -85,27 +81,50 @@ bool isFriend(Node node, uint id) {
     //if (node.numFriends > 19 && (node.friend20 == id)) return true;
     //return false;
 
-    if (node.numFriends > 0) {if (node.friend1 == id) {return true;} else {return false;}}
-    if (node.numFriends > 2) {if (node.friend2 == id) {return true;} else {return false;}}
-    if (node.numFriends > 3) {if (node.friend3 == id) {return true;} else {return false;}}
-    if (node.numFriends > 4) {if (node.friend4 == id) {return true;} else {return false;}}
-    if (node.numFriends > 5) {if (node.friend5 == id) {return true;} else {return false;}}
-    if (node.numFriends > 6) {if (node.friend6 == id) {return true;} else {return false;}}
-    if (node.numFriends > 7) {if (node.friend7 == id) {return true;} else {return false;}}
-    if (node.numFriends > 8) {if (node.friend8 == id) {return true;} else {return false;}}
-    if (node.numFriends > 9) {if (node.friend9 == id) {return true;} else {return false;}}
-    if (node.numFriends > 10) {if (node.friend10 == id) {return true;} else {return false;}}
-    if (node.numFriends > 11) {if (node.friend11 == id) {return true;} else {return false;}}
-    if (node.numFriends > 12) {if (node.friend12 == id) {return true;} else {return false;}}
-    if (node.numFriends > 13) {if (node.friend13 == id) {return true;} else {return false;}}
-    if (node.numFriends > 14) {if (node.friend14 == id) {return true;} else {return false;}}
-    if (node.numFriends > 15) {if (node.friend15 == id) {return true;} else {return false;}}
-    if (node.numFriends > 16) {if (node.friend16 == id) {return true;} else {return false;}}
-    if (node.numFriends > 17) {if (node.friend17 == id) {return true;} else {return false;}}
-    if (node.numFriends > 18) {if (node.friend18 == id) {return true;} else {return false;}}
-    if (node.numFriends > 19) {if (node.friend19 == id) {return true;} else {return false;}}
-    if (node.numFriends > 20) {if (node.friend20 == id) {return true;} else {return false;}}
+
+    if (node.numFriends > 0) {if (node.friend1 == id) return true;} else {return false;}
+    if (node.numFriends > 1) {if (node.friend2 == id) return true;} else {return false;}
+    if (node.numFriends > 2) {if (node.friend3 == id) return true;} else {return false;}
+    if (node.numFriends > 3) {if (node.friend4 == id) return true;} else {return false;}
+    if (node.numFriends > 4) {if (node.friend5 == id) return true;} else {return false;}
+    if (node.numFriends > 5) {if (node.friend6 == id) return true;} else {return false;}
+    if (node.numFriends > 6) {if (node.friend7 == id) return true;} else {return false;}
+    if (node.numFriends > 7) {if (node.friend8 == id) return true;} else {return false;}
+    if (node.numFriends > 8) {if (node.friend9 == id) return true;} else {return false;}
+    if (node.numFriends > 9) {if (node.friend10 == id) return true;} else {return false;}
+    if (node.numFriends > 10) {if (node.friend11 == id) return true;} else {return false;}
+    if (node.numFriends > 11) {if (node.friend12 == id) return true;} else {return false;}
+    if (node.numFriends > 12) {if (node.friend13 == id) return true;} else {return false;}
+    if (node.numFriends > 13) {if (node.friend14 == id) return true;} else {return false;}
+    if (node.numFriends > 14) {if (node.friend15 == id) return true;} else {return false;}
+    if (node.numFriends > 15) {if (node.friend16 == id) return true;} else {return false;}
+    if (node.numFriends > 16) {if (node.friend17 == id) return true;} else {return false;}
+    if (node.numFriends > 17) {if (node.friend18 == id) return true;} else {return false;}
+    if (node.numFriends > 18) {if (node.friend19 == id) return true;} else {return false;}
+    if (node.numFriends > 19) {if (node.friend20 == id) return true;} else {return false;}
     return false;
+
+    //if (node.numFriends > 0) {if (node.friend1 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 2) {if (node.friend2 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 3) {if (node.friend3 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 4) {if (node.friend4 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 5) {if (node.friend5 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 6) {if (node.friend6 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 7) {if (node.friend7 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 8) {if (node.friend8 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 9) {if (node.friend9 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 10) {if (node.friend10 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 11) {if (node.friend11 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 12) {if (node.friend12 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 13) {if (node.friend13 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 14) {if (node.friend14 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 15) {if (node.friend15 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 16) {if (node.friend16 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 17) {if (node.friend17 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 18) {if (node.friend18 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 19) {if (node.friend19 == id) {return true;} else {return false;}}
+    //if (node.numFriends > 20) {if (node.friend20 == id) {return true;} else {return false;}}
+    //return false;
 }
 
 RWStructuredBuffer<Node> nodes;
