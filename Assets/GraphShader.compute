@@ -173,6 +173,7 @@ void CSMain (uint3 id : SV_DispatchThreadID)
         if (is_neighbour) {
             // Attract
             node.force += ForceAttraction(node.position, n.position);
+            node.force += ForceRepulse(node.position, n.position);
         } else {
             // Repulse
             node.force += ForceRepulse(node.position, n.position);

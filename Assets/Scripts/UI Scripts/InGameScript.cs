@@ -31,6 +31,7 @@ public class InGameScript : MonoBehaviour
     [SerializeField] private TextMeshProUGUI AGENT_ID_TEXT;
     [SerializeField] private TextMeshProUGUI AGE_TEXT;
     [SerializeField] private TextMeshProUGUI GENDER_TEXT;
+    [SerializeField] private TextMeshProUGUI SPOUSE_TEXT;
     [SerializeField] private TextMeshProUGUI HOME_OWNER_TEXT;
     [SerializeField] private TextMeshProUGUI NUM_CHILDREN_TEXT;
     [SerializeField] private TextMeshProUGUI NUM_FRIENDS_TEXT;
@@ -156,6 +157,7 @@ public class InGameScript : MonoBehaviour
         AGENT_ID_TEXT.text = "ID: " + a.getAgentID();
         AGE_TEXT.text = "Age: " + a.getAge() + "/" + a.getMaxAge();
         GENDER_TEXT.text = "Gender: " + a.getGenderString();
+        SPOUSE_TEXT.text = a.getSpouse() != null ? "Spouse: " + a.getSpouse().getAgentID().ToString() : "Spouse ID: null";
         HOME_OWNER_TEXT.text = (a.isHomeOwner()) ? "Home Owner: Yes" : "Home Owner: No";
         NUM_CHILDREN_TEXT.text = "#Children: " + a.numOffspring() + "/" + a.getMaxNumOffspring();
         NUM_FRIENDS_TEXT.text = "#Friends: " + a.getNumFriends() + "/" + a.getMaxNumFriends();
@@ -181,6 +183,7 @@ public class InGameScript : MonoBehaviour
         AGENT_ID_TEXT.text = "ID:";
         AGE_TEXT.text = "Age:";
         GENDER_TEXT.text = "Gender:";
+        SPOUSE_TEXT.text = "Spouse ID:";
         HOME_OWNER_TEXT.text = "Home Owner:";
         NUM_CHILDREN_TEXT.text = "#Children:";
         NUM_FRIENDS_TEXT.text = "#Friends:";

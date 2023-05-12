@@ -1349,7 +1349,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0004272461, y: 0.00048828125}
+  m_AnchoredPosition: {x: -0.00048828125, y: 0.00048828125}
   m_SizeDelta: {x: -1091.1, y: -614.08}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &360913416
@@ -1832,7 +1832,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.2841457, y: 0.28885186}
   m_AnchorMax: {x: 0.71477073, y: 0.71470374}
-  m_AnchoredPosition: {x: 1.0375977, y: -1.9199982}
+  m_AnchoredPosition: {x: 1.0375977, y: -1.9199829}
   m_SizeDelta: {x: 1093.2, y: 620.08}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &517510690
@@ -2928,7 +2928,8 @@ MonoBehaviour:
   AGENT_ID_TEXT: {fileID: 1783743842}
   AGE_TEXT: {fileID: 1566759242}
   GENDER_TEXT: {fileID: 2058125859}
-  HOME_OWNER_TEXT: {fileID: 856738722}
+  SPOUSE_TEXT: {fileID: 856738722}
+  HOME_OWNER_TEXT: {fileID: 938733479}
   NUM_CHILDREN_TEXT: {fileID: 477425640}
   NUM_FRIENDS_TEXT: {fileID: 314272749}
   FRIENDS_TEXT: {fileID: 374389301}
@@ -4737,8 +4738,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b104e9eb257260041a6761fd990449f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NUM_YEARS_TO_RUN: 9999
-  DISABLE_PATHFINDING: 1
+  NUM_YEARS_TO_RUN: 439
+  DISABLE_PATHFINDING: 0
   TEST_NAME: SANDBOX
   IS_SEEDED: 1
   SEED: 123456789
@@ -8722,7 +8723,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SANDBOX_MODE: 1
-  SANDBOX_MAP: {fileID: 2800000, guid: 6f9a0ff126e59fb4ebfb7fff0323a072, type: 3}
+  SANDBOX_MAP: {fileID: 2800000, guid: fc35b027ce1f27b43aafd391f9b530ed, type: 3}
   maps:
   - {fileID: 2800000, guid: fc35b027ce1f27b43aafd391f9b530ed, type: 3}
   - {fileID: 2800000, guid: 1b3329181ca9d254eb95df70543bb9c5, type: 3}

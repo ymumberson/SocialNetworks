@@ -154,10 +154,11 @@ public class GraphRendererScript : MonoBehaviour
     public void enableVisuals(bool b)
     {
         this.ENABLE_VISUALS = b;
+        InitialiseEdges();
+        ConstructNodeStructs();
         calculateIdealNeighbours();
         calculateIdealGraphProperties();
-        ConstructNodeStructs();
-        InitialiseEdges();
+        
     }
 
     public void toggleShowCommunities()
@@ -420,6 +421,7 @@ public class GraphRendererScript : MonoBehaviour
             {
                 id.destroyAllEdges();
             }
+            InitialiseEdges();
         }
         previously_drew_ideal = false;
 
@@ -1415,7 +1417,7 @@ public class GraphRendererScript : MonoBehaviour
     }
 
     private void RepositionNodesGPU()
-    {
+    {   
         UpdateNodeStructsPositions();
 
         int totalSize = sizeof(uint) * 2 + sizeof(float) * 3 + sizeof(uint) * 20 + sizeof(float)*3 + sizeof(int);
@@ -1430,15 +1432,15 @@ public class GraphRendererScript : MonoBehaviour
 
         nodesBuffer.GetData(node_structs);
 
-        for (int i=0; i<numNodes; i++)
+        for (int i = 0; i < numNodes; i++)
         {
             //print(nodeList[i].gameObject.name + " -> " + node_structs[i].force);
             //nodeList[i].moveRigidBodyPosition(new Vector3(nodeList[i].getPosition().x,nodeList[i].getPosition().y,0) + node_structs[i].force);
             nodeList[i].moveRigidBodyPosition(node_structs[i].position + node_structs[i].force);
-            if (node_structs[i].force.z != 0)
-            {
-                print(node_structs[i].force.z);
-            }
+            //if (node_structs[i].force.z != 0)
+            //{
+            //    print(node_structs[i].force.z);
+            //}
         }
 
         nodesBuffer.Dispose();
