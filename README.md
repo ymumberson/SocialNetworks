@@ -8,4 +8,8 @@ Agents store a list of their friends, and make friends with other agents at work
 Rendering the network uses Force-Directed drawing, and is accelerated using compute shaders.
 
 ## Gifs
-TODO
+### Growing Social Networks
+![Growing Social Networks](https://github.com/ymumberson/SocialNetworks/blob/ac829f91b561e98c887761144e91d8da0c269c11/Recordings/Growing%20Social%20Networks.gif)
+
+### City Simulation
+![City Simulation](https://github.com/ymumberson/SocialNetworks/blob/ac829f91b561e98c887761144e91d8da0c269c11/Recordings/map1.gif)
